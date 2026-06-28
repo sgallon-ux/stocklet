@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'datos_app.dart';
 import 'pantallas/login.dart';
-import 'pantallas/inicio.dart';
 import 'pantallas/crear_negocio.dart';
+import 'pantallas/principal.dart';
 
 class Compuerta extends StatelessWidget {
   const Compuerta({super.key});
@@ -19,7 +19,7 @@ class Compuerta extends StatelessWidget {
       case EstadoApp.sinNegocio:
         return const PantallaCrearNegocio();
       case EstadoApp.listo:
-        return const PantallaInicio();
+        return const PantallaPrincipal();
     }
   }
 }
