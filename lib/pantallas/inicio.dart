@@ -10,6 +10,7 @@ import 'historial_gastos.dart';
 import 'ajustes.dart';
 import 'widgets/tarjeta_resumen.dart';
 import 'widgets/grafica_tendencia.dart';
+import 'widgets/widget_pedidos.dart';
 
 class PantallaInicio extends StatelessWidget {
   const PantallaInicio({super.key});
@@ -115,6 +116,8 @@ class PantallaInicio extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               const GraficaTendencia(),
+              const SizedBox(height: 20),
+              const WidgetPedidos(),
             ],
           );
         },
