@@ -13,6 +13,7 @@ import 'models/resumen_mensual.dart';
 import 'models/negocio.dart';
 import 'formato.dart';
 import 'models/nota.dart';
+import 'models/item_pedido.dart';
 
 enum EstadoApp { cargando, sinSesion, sinNegocio, listo }
 
@@ -202,6 +203,32 @@ Future<void> _cargarNegocioId(String uid) async {
   void marcarPedidoEntregado(Pedido pedido) {
     pedido.entregado = true;
     _col('pedidos').doc(pedido.id).set(pedido.toMap());
+
+    // El ingreso del pedido se registra como una venta propia: así aparece
+    // en el historial y queda independiente del pedido (archivar/eliminar
+    // el pedido ya no afecta los ingresos).
+    final venta = Venta(
+      fecha: DateTime.now(),
+      descripcion: 'Pedido: ${pedido.cliente.nombre} — ${pedido.descripcion}',
+      cantidad: 1,
+      precioUnitario: pedido.precio,
+      costoUnitario: pedido.costo,
+    );
+    ventas.add(venta);
+    _col('ventas').doc(venta.id).set(venta.toMap());
+
+    notifyListeners();
+  }
+
+  void archivarPedido(Pedido pedido) {
+    pedido.archivado = true;
+    _col('pedidos').doc(pedido.id).set(pedido.toMap());
+    notifyListeners();
+  }
+
+  void desarchivarPedido(Pedido pedido) {
+    pedido.archivado = false;
+    _col('pedidos').doc(pedido.id).set(pedido.toMap());
     notifyListeners();
   }
 
@@ -307,6 +334,8 @@ Future<void> _cargarNegocioId(String uid) async {
     required DateTime fechaEntrega,
     required double precio,
     required double costo,
+    required List<ItemPedido> items,
+    required double otroValor,
   }) {
     pedido.cliente.nombre = clienteNombre;
     pedido.cliente.telefono = clienteTelefono;
@@ -314,6 +343,8 @@ Future<void> _cargarNegocioId(String uid) async {
     pedido.fechaEntrega = fechaEntrega;
     pedido.precio = precio;
     pedido.costo = costo;
+    pedido.items = items;
+    pedido.otroValor = otroValor;
     _col('pedidos').doc(pedido.id).set(pedido.toMap());
     notifyListeners();
   }
@@ -351,9 +382,6 @@ Future<void> _cargarNegocioId(String uid) async {
     for (Venta v in ventas) {
       total += v.total;
     }
-    for (Pedido p in pedidos) {
-      if (p.entregado) total += p.precio;
-    }
     return total;
   }
 
@@ -375,11 +403,6 @@ Future<void> _cargarNegocioId(String uid) async {
     for (final v in ventas) {
       delMes(v.fecha.year, v.fecha.month).ingresos += v.total;
     }
-    for (final p in pedidos) {
-      if (p.entregado) {
-        delMes(p.fechaEntrega.year, p.fechaEntrega.month).ingresos += p.precio;
-      }
-    }
     for (final g in gastos) {
       delMes(g.fecha.year, g.fecha.month).gastos += g.monto;
     }
@@ -399,13 +422,6 @@ Future<void> _cargarNegocioId(String uid) async {
       double ing = 0, gas = 0;
       for (final v in ventas) {
         if (!v.fecha.isBefore(ini) && v.fecha.isBefore(fin)) ing += v.total;
-      }
-      for (final p in pedidos) {
-        if (p.entregado &&
-            !p.fechaEntrega.isBefore(ini) &&
-            p.fechaEntrega.isBefore(fin)) {
-          ing += p.precio;
-        }
       }
       for (final g in gastos) {
         if (!g.fecha.isBefore(ini) && g.fecha.isBefore(fin)) gas += g.monto;

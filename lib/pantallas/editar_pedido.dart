@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../datos_app.dart';
 import '../models/pedido.dart';
+import '../models/item_pedido.dart';
+import '../tema.dart';
+import '../formato.dart';
+import 'selector_producto.dart';
 
 class PantallaEditarPedido extends StatefulWidget {
   final Pedido pedido;
@@ -14,10 +18,9 @@ class PantallaEditarPedido extends StatefulWidget {
 class _PantallaEditarPedidoState extends State<PantallaEditarPedido> {
   late final TextEditingController clienteNombreCtrl;
   late final TextEditingController clienteTelefonoCtrl;
-  late final TextEditingController descripcionCtrl;
-  late final TextEditingController precioCtrl;
-  late final TextEditingController costoCtrl;
+  late final TextEditingController otroValorCtrl;
   late DateTime fechaEntrega;
+  late final List<ItemPedido> items;
 
   @override
   void initState() {
@@ -25,116 +28,348 @@ class _PantallaEditarPedidoState extends State<PantallaEditarPedido> {
     final p = widget.pedido;
     clienteNombreCtrl = TextEditingController(text: p.cliente.nombre);
     clienteTelefonoCtrl = TextEditingController(text: p.cliente.telefono);
-    descripcionCtrl = TextEditingController(text: p.descripcion);
-    precioCtrl = TextEditingController(text: p.precio.toStringAsFixed(0));
-    costoCtrl = TextEditingController(text: p.costo.toStringAsFixed(0));
+    otroValorCtrl = TextEditingController(
+        text: p.otroValor > 0 ? p.otroValor.toStringAsFixed(0) : '');
     fechaEntrega = p.fechaEntrega;
+    // copia editable de los ítems
+    items = p.items
+        .map((i) => ItemPedido(
+            nombre: i.nombre,
+            cantidad: i.cantidad,
+            precioUnitario: i.precioUnitario,
+            costoUnitario: i.costoUnitario))
+        .toList();
   }
 
   @override
   void dispose() {
     clienteNombreCtrl.dispose();
     clienteTelefonoCtrl.dispose();
-    descripcionCtrl.dispose();
-    precioCtrl.dispose();
-    costoCtrl.dispose();
+    otroValorCtrl.dispose();
     super.dispose();
   }
 
   Future<void> elegirFecha() async {
-    final seleccionada = await showDatePicker(
+    final sel = await showDatePicker(
       context: context,
       initialDate: fechaEntrega,
       firstDate: DateTime(2020),
       lastDate: DateTime.now().add(const Duration(days: 365)),
     );
-    if (seleccionada != null) {
-      setState(() => fechaEntrega = seleccionada);
+    if (sel != null) setState(() => fechaEntrega = sel);
+  }
+
+  Future<int?> _pedirCantidad() async {
+    final ctrl = TextEditingController(text: '1');
+    final r = await showDialog<int>(
+      context: context,
+      builder: (dc) => AlertDialog(
+        title: const Text('Cantidad'),
+        content: TextField(
+          controller: ctrl,
+          autofocus: true,
+          keyboardType: TextInputType.number,
+          decoration: const InputDecoration(labelText: 'Cantidad'),
+        ),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(dc),
+              child: const Text('Cancelar')),
+          ElevatedButton(
+            onPressed: () {
+              final n = int.tryParse(ctrl.text) ?? 0;
+              Navigator.pop(dc, n > 0 ? n : 1);
+            },
+            child: const Text('Agregar'),
+          ),
+        ],
+      ),
+    );
+    ctrl.dispose();
+    return r;
+  }
+
+  Future<void> _agregarDelCatalogo() async {
+    final productos = [...context.read<DatosApp>().productos];
+    if (productos.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Aún no tienes productos creados')),
+      );
+      return;
     }
+    final prod = await elegirProducto(context, productos);
+    if (prod == null || !mounted) return;
+    final cant = await _pedirCantidad();
+    if (cant == null || !mounted) return;
+    setState(() => items.add(ItemPedido(
+          nombre: prod.nombre,
+          cantidad: cant,
+          precioUnitario: prod.precioVenta,
+          costoUnitario: prod.costoProduccion(),
+        )));
+  }
+
+  Future<void> _agregarManual() async {
+    final nombreCtrl = TextEditingController();
+    final precioCtrl = TextEditingController();
+    final costoCtrl = TextEditingController();
+    final cantCtrl = TextEditingController(text: '1');
+    final item = await showDialog<ItemPedido>(
+      context: context,
+      builder: (dc) => AlertDialog(
+        title: const Text('Ítem manual'),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                  controller: nombreCtrl,
+                  textCapitalization: TextCapitalization.sentences,
+                  decoration: const InputDecoration(labelText: 'Descripción')),
+              const SizedBox(height: 8),
+              TextField(
+                  controller: precioCtrl,
+                  keyboardType: TextInputType.number,
+                  decoration:
+                      const InputDecoration(labelText: 'Precio unitario')),
+              const SizedBox(height: 8),
+              TextField(
+                  controller: costoCtrl,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                      labelText: 'Costo unitario (opcional)')),
+              const SizedBox(height: 8),
+              TextField(
+                  controller: cantCtrl,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(labelText: 'Cantidad')),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(dc),
+              child: const Text('Cancelar')),
+          ElevatedButton(
+            onPressed: () {
+              final nombre = nombreCtrl.text.trim();
+              final precio = double.tryParse(precioCtrl.text) ?? 0;
+              final costo = double.tryParse(costoCtrl.text) ?? 0;
+              final cant = int.tryParse(cantCtrl.text) ?? 0;
+              if (nombre.isEmpty || precio <= 0 || cant <= 0) return;
+              Navigator.pop(
+                  dc,
+                  ItemPedido(
+                      nombre: nombre,
+                      cantidad: cant,
+                      precioUnitario: precio,
+                      costoUnitario: costo));
+            },
+            child: const Text('Agregar'),
+          ),
+        ],
+      ),
+    );
+    nombreCtrl.dispose();
+    precioCtrl.dispose();
+    costoCtrl.dispose();
+    cantCtrl.dispose();
+    if (item != null && mounted) setState(() => items.add(item));
   }
 
   void guardar() {
     final nombre = clienteNombreCtrl.text.trim();
     final telefono = clienteTelefonoCtrl.text.trim();
-    final descripcion = descripcionCtrl.text.trim();
-    final precio = double.tryParse(precioCtrl.text) ?? 0;
-    final costo = double.tryParse(costoCtrl.text) ?? 0;
+    final otro = double.tryParse(otroValorCtrl.text) ?? 0;
+    final precioItems = items.fold<double>(0, (s, i) => s + i.precioTotal);
+    final precioTotal = precioItems + otro;
+    final costoTotal = items.fold<double>(0, (s, i) => s + i.costoTotal);
 
-    if (nombre.isEmpty || descripcion.isEmpty || precio <= 0) {
+    if (nombre.isEmpty || precioTotal <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Completa cliente, descripción y precio')),
+        const SnackBar(
+            content: Text('Falta el cliente o al menos un ítem (o valor)')),
       );
       return;
     }
 
+    final partes = items.map((i) => '${i.cantidad}x ${i.nombre}').toList();
+    if (otro > 0) partes.add('Otro valor');
+    final descripcion = partes.isEmpty ? 'Pedido' : partes.join(', ');
+
     context.read<DatosApp>().editarPedido(
-      widget.pedido,
-      clienteNombre: nombre,
-      clienteTelefono: telefono,
-      descripcion: descripcion,
-      fechaEntrega: fechaEntrega,
-      precio: precio,
-      costo: costo,
-    );
+          widget.pedido,
+          clienteNombre: nombre,
+          clienteTelefono: telefono,
+          descripcion: descripcion,
+          fechaEntrega: fechaEntrega,
+          precio: precioTotal,
+          costo: costoTotal,
+          items: items,
+          otroValor: otro,
+        );
 
     Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
+    final otro = double.tryParse(otroValorCtrl.text) ?? 0;
+    final precioItems = items.fold<double>(0, (s, i) => s + i.precioTotal);
+    final precioTotal = precioItems + otro;
+    final costoTotal = items.fold<double>(0, (s, i) => s + i.costoTotal);
+    final ganancia = precioTotal - costoTotal;
+    final gColor = ganancia >= 0 ? AppColores.verde : AppColores.rojo;
+
     return Scaffold(
       appBar: AppBar(title: const Text('Editar pedido')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          TextField(
-            controller: clienteNombreCtrl,
-            decoration: const InputDecoration(labelText: 'Nombre del cliente'),
+          if (widget.pedido.entregado)
+            const Padding(
+              padding: EdgeInsets.only(bottom: 12),
+              child: Text(
+                'Este pedido ya fue entregado. Editarlo no cambia el ingreso ya registrado.',
+                style: TextStyle(fontSize: 12, color: AppColores.textoSuave),
+              ),
+            ),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  TextField(
+                    controller: clienteNombreCtrl,
+                    textCapitalization: TextCapitalization.words,
+                    decoration: const InputDecoration(
+                      labelText: 'Nombre del cliente',
+                      prefixIcon: Icon(Icons.person_outline),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: clienteTelefonoCtrl,
+                    keyboardType: TextInputType.phone,
+                    decoration: const InputDecoration(
+                      labelText: 'Teléfono (opcional)',
+                      prefixIcon: Icon(Icons.phone_outlined),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-          const SizedBox(height: 16),
-          TextField(
-            controller: clienteTelefonoCtrl,
-            keyboardType: TextInputType.phone,
-            decoration: const InputDecoration(labelText: 'Teléfono (opcional)'),
-          ),
-          const SizedBox(height: 16),
-          TextField(
-            controller: descripcionCtrl,
-            decoration: const InputDecoration(labelText: 'Descripción del pedido'),
-          ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
+          const Text('Productos del pedido',
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppColores.texto)),
+          const SizedBox(height: 8),
           Row(
             children: [
               Expanded(
-                child: TextField(
-                  controller: precioCtrl,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(labelText: 'Precio', prefixText: '\$ '),
+                child: OutlinedButton.icon(
+                  onPressed: _agregarDelCatalogo,
+                  icon: const Icon(Icons.shopping_bag_outlined),
+                  label: const Text('Del catálogo'),
                 ),
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: 8),
               Expanded(
-                child: TextField(
-                  controller: costoCtrl,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(labelText: 'Costo aprox.', prefixText: '\$ '),
+                child: OutlinedButton.icon(
+                  onPressed: _agregarManual,
+                  icon: const Icon(Icons.edit_outlined),
+                  label: const Text('Manual'),
                 ),
               ),
             ],
           ),
+          const SizedBox(height: 12),
+          if (items.isEmpty)
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 8),
+              child: Text('Sin ítems. Agrega del catálogo o manuales.',
+                  style: TextStyle(color: AppColores.textoSuave)),
+            )
+          else
+            ...items.asMap().entries.map((e) {
+              final it = e.value;
+              return Card(
+                child: ListTile(
+                  dense: true,
+                  title: Text('${it.cantidad}x ${it.nombre}',
+                      style: const TextStyle(fontWeight: FontWeight.w600)),
+                  subtitle: Text(pesos(it.precioTotal)),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.delete_outline,
+                        color: AppColores.rojo),
+                    onPressed: () => setState(() => items.removeAt(e.key)),
+                  ),
+                ),
+              );
+            }),
+          const SizedBox(height: 16),
+          TextField(
+            controller: otroValorCtrl,
+            keyboardType: TextInputType.number,
+            onChanged: (_) => setState(() {}),
+            decoration: const InputDecoration(
+              labelText: 'Otro valor (domicilio, servicios...)',
+              prefixIcon: Icon(Icons.add_road),
+            ),
+          ),
+          const SizedBox(height: 20),
+          Card(
+            color: AppColores.verde.withValues(alpha: 0.06),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  _tot('Precio', pesos(precioTotal), AppColores.texto),
+                  _tot('Costo', pesos(costoTotal), AppColores.texto),
+                  _tot('Ganancia', pesos(ganancia), gColor),
+                ],
+              ),
+            ),
+          ),
           const SizedBox(height: 16),
           Card(
             child: ListTile(
-              leading: const Icon(Icons.event),
+              leading: const Icon(Icons.event, color: AppColores.verde),
               title: const Text('Fecha de entrega'),
-              subtitle: Text('${fechaEntrega.day}/${fechaEntrega.month}/${fechaEntrega.year}'),
-              trailing: TextButton(onPressed: elegirFecha, child: const Text('Cambiar')),
+              subtitle: Text(
+                  '${fechaEntrega.day}/${fechaEntrega.month}/${fechaEntrega.year}'),
+              trailing: TextButton(
+                  onPressed: elegirFecha, child: const Text('Cambiar')),
             ),
           ),
           const SizedBox(height: 24),
-          ElevatedButton(onPressed: guardar, child: const Text('Guardar cambios')),
+          ElevatedButton(
+              onPressed: guardar, child: const Text('Guardar cambios')),
         ],
       ),
     );
   }
+
+  Widget _tot(String t, String v, Color c) => Expanded(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(t,
+                style:
+                    const TextStyle(fontSize: 12, color: AppColores.textoSuave)),
+            const SizedBox(height: 2),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Text(v,
+                  style: TextStyle(
+                      fontSize: 15, fontWeight: FontWeight.bold, color: c)),
+            ),
+          ],
+        ),
+      );
 }

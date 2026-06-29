@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'cliente.dart';
+import 'item_pedido.dart';
 
 class Pedido {
   String id;
@@ -10,6 +11,9 @@ class Pedido {
   double precio;
   double costo;
   bool entregado;
+  bool archivado;
+  List<ItemPedido> items;
+  double otroValor;
 
   Pedido({
     String? id,
@@ -20,19 +24,25 @@ class Pedido {
     required this.precio,
     required this.costo,
     this.entregado = false,
+    this.archivado = false,
+    this.items = const [],
+    this.otroValor = 0,
   }) : id = id ?? DateTime.now().microsecondsSinceEpoch.toString();
 
   double get ganancia => precio - costo;
 
   Map<String, dynamic> toMap() {
     return {
-      'cliente': cliente.toMap(), // un mapa dentro del mapa
+      'cliente': cliente.toMap(),
       'descripcion': descripcion,
       'fechaPedido': fechaPedido,
       'fechaEntrega': fechaEntrega,
       'precio': precio,
       'costo': costo,
       'entregado': entregado,
+      'archivado': archivado,
+      'items': items.map((i) => i.toMap()).toList(),
+      'otroValor': otroValor,
     };
   }
 
@@ -46,6 +56,11 @@ class Pedido {
       precio: (map['precio'] as num).toDouble(),
       costo: (map['costo'] as num).toDouble(),
       entregado: map['entregado'] as bool,
+      archivado: (map['archivado'] as bool?) ?? false,
+      items: ((map['items'] as List?) ?? const [])
+          .map((i) => ItemPedido.fromMap(i as Map<String, dynamic>))
+          .toList(),
+      otroValor: (map['otroValor'] as num?)?.toDouble() ?? 0,
     );
   }
 }
