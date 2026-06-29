@@ -4,8 +4,10 @@ import '../datos_app.dart';
 import '../models/insumo.dart';
 import '../models/producto.dart';
 import '../models/ingrediente_de_receta.dart';
+import '../tema.dart';
 import '../formato.dart';
 import 'selector_insumo.dart';
+import 'widgets/resumen_producto.dart';
 
 class PantallaCrearProducto extends StatefulWidget {
   const PantallaCrearProducto({super.key});
@@ -55,7 +57,8 @@ class _PantallaCrearProductoState extends State<PantallaCrearProducto> {
       return;
     }
     setState(() {
-      receta.add(IngredienteDeReceta(insumo: insumoSeleccionado!, cantidad: cantidad));
+      receta.add(
+          IngredienteDeReceta(insumo: insumoSeleccionado!, cantidad: cantidad));
       insumoSeleccionado = null;
       cantidadCtrl.clear();
     });
@@ -66,22 +69,23 @@ class _PantallaCrearProductoState extends State<PantallaCrearProducto> {
     final precio = double.tryParse(precioCtrl.text) ?? 0;
     if (nombre.isEmpty || precio <= 0 || receta.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Falta el nombre, el precio o al menos un ingrediente')),
+        const SnackBar(
+            content:
+                Text('Falta el nombre, el precio o al menos un ingrediente')),
       );
       return;
     }
     context.read<DatosApp>().agregarProducto(Producto(
-      nombre: nombre,
-      tipo: tipo,
-      precioVenta: precio,
-      receta: receta,
-    ));
+          nombre: nombre,
+          tipo: tipo,
+          precioVenta: precio,
+          receta: receta,
+        ));
     Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    // insumos ordenados A-Z
     final insumosDisponibles = [...context.watch<DatosApp>().insumos]
       ..sort((a, b) => a.nombre.toLowerCase().compareTo(b.nombre.toLowerCase()));
     final precio = double.tryParse(precioCtrl.text) ?? 0;
@@ -91,100 +95,148 @@ class _PantallaCrearProductoState extends State<PantallaCrearProducto> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          TextField(
-            controller: nombreCtrl,
-            decoration: const InputDecoration(
-              labelText: 'Nombre del producto',
-              hintText: 'Ej: Torta de chocolate',
-            ),
-          ),
-          const SizedBox(height: 16),
-          DropdownButtonFormField<String>(
-            initialValue: tipo,
-            decoration: const InputDecoration(labelText: 'Tipo de producto'),
-            items: tiposDeProducto.map((t) {
-              return DropdownMenuItem(value: t, child: Text(t));
-            }).toList(),
-            onChanged: (nuevo) => setState(() => tipo = nuevo!),
-          ),
-          const SizedBox(height: 16),
-          TextField(
-            controller: precioCtrl,
-            keyboardType: TextInputType.number,
-            onChanged: (_) => setState(() {}),
-            decoration: const InputDecoration(labelText: 'Precio de venta', prefixText: '\$ '),
-          ),
-          const SizedBox(height: 24),
-          const Text('Receta', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 8),
-          if (insumosDisponibles.isEmpty)
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 8),
-              child: Text('Primero agrega insumos en la pantalla de Inventario.'),
-            )
-          else
-            Column(
-              children: [
-                SizedBox(
-                  width: double.infinity,
-                  child: OutlinedButton.icon(
-                    onPressed: () async {
-                      final elegido = await elegirInsumo(context, insumosDisponibles);
-                      if (elegido != null && mounted) {
-                        setState(() => insumoSeleccionado = elegido);
-                      }
-                    },
-                    icon: const Icon(Icons.search),
-                    label: Text(
-                      insumoSeleccionado?.nombre ?? 'Elegir insumo',
-                      overflow: TextOverflow.ellipsis,
+          // --- Datos del producto ---
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  TextField(
+                    controller: nombreCtrl,
+                    textCapitalization: TextCapitalization.sentences,
+                    decoration: const InputDecoration(
+                      labelText: 'Nombre del producto',
+                      hintText: 'Ej: Torta de chocolate',
+                      prefixIcon: Icon(Icons.shopping_bag_outlined),
                     ),
                   ),
-                ),
-                const SizedBox(height: 8),
-                Row(
+                  const SizedBox(height: 16),
+                  DropdownButtonFormField<String>(
+                    initialValue: tipo,
+                    decoration: const InputDecoration(
+                      labelText: 'Tipo de producto',
+                      prefixIcon: Icon(Icons.category_outlined),
+                    ),
+                    items: tiposDeProducto.map((t) {
+                      return DropdownMenuItem(value: t, child: Text(t));
+                    }).toList(),
+                    onChanged: (nuevo) => setState(() => tipo = nuevo!),
+                  ),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: precioCtrl,
+                    keyboardType: TextInputType.number,
+                    onChanged: (_) => setState(() {}),
+                    decoration: const InputDecoration(
+                      labelText: 'Precio de venta',
+                      prefixIcon: Icon(Icons.attach_money),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+
+          // --- Receta ---
+          const Text('Receta',
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppColores.texto)),
+          const SizedBox(height: 4),
+          const Text('Agrega los insumos y cantidades que lleva una unidad',
+              style: TextStyle(fontSize: 12, color: AppColores.textoSuave)),
+          const SizedBox(height: 12),
+
+          if (insumosDisponibles.isEmpty)
+            const Card(
+              child: Padding(
+                padding: EdgeInsets.all(16),
+                child: Text(
+                    'Primero agrega insumos en la pantalla de Inventario.'),
+              ),
+            )
+          else
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
                   children: [
-                    Expanded(
-                      child: TextField(
-                        controller: cantidadCtrl,
-                        keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(labelText: 'Cantidad'),
+                    SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton.icon(
+                        onPressed: () async {
+                          final elegido =
+                              await elegirInsumo(context, insumosDisponibles);
+                          if (elegido != null && mounted) {
+                            setState(() => insumoSeleccionado = elegido);
+                          }
+                        },
+                        icon: const Icon(Icons.search),
+                        label: Text(
+                          insumoSeleccionado?.nombre ?? 'Elegir insumo',
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ),
-                    const SizedBox(width: 8),
-                    IconButton(
-                      icon: const Icon(Icons.add_circle),
-                      onPressed: agregarIngrediente,
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: cantidadCtrl,
+                            keyboardType: TextInputType.number,
+                            decoration:
+                                const InputDecoration(labelText: 'Cantidad'),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        IconButton.filled(
+                          icon: const Icon(Icons.add),
+                          onPressed: agregarIngrediente,
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
+              ),
             ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
+
           if (receta.isEmpty)
-            const Text('Aún no has agregado ingredientes.')
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 8),
+              child: Text('Aún no has agregado ingredientes.',
+                  style: TextStyle(color: AppColores.textoSuave)),
+            )
           else
             ...receta.map((ing) {
-              return ListTile(
-                dense: true,
-                title: Text(ing.insumo.nombre),
-                subtitle: Text(
-                  '${ing.cantidad.toStringAsFixed(0)} ${ing.insumo.unidad}'
-                  '  ·  ${pesos(ing.costo)}',
-                ),
-                trailing: IconButton(
-                  icon: const Icon(Icons.delete_outline),
-                  onPressed: () => setState(() => receta.remove(ing)),
+              return Card(
+                child: ListTile(
+                  title: Text(ing.insumo.nombre,
+                      style: const TextStyle(fontWeight: FontWeight.w600)),
+                  subtitle: Text(
+                    '${ing.cantidad.toStringAsFixed(0)} ${ing.insumo.unidad}  ·  ${pesos(ing.costo)}',
+                  ),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.delete_outline,
+                        color: AppColores.rojo),
+                    onPressed: () => setState(() => receta.remove(ing)),
+                  ),
                 ),
               );
             }),
-          const Divider(height: 32),
-          Text('Costo de producción: ${pesos(costoActual)}',
-              style: const TextStyle(fontSize: 16)),
-          Text('Ganancia por unidad: ${pesos(precio - costoActual)}',
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 24),
-          ElevatedButton(onPressed: guardarProducto, child: const Text('Guardar producto')),
+          const SizedBox(height: 20),
+
+          // --- Resumen en vivo ---
+          ResumenProducto(costo: costoActual, precio: precio),
+          const SizedBox(height: 20),
+
+          ElevatedButton(
+              onPressed: guardarProducto,
+              child: const Text('Guardar producto')),
         ],
       ),
     );
