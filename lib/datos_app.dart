@@ -12,6 +12,7 @@ import 'models/ingrediente_de_receta.dart';
 import 'models/resumen_mensual.dart';
 import 'models/negocio.dart';
 import 'formato.dart';
+import 'models/nota.dart';
 
 enum EstadoApp { cargando, sinSesion, sinNegocio, listo }
 
@@ -40,6 +41,7 @@ class DatosApp extends ChangeNotifier {
   List<Venta> ventas = [];
   List<Gasto> gastos = [];
   List<Pedido> pedidos = [];
+  List<Nota> notas = [];
 
   List<QueryDocumentSnapshot<Map<String, dynamic>>> _productosRaw = [];
   final List<StreamSubscription> _suscripciones = [];
@@ -322,6 +324,27 @@ Future<void> _cargarNegocioId(String uid) async {
     notifyListeners();
   }
 
+  void agregarNota(Nota nota) {
+    notas.add(nota);
+    _col('notas').doc(nota.id).set(nota.toMap());
+    notifyListeners();
+  }
+
+  void editarNota(Nota nota,
+      {required String asunto, required String contenido}) {
+    nota.asunto = asunto;
+    nota.contenido = contenido;
+    nota.fecha = DateTime.now();
+    _col('notas').doc(nota.id).set(nota.toMap());
+    notifyListeners();
+  }
+
+  void eliminarNota(Nota nota) {
+    notas.remove(nota);
+    _col('notas').doc(nota.id).delete();
+    notifyListeners();
+  }
+
   // --- Reportes ---
   double get ingresosTotales {
     double total = 0;
@@ -449,6 +472,12 @@ Future<void> _cargarNegocioId(String uid) async {
         notifyListeners();
       }),
     );
+    _suscripciones.add(
+      _col('notas').snapshots().listen((snap) {
+        notas = snap.docs.map((d) => Nota.fromMap(d.id, d.data())).toList();
+        notifyListeners();
+      }),
+    );
   }
 
   void _detenerYLimpiar() {
@@ -462,6 +491,7 @@ Future<void> _cargarNegocioId(String uid) async {
     ventas = [];
     gastos = [];
     pedidos = [];
+    notas = [];
     _productosRaw = [];
     notifyListeners();
   }
