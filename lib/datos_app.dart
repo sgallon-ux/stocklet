@@ -15,6 +15,8 @@ import 'formato.dart';
 import 'models/nota.dart';
 import 'models/guia_receta.dart';
 import 'models/item_pedido.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'models/catalogo.dart';
 
 enum EstadoApp { cargando, sinSesion, sinNegocio, listo }
 
@@ -33,6 +35,7 @@ enum RangoTendencia { mes, tres, seis, anio }
 
 class DatosApp extends ChangeNotifier {
   final _db = FirebaseFirestore.instance;
+  final _storage = FirebaseStorage.instance;
   String? _negocioId; // a qué negocio pertenece el usuario actual
   EstadoApp estado = EstadoApp.cargando;
   Negocio? negocio;
@@ -45,6 +48,7 @@ class DatosApp extends ChangeNotifier {
   List<Pedido> pedidos = [];
   List<Nota> notas = [];
   List<GuiaReceta> recetas = [];
+  List<Catalogo> catalogos = [];
 
   List<QueryDocumentSnapshot<Map<String, dynamic>>> _productosRaw = [];
   final List<StreamSubscription> _suscripciones = [];
@@ -402,6 +406,33 @@ Future<void> _cargarNegocioId(String uid) async {
     notifyListeners();
   }
 
+  Future<void> agregarCatalogo({
+    required String nombre,
+    required Uint8List bytes,
+    required String nombreArchivo,
+  }) async {
+    final id = DateTime.now().microsecondsSinceEpoch.toString();
+    final path = 'negocios/$_negocioId/catalogos/${id}_$nombreArchivo';
+    final ref = _storage.ref(path);
+    await ref.putData(bytes, SettableMetadata(contentType: 'application/pdf'));
+    final url = await ref.getDownloadURL();
+    final cat = Catalogo(
+        id: id, nombre: nombre, url: url, path: path, fecha: DateTime.now());
+    await _col('catalogos').doc(id).set(cat.toMap());
+    notifyListeners();
+  }
+
+  Future<void> eliminarCatalogo(Catalogo c) async {
+    try {
+      await _storage.ref(c.path).delete();
+    } catch (_) {
+      // Si el archivo ya no existe, igual borramos el registro.
+    }
+    await _col('catalogos').doc(c.id).delete();
+    catalogos.removeWhere((x) => x.id == c.id);
+    notifyListeners();
+  }
+
   // --- Reportes ---
   double get ingresosTotales {
     double total = 0;
@@ -527,6 +558,13 @@ Future<void> _cargarNegocioId(String uid) async {
         notifyListeners();
       }),
     );
+    _suscripciones.add(
+      _col('catalogos').snapshots().listen((snap) {
+        catalogos =
+            snap.docs.map((d) => Catalogo.fromMap(d.id, d.data())).toList();
+        notifyListeners();
+      }),
+    );
   }
 
   void _detenerYLimpiar() {
@@ -542,6 +580,7 @@ Future<void> _cargarNegocioId(String uid) async {
     pedidos = [];
     notas = [];
     recetas = [];
+    catalogos = [];
     _productosRaw = [];
     notifyListeners();
   }

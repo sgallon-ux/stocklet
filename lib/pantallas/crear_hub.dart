@@ -3,8 +3,8 @@ import '../tema.dart';
 import 'inventario.dart';
 import 'productos.dart';
 import 'pedidos.dart';
-import 'proximamente.dart';
 import 'recetas.dart';
+import 'catalogo.dart';
 
 class CrearHub extends StatelessWidget {
   const CrearHub({super.key});
@@ -52,7 +52,7 @@ class CrearHub extends StatelessWidget {
           _item(context, Icons.menu_book_outlined, 'Recetas',
               'Guías de preparación paso a paso', const PantallaRecetas()),
           _item(context, Icons.picture_as_pdf_outlined, 'Catálogo',
-              'Tus catálogos en PDF', const PantallaProximamente('Catálogo')),
+              'Tus catálogos en PDF', const PantallaCatalogo()),
         ],
       ),
     );
