@@ -15,6 +15,19 @@ import 'formato.dart';
 
 enum EstadoApp { cargando, sinSesion, sinNegocio, listo }
 
+const _mesesCorto = [
+  'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
+  'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'
+];
+
+class PuntoTendencia {
+  final String etiqueta;
+  final double valor;
+  PuntoTendencia(this.etiqueta, this.valor);
+}
+
+enum RangoTendencia { mes, tres, seis, anio }
+
 class DatosApp extends ChangeNotifier {
   final _db = FirebaseFirestore.instance;
   String? _negocioId; // a qué negocio pertenece el usuario actual
@@ -353,6 +366,50 @@ Future<void> _cargarNegocioId(String uid) async {
       return a.mes.compareTo(b.mes);
     });
     return lista;
+  }
+
+  List<PuntoTendencia> tendenciaGanancia(RangoTendencia rango) {
+    final ahora = DateTime.now();
+
+    // Ganancia en el intervalo [ini, fin)  (fin es exclusivo)
+    double gananciaEntre(DateTime ini, DateTime fin) {
+      double ing = 0, gas = 0;
+      for (final v in ventas) {
+        if (!v.fecha.isBefore(ini) && v.fecha.isBefore(fin)) ing += v.total;
+      }
+      for (final p in pedidos) {
+        if (p.entregado &&
+            !p.fechaEntrega.isBefore(ini) &&
+            p.fechaEntrega.isBefore(fin)) {
+          ing += p.precio;
+        }
+      }
+      for (final g in gastos) {
+        if (!g.fecha.isBefore(ini) && g.fecha.isBefore(fin)) gas += g.monto;
+      }
+      return ing - gas;
+    }
+
+    final puntos = <PuntoTendencia>[];
+
+    if (rango == RangoTendencia.mes) {
+      // Día por día, del 1 hasta hoy
+      for (int d = 1; d <= ahora.day; d++) {
+        final ini = DateTime(ahora.year, ahora.month, d);
+        final fin = DateTime(ahora.year, ahora.month, d + 1);
+        puntos.add(PuntoTendencia('$d', gananciaEntre(ini, fin)));
+      }
+    } else {
+      final n = rango == RangoTendencia.tres
+          ? 3
+          : (rango == RangoTendencia.seis ? 6 : 12);
+      for (int i = n - 1; i >= 0; i--) {
+        final ini = DateTime(ahora.year, ahora.month - i, 1);
+        final fin = DateTime(ahora.year, ahora.month - i + 1, 1);
+        puntos.add(PuntoTendencia(_mesesCorto[ini.month - 1], gananciaEntre(ini, fin)));
+      }
+    }
+    return puntos;
   }
 
   // --- Escuchar la nube en vivo, dentro del negocio ---

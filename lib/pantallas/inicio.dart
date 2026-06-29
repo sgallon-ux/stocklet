@@ -9,6 +9,7 @@ import 'historial_ventas.dart';
 import 'historial_gastos.dart';
 import 'ajustes.dart';
 import 'widgets/tarjeta_resumen.dart';
+import 'widgets/grafica_tendencia.dart';
 
 class PantallaInicio extends StatelessWidget {
   const PantallaInicio({super.key});
@@ -100,7 +101,7 @@ class PantallaInicio extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 10),
-                  Expanded(
+                 Expanded(
                     child: OutlinedButton.icon(
                       onPressed: () => Navigator.push(
                           context,
@@ -112,6 +113,8 @@ class PantallaInicio extends StatelessWidget {
                   ),
                 ],
               ),
+              const SizedBox(height: 20),
+              const GraficaTendencia(),
             ],
           );
         },
