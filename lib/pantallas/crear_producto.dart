@@ -8,6 +8,7 @@ import '../tema.dart';
 import '../formato.dart';
 import 'selector_insumo.dart';
 import 'widgets/resumen_producto.dart';
+import 'selector_tipo.dart';
 
 class PantallaCrearProducto extends StatefulWidget {
   const PantallaCrearProducto({super.key});
@@ -19,7 +20,7 @@ class PantallaCrearProducto extends StatefulWidget {
 class _PantallaCrearProductoState extends State<PantallaCrearProducto> {
   final nombreCtrl = TextEditingController();
   final precioCtrl = TextEditingController();
-  String tipo = 'Otro';
+  String tipo = '';
 
   final List<IngredienteDeReceta> receta = [];
 
@@ -86,8 +87,14 @@ class _PantallaCrearProductoState extends State<PantallaCrearProducto> {
 
   @override
   Widget build(BuildContext context) {
-    final insumosDisponibles = [...context.watch<DatosApp>().insumos]
+    final datos = context.watch<DatosApp>();
+    final insumosDisponibles = [...datos.insumos]
       ..sort((a, b) => a.nombre.toLowerCase().compareTo(b.nombre.toLowerCase()));
+    final tiposExistentes = (<String>{
+      for (final p in datos.productos)
+        if (p.tipo.trim().isNotEmpty) p.tipo
+    }.toList()
+      ..sort());
     final precio = double.tryParse(precioCtrl.text) ?? 0;
 
     return Scaffold(
@@ -112,16 +119,24 @@ class _PantallaCrearProductoState extends State<PantallaCrearProducto> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  DropdownButtonFormField<String>(
-                    initialValue: tipo,
-                    decoration: const InputDecoration(
-                      labelText: 'Tipo de producto',
-                      prefixIcon: Icon(Icons.category_outlined),
+                  InkWell(
+                    onTap: () async {
+                      final elegido =
+                          await elegirTipo(context, tiposExistentes);
+                      if (elegido != null && mounted) {
+                        setState(() => tipo = elegido);
+                      }
+                    },
+                    borderRadius: BorderRadius.circular(12),
+                    child: InputDecorator(
+                      decoration: const InputDecoration(
+                        labelText: 'Tipo de producto',
+                        prefixIcon: Icon(Icons.category_outlined),
+                        suffixIcon: Icon(Icons.arrow_drop_down),
+                      ),
+                      child: Text(tipo.isEmpty ? 'Sin tipo' : tipo,
+                          style: const TextStyle(fontSize: 16)),
                     ),
-                    items: tiposDeProducto.map((t) {
-                      return DropdownMenuItem(value: t, child: Text(t));
-                    }).toList(),
-                    onChanged: (nuevo) => setState(() => tipo = nuevo!),
                   ),
                   const SizedBox(height: 16),
                   TextField(

@@ -101,6 +101,11 @@ class _PantallaIngresarVentaState extends State<PantallaIngresarVenta> {
               : datos.productos.where((p) => p.tipo == tipoFiltro).toList())
             ..sort((a, b) =>
                 a.nombre.toLowerCase().compareTo(b.nombre.toLowerCase()));
+          final tipos = (<String>{
+            for (final p in datos.productos)
+              if (p.tipo.trim().isNotEmpty) p.tipo
+          }.toList()
+            ..sort());
 
           return ListView(
             padding: const EdgeInsets.all(16),
@@ -175,7 +180,7 @@ class _PantallaIngresarVentaState extends State<PantallaIngresarVenta> {
                           onSelected: (valor) =>
                               setState(() => tipoFiltro = valor),
                           itemBuilder: (context) =>
-                              ['Todos', ...tiposDeProducto].map((t) {
+                              ['Todos', ...tipos].map((t) {
                             return PopupMenuItem(value: t, child: Text(t));
                           }).toList(),
                         ),

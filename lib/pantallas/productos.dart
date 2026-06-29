@@ -101,7 +101,10 @@ class PantallaProductos extends StatelessWidget {
                                       fontWeight: FontWeight.bold,
                                       color: AppColores.texto)),
                               const SizedBox(height: 2),
-                              Text('${p.tipo}  ·  ${pesos(p.precioVenta)}',
+                              Text(
+                                  p.tipo.trim().isEmpty
+                                      ? pesos(p.precioVenta)
+                                      : '${p.tipo}  ·  ${pesos(p.precioVenta)}',
                                   style: const TextStyle(
                                       fontSize: 12,
                                       color: AppColores.textoSuave)),
