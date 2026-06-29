@@ -21,8 +21,10 @@ class _PantallaEditarInsumoState extends State<PantallaEditarInsumo> {
   void initState() {
     super.initState();
     nombreCtrl = TextEditingController(text: widget.insumo.nombre);
-    costoCtrl = TextEditingController(text: widget.insumo.costoPorUnidad.toString());
-    stockCtrl = TextEditingController(text: widget.insumo.stockActual.toString());
+    costoCtrl =
+        TextEditingController(text: widget.insumo.costoPorUnidad.toString());
+    stockCtrl =
+        TextEditingController(text: widget.insumo.stockActual.toString());
     unidad = widget.insumo.unidad;
   }
 
@@ -41,18 +43,20 @@ class _PantallaEditarInsumoState extends State<PantallaEditarInsumo> {
 
     if (nombre.isEmpty || costo < 0 || stock < 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Revisa los campos: valores válidos, sin negativos')),
+        const SnackBar(
+            content:
+                Text('Revisa los campos: valores válidos, sin negativos')),
       );
       return;
     }
 
     context.read<DatosApp>().editarInsumo(
-      widget.insumo,
-      nombre: nombre,
-      unidad: unidad,
-      costoPorUnidad: costo,
-      stockActual: stock,
-    );
+          widget.insumo,
+          nombre: nombre,
+          unidad: unidad,
+          costoPorUnidad: costo,
+          stockActual: stock,
+        );
 
     Navigator.pop(context);
   }
@@ -61,42 +65,63 @@ class _PantallaEditarInsumoState extends State<PantallaEditarInsumo> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Editar insumo')),
-      body: Padding(
+      body: ListView(
         padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            TextField(
-              controller: nombreCtrl,
-              decoration: const InputDecoration(labelText: 'Nombre'),
+        children: [
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  TextField(
+                    controller: nombreCtrl,
+                    textCapitalization: TextCapitalization.sentences,
+                    decoration: const InputDecoration(
+                      labelText: 'Nombre',
+                      prefixIcon: Icon(Icons.category_outlined),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  DropdownButtonFormField<String>(
+                    initialValue: unidad,
+                    decoration: const InputDecoration(
+                      labelText: 'Unidad de medida',
+                      prefixIcon: Icon(Icons.straighten),
+                    ),
+                    items: const [
+                      DropdownMenuItem(value: 'g', child: Text('Gramos (g)')),
+                      DropdownMenuItem(value: 'ml', child: Text('Mililitros (ml)')),
+                      DropdownMenuItem(value: 'unidad', child: Text('Unidades')),
+                    ],
+                    onChanged: (nueva) => setState(() => unidad = nueva!),
+                  ),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: costoCtrl,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      labelText: 'Costo por unidad',
+                      prefixIcon: Icon(Icons.attach_money),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: stockCtrl,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      labelText: 'Stock actual',
+                      prefixIcon: Icon(Icons.inventory_2_outlined),
+                    ),
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(height: 16),
-            DropdownButtonFormField<String>(
-              initialValue: unidad,
-              decoration: const InputDecoration(labelText: 'Unidad de medida'),
-              items: const [
-                DropdownMenuItem(value: 'g', child: Text('Gramos (g)')),
-                DropdownMenuItem(value: 'ml', child: Text('Mililitros (ml)')),
-                DropdownMenuItem(value: 'unidad', child: Text('Unidades')),
-              ],
-              onChanged: (nueva) => setState(() => unidad = nueva!),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: costoCtrl,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(labelText: 'Costo por unidad', prefixText: '\$ '),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: stockCtrl,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(labelText: 'Stock actual'),
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton(onPressed: guardar, child: const Text('Guardar cambios')),
-          ],
-        ),
+          ),
+          const SizedBox(height: 16),
+          ElevatedButton(
+              onPressed: guardar, child: const Text('Guardar cambios')),
+        ],
       ),
     );
   }

@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../datos_app.dart';
 import '../models/insumo.dart';
+import '../tema.dart';
+import '../formato.dart';
 import 'agregar_insumo.dart';
 import 'editar_insumo.dart';
-import '../formato.dart';
 
 class PantallaInventario extends StatefulWidget {
   const PantallaInventario({super.key});
@@ -28,7 +29,9 @@ class _PantallaInventarioState extends State<PantallaInventario> {
     final datos = context.read<DatosApp>();
     if (datos.insumoEstaEnUso(insumo)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('No puedes eliminar ${insumo.nombre}: lo usa un producto')),
+        SnackBar(
+            content: Text(
+                'No puedes eliminar ${insumo.nombre}: lo usa un producto')),
       );
       return;
     }
@@ -39,9 +42,8 @@ class _PantallaInventarioState extends State<PantallaInventario> {
         content: Text('¿Seguro que quieres eliminar ${insumo.nombre}?'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancelar'),
-          ),
+              onPressed: () => Navigator.pop(dialogContext),
+              child: const Text('Cancelar')),
           TextButton(
             onPressed: () {
               datos.eliminarInsumo(insumo);
@@ -87,63 +89,110 @@ class _PantallaInventarioState extends State<PantallaInventario> {
                   tooltip: 'Buscar',
                   onPressed: () => setState(() => buscando = true),
                 ),
-          IconButton(
-            icon: const Icon(Icons.add),
-            tooltip: 'Agregar insumo',
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const PantallaAgregarInsumo()),
-              );
-            },
-          ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const PantallaAgregarInsumo())),
+        icon: const Icon(Icons.add),
+        label: const Text('Insumo'),
       ),
       body: Consumer<DatosApp>(
         builder: (context, datos, child) {
           if (datos.insumos.isEmpty) {
             return const Center(
-              child: Text('Aún no hay insumos. Agrega el primero con el botón +'),
+              child: Padding(
+                padding: EdgeInsets.all(32),
+                child: Text('Aún no hay insumos.\nAgrega el primero con el botón +',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: AppColores.textoSuave)),
+              ),
             );
           }
 
-          // Filtra por la búsqueda y ordena A-Z
           final insumos = datos.insumos
-              .where((i) => i.nombre.toLowerCase().contains(consulta.toLowerCase()))
+              .where((i) =>
+                  i.nombre.toLowerCase().contains(consulta.toLowerCase()))
               .toList()
-            ..sort((a, b) => a.nombre.toLowerCase().compareTo(b.nombre.toLowerCase()));
+            ..sort((a, b) =>
+                a.nombre.toLowerCase().compareTo(b.nombre.toLowerCase()));
 
           if (insumos.isEmpty) {
-            return const Center(child: Text('Ningún insumo coincide con la búsqueda.'));
+            return const Center(
+                child: Text('Ningún insumo coincide con la búsqueda.'));
           }
 
           return ListView(
             padding: const EdgeInsets.all(16),
             children: insumos.map((insumo) {
               return Card(
-                child: ListTile(
-                  title: Text(insumo.nombre),
-                  subtitle: Text(
-                    'Costo: ${pesos(insumo.costoPorUnidad)} por ${insumo.unidad}'
-                    '  ·  Stock: ${insumo.stockActual.toStringAsFixed(0)} ${insumo.unidad}',
-                  ),
-                  trailing: PopupMenuButton<String>(
-                    onSelected: (opcion) {
-                      if (opcion == 'editar') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => PantallaEditarInsumo(insumo: insumo),
+                clipBehavior: Clip.antiAlias,
+                child: InkWell(
+                  onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              PantallaEditarInsumo(insumo: insumo))),
+                  child: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Row(
+                      children: [
+                        Container(
+                          height: 44,
+                          width: 44,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: AppColores.verde.withValues(alpha: 0.12),
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                        );
-                      } else if (opcion == 'eliminar') {
-                        _confirmarEliminar(insumo);
-                      }
-                    },
-                    itemBuilder: (context) => const [
-                      PopupMenuItem(value: 'editar', child: Text('Editar')),
-                      PopupMenuItem(value: 'eliminar', child: Text('Eliminar')),
-                    ],
+                          child: const Icon(Icons.category_outlined,
+                              color: AppColores.verde),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(insumo.nombre,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColores.texto)),
+                              const SizedBox(height: 3),
+                              Text(
+                                  '${pesos(insumo.costoPorUnidad)} por ${insumo.unidad}',
+                                  style: const TextStyle(
+                                      fontSize: 12,
+                                      color: AppColores.textoSuave)),
+                              Text(
+                                  'Stock: ${insumo.stockActual.toStringAsFixed(0)} ${insumo.unidad}',
+                                  style: const TextStyle(
+                                      fontSize: 12,
+                                      color: AppColores.textoSuave)),
+                            ],
+                          ),
+                        ),
+                        PopupMenuButton<String>(
+                          onSelected: (opcion) {
+                            if (opcion == 'editar') {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          PantallaEditarInsumo(insumo: insumo)));
+                            } else if (opcion == 'eliminar') {
+                              _confirmarEliminar(insumo);
+                            }
+                          },
+                          itemBuilder: (context) => const [
+                            PopupMenuItem(value: 'editar', child: Text('Editar')),
+                            PopupMenuItem(
+                                value: 'eliminar', child: Text('Eliminar')),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               );
