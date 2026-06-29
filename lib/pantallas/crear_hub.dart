@@ -4,6 +4,7 @@ import 'inventario.dart';
 import 'productos.dart';
 import 'pedidos.dart';
 import 'proximamente.dart';
+import 'recetas.dart';
 
 class CrearHub extends StatelessWidget {
   const CrearHub({super.key});
@@ -49,8 +50,7 @@ class CrearHub extends StatelessWidget {
           _item(context, Icons.receipt_long_outlined, 'Pedidos',
               'Encargos de clientes', const PantallaPedidos()),
           _item(context, Icons.menu_book_outlined, 'Recetas',
-              'Guías de preparación paso a paso',
-              const PantallaProximamente('Recetas')),
+              'Guías de preparación paso a paso', const PantallaRecetas()),
           _item(context, Icons.picture_as_pdf_outlined, 'Catálogo',
               'Tus catálogos en PDF', const PantallaProximamente('Catálogo')),
         ],
