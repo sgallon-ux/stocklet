@@ -88,8 +88,13 @@ class _PantallaCatalogoState extends State<PantallaCatalogo> {
   }
 
   Future<void> _abrir(Catalogo c) async {
-    final ok = await launchUrl(Uri.parse(c.url),
-        mode: LaunchMode.externalApplication);
+    final uri = Uri.parse(c.url);
+    // En PWA instalada: intentar pestaña nueva ('_blank'); si el móvil
+    // la bloquea, abrir en la misma ventana ('_self').
+    var ok = await launchUrl(uri, webOnlyWindowName: '_blank');
+    if (!ok) {
+      ok = await launchUrl(uri, webOnlyWindowName: '_self');
+    }
     if (!ok) _aviso('No se pudo abrir el catálogo.');
   }
 
