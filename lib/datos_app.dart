@@ -452,6 +452,40 @@ Future<void> _cargarNegocioId(String uid) async {
 
   double get ganancia => ingresosTotales - gastosTotales;
 
+  // --- Totales dentro de un rango (para el panel del inicio) ---
+  (DateTime, DateTime) _limitesRango(RangoTendencia rango) {
+    final ahora = DateTime.now();
+    final fin = DateTime(ahora.year, ahora.month + 1, 1);
+    if (rango == RangoTendencia.mes) {
+      return (DateTime(ahora.year, ahora.month, 1), fin);
+    }
+    final n = rango == RangoTendencia.tres
+        ? 3
+        : (rango == RangoTendencia.seis ? 6 : 12);
+    return (DateTime(ahora.year, ahora.month - (n - 1), 1), fin);
+  }
+
+  double ingresosEnRango(RangoTendencia rango) {
+    final (ini, fin) = _limitesRango(rango);
+    double total = 0;
+    for (final v in ventas) {
+      if (!v.fecha.isBefore(ini) && v.fecha.isBefore(fin)) total += v.total;
+    }
+    return total;
+  }
+
+  double gastosEnRango(RangoTendencia rango) {
+    final (ini, fin) = _limitesRango(rango);
+    double total = 0;
+    for (final g in gastos) {
+      if (!g.fecha.isBefore(ini) && g.fecha.isBefore(fin)) total += g.monto;
+    }
+    return total;
+  }
+
+  double gananciaEnRango(RangoTendencia rango) =>
+      ingresosEnRango(rango) - gastosEnRango(rango);
+
   List<ResumenMensual> get resumenPorMes {
     final mapa = <String, ResumenMensual>{};
     ResumenMensual delMes(int anio, int mes) {

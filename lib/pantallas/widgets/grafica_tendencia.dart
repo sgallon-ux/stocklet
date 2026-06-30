@@ -5,61 +5,15 @@ import '../../datos_app.dart';
 import '../../tema.dart';
 import '../../formato.dart';
 
-class GraficaTendencia extends StatefulWidget {
-  const GraficaTendencia({super.key});
-
-  @override
-  State<GraficaTendencia> createState() => _GraficaTendenciaState();
-}
-
-class _GraficaTendenciaState extends State<GraficaTendencia> {
-  RangoTendencia _rango = RangoTendencia.seis;
-
-  static const _opciones = {
-    RangoTendencia.mes: 'Este mes',
-    RangoTendencia.tres: '3 meses',
-    RangoTendencia.seis: '6 meses',
-    RangoTendencia.anio: 'Año',
-  };
+class GraficaTendencia extends StatelessWidget {
+  final RangoTendencia rango;
+  const GraficaTendencia({super.key, required this.rango});
 
   @override
   Widget build(BuildContext context) {
     final datos = context.watch<DatosApp>();
-    final puntos = datos.tendenciaGanancia(_rango);
-
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 16, 12, 12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                const Expanded(
-                  child: Text('Tendencia de ganancia',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: AppColores.texto)),
-                ),
-                DropdownButton<RangoTendencia>(
-                  value: _rango,
-                  underline: const SizedBox.shrink(),
-                  borderRadius: BorderRadius.circular(12),
-                  items: _opciones.entries
-                      .map((e) => DropdownMenuItem(
-                          value: e.key, child: Text(e.value)))
-                      .toList(),
-                  onChanged: (v) => setState(() => _rango = v!),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            SizedBox(height: 200, child: _grafica(puntos)),
-          ],
-        ),
-      ),
-    );
+    final puntos = datos.tendenciaGanancia(rango);
+    return SizedBox(height: 200, child: _grafica(puntos));
   }
 
   Widget _grafica(List<PuntoTendencia> puntos) {

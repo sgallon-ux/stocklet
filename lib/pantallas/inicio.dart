@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../datos_app.dart';
-import '../tema.dart';
-import '../formato.dart';
 import 'ingresar_venta.dart';
 import 'registrar_gasto.dart';
-import 'historial_ventas.dart';
-import 'historial_gastos.dart';
 import 'ajustes.dart';
-import 'widgets/tarjeta_resumen.dart';
-import 'widgets/grafica_tendencia.dart';
+import 'widgets/panel_resumen.dart';
 import 'widgets/widget_pedidos.dart';
 import 'widgets/widget_notas.dart';
 
@@ -39,91 +34,43 @@ class PantallaInicio extends StatelessWidget {
           ),
         ],
       ),
-      body: Consumer<DatosApp>(
-        builder: (context, datos, child) {
-          return ListView(
-            padding: const EdgeInsets.all(16),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          const PanelResumen(),
+          const SizedBox(height: 16),
+
+          // --- Fila de acciones ---
+          Row(
             children: [
-              const Text('Resumen de tu negocio',
-                  style: TextStyle(fontSize: 14, color: AppColores.textoSuave)),
-              const SizedBox(height: 12),
-
-              // --- Resumen en una fila (Ingresos y Gastos son botones) ---
-              Row(
-                children: [
-                  Expanded(
-                    child: TarjetaResumen(
-                      titulo: 'Ingresos',
-                      valor: pesos(datos.ingresosTotales),
-                      icono: Icons.trending_up,
-                      color: AppColores.verde,
-                      onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => const PantallaHistorialVentas())),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: TarjetaResumen(
-                      titulo: 'Gastos',
-                      valor: pesos(datos.gastosTotales),
-                      icono: Icons.trending_down,
-                      color: AppColores.rojo,
-                      onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => const PantallaHistorialGastos())),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: TarjetaResumen(
-                      titulo: 'Ganancia',
-                      valor: pesos(datos.ganancia),
-                      icono: Icons.account_balance_wallet,
-                      color: const Color(0xFF2563EB),
-                    ),
-                  ),
-                ],
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => const PantallaIngresarVenta())),
+                  icon: const Icon(Icons.add),
+                  label: const Text('Agregar venta'),
+                ),
               ),
-              const SizedBox(height: 14),
-
-              // --- Fila de acciones ---
-              Row(
-                children: [
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => const PantallaIngresarVenta())),
-                      icon: const Icon(Icons.add),
-                      label: const Text('Agregar venta'),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                 Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => const PantallaRegistrarGasto())),
-                      icon: const Icon(Icons.add),
-                      label: const Text('Agregar gasto'),
-                    ),
-                  ),
-                ],
+              const SizedBox(width: 10),
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => const PantallaRegistrarGasto())),
+                  icon: const Icon(Icons.add),
+                  label: const Text('Agregar gasto'),
+                ),
               ),
-              const SizedBox(height: 20),
-              const GraficaTendencia(),
-              const SizedBox(height: 20),
-              const WidgetPedidos(),
-              const SizedBox(height: 20),
-              const WidgetNotas(),
             ],
-          );
-        },
+          ),
+          const SizedBox(height: 20),
+          const WidgetPedidos(),
+          const SizedBox(height: 20),
+          const WidgetNotas(),
+        ],
       ),
     );
   }
