@@ -53,8 +53,7 @@ class _PantallaCatalogoState extends State<PantallaCatalogo> {
 
   Future<void> _subir() async {
     final result = await FilePicker.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['pdf'],
+      type: FileType.any, // iPhone a veces no deja elegir si se filtra a 'pdf'
       withData: true,
     );
     if (result == null || !mounted) return;
@@ -62,6 +61,10 @@ class _PantallaCatalogoState extends State<PantallaCatalogo> {
     final bytes = archivo.bytes;
     if (bytes == null) {
       _aviso('No se pudo leer el archivo.');
+      return;
+    }
+    if (!archivo.name.toLowerCase().endsWith('.pdf')) {
+      _aviso('Por ahora solo se admiten archivos PDF.');
       return;
     }
     if (archivo.size > 15 * 1024 * 1024) {
