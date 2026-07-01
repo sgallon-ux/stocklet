@@ -33,6 +33,13 @@ class PuntoTendencia {
 
 enum RangoTendencia { mes, tres, seis, anio }
 
+class ProductoVendido {
+  final String nombre;
+  final int cantidad;
+  final double total;
+  ProductoVendido(this.nombre, this.cantidad, this.total);
+}
+
 class DatosApp extends ChangeNotifier {
   final _db = FirebaseFirestore.instance;
   final _storage = FirebaseStorage.instance;
@@ -485,6 +492,38 @@ Future<void> _cargarNegocioId(String uid) async {
 
   double gananciaEnRango(RangoTendencia rango) =>
       ingresosEnRango(rango) - gastosEnRango(rango);
+  
+  // --- Top de productos (solo nombres que existen en el catálogo) ---
+  List<ProductoVendido> topProductos(int anio, int mes) {
+    final nombres = productos.map((p) => p.nombre).toSet();
+    final cant = <String, int>{};
+    final tot = <String, double>{};
+    for (final v in ventas) {
+      if (v.fecha.year != anio || v.fecha.month != mes) continue;
+      if (!nombres.contains(v.descripcion)) continue;
+      cant[v.descripcion] = (cant[v.descripcion] ?? 0) + v.cantidad;
+      tot[v.descripcion] = (tot[v.descripcion] ?? 0) + v.total;
+    }
+    final lista = cant.keys
+        .map((n) => ProductoVendido(n, cant[n]!, tot[n]!))
+        .toList()
+      ..sort((a, b) => b.cantidad.compareTo(a.cantidad));
+    return lista;
+  }
+
+  // Meses (día 1) que tienen al menos una venta de un producto del catálogo.
+  List<DateTime> mesesConVentasDeProductos() {
+    final nombres = productos.map((p) => p.nombre).toSet();
+    final vistos = <String>{};
+    final lista = <DateTime>[];
+    for (final v in ventas) {
+      if (!nombres.contains(v.descripcion)) continue;
+      final clave = '${v.fecha.year}-${v.fecha.month}';
+      if (vistos.add(clave)) lista.add(DateTime(v.fecha.year, v.fecha.month, 1));
+    }
+    lista.sort((a, b) => b.compareTo(a)); // más reciente primero
+    return lista;
+  }
 
   List<ResumenMensual> get resumenPorMes {
     final mapa = <String, ResumenMensual>{};

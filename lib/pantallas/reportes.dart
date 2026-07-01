@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../datos_app.dart';
+import '../models/resumen_mensual.dart';
+import '../tema.dart';
 import '../formato.dart';
+import 'widgets/widget_top_productos.dart';
 
 class PantallaReportes extends StatelessWidget {
   const PantallaReportes({super.key});
@@ -10,105 +13,247 @@ class PantallaReportes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Reportes por mes')),
+      appBar: AppBar(title: const Text('Análisis y reportes')),
       body: Consumer<DatosApp>(
         builder: (context, datos, child) {
-          final resumen = datos.resumenPorMes;
+          final resumen = datos.resumenPorMes; // ascendente por fecha
           if (resumen.isEmpty) {
-            return const Center(child: Text('Aún no hay datos para mostrar.'));
+            return const Center(
+              child: Padding(
+                padding: EdgeInsets.all(32),
+                child: Text(
+                    'Aún no hay datos para analizar.\nRegistra ventas y gastos para ver tus reportes.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: AppColores.textoSuave)),
+              ),
+            );
           }
 
-          // últimos 6 meses para la gráfica
-          final ultimos = resumen.length > 6
-              ? resumen.sublist(resumen.length - 6)
-              : resumen;
+          final actual = resumen.last;
+          final anterior =
+              resumen.length >= 2 ? resumen[resumen.length - 2] : null;
 
-          final maxG = ultimos.map((r) => r.ganancia).fold<double>(0, (a, b) => b > a ? b : a);
-          final minG = ultimos.map((r) => r.ganancia).fold<double>(0, (a, b) => b < a ? b : a);
-          final maxY = maxG <= 0 ? 100.0 : maxG * 1.2;
-          final minY = minG < 0 ? minG * 1.2 : 0.0;
+          double? crecimiento;
+          if (anterior != null && anterior.ganancia > 0) {
+            crecimiento =
+                (actual.ganancia - anterior.ganancia) / anterior.ganancia * 100;
+          }
 
           return ListView(
             padding: const EdgeInsets.all(16),
             children: [
-              const Text('Ganancia por mes',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              _tarjetaGanancia(actual, anterior, crecimiento),
               const SizedBox(height: 16),
-              SizedBox(
-                height: 260,
-                child: BarChart(
-                  BarChartData(
-                    alignment: BarChartAlignment.spaceAround,
-                    maxY: maxY,
-                    minY: minY,
-                    gridData: const FlGridData(show: false),
-                    borderData: FlBorderData(show: false),
-                    titlesData: FlTitlesData(
-                      leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                      rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                      topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                      bottomTitles: AxisTitles(
-                        sideTitles: SideTitles(
-                          showTitles: true,
-                          reservedSize: 28,
-                          getTitlesWidget: (value, meta) {
-                            final i = value.toInt();
-                            if (i < 0 || i >= ultimos.length) {
-                              return const SizedBox.shrink();
-                            }
-                            return Padding(
-                              padding: const EdgeInsets.only(top: 6),
-                              child: Text(ultimos[i].etiquetaCorta,
-                                  style: const TextStyle(fontSize: 11)),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                    barGroups: List.generate(ultimos.length, (i) {
-                      final r = ultimos[i];
-                      return BarChartGroupData(
-                        x: i,
-                        barRods: [
-                          BarChartRodData(
-                            toY: r.ganancia,
-                            color: r.ganancia >= 0 ? Colors.green : Colors.red,
-                            width: 18,
-                            borderRadius:
-                                const BorderRadius.vertical(top: Radius.circular(4)),
-                          ),
-                        ],
-                      );
-                    }),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 24),
-              const Text('Detalle por mes',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 8),
-              ...resumen.reversed.map((r) {
-                return Card(
-                  child: ListTile(
-                    title: Text(r.etiqueta),
-                    subtitle: Text(
-                      'Ingresos: ${pesos(r.ingresos)}  ·  '
-                      'Gastos: ${pesos(r.gastos)}',
-                    ),
-                    trailing: Text(
-                      pesos(r.ganancia),
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: r.ganancia >= 0 ? Colors.green : Colors.red,
-                      ),
-                    ),
-                  ),
-                );
-              }),
+              _tarjetaGrafica(resumen),
+              const SizedBox(height: 16),
+              const WidgetTopProductos(),
+              const SizedBox(height: 16),
+              // Aquí irán: Análisis de ventas (Fase C) y
+              // Reportes mensuales (Fase D).
+              _detalleTemporal(resumen),
             ],
           );
         },
       ),
+    );
+  }
+
+  // --- Indicador de ganancia + crecimiento ---
+  Widget _tarjetaGanancia(
+      ResumenMensual actual, ResumenMensual? anterior, double? crecimiento) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Text('Ganancia de ${actual.etiqueta}',
+                      style: const TextStyle(
+                          fontSize: 13, color: AppColores.textoSuave)),
+                ),
+                _badgeCrecimiento(crecimiento),
+              ],
+            ),
+            const SizedBox(height: 6),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Text(
+                pesos(actual.ganancia),
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                  color: actual.ganancia >= 0
+                      ? AppColores.texto
+                      : AppColores.rojo,
+                ),
+              ),
+            ),
+            if (anterior != null) ...[
+              const SizedBox(height: 4),
+              Text('Mes anterior (${anterior.etiquetaCorta}): ${pesos(anterior.ganancia)}',
+                  style: const TextStyle(
+                      fontSize: 12, color: AppColores.textoSuave)),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _badgeCrecimiento(double? pct) {
+    if (pct == null) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        decoration: BoxDecoration(
+          color: AppColores.textoSuave.withValues(alpha: 0.12),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: const Text('— sin comparación',
+            style: TextStyle(fontSize: 12, color: AppColores.textoSuave)),
+      );
+    }
+    final sube = pct >= 0;
+    final color = sube ? AppColores.verde : AppColores.rojo;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(sube ? Icons.arrow_upward : Icons.arrow_downward,
+              size: 14, color: color),
+          const SizedBox(width: 3),
+          Text('${pct.abs().toStringAsFixed(0)}%',
+              style: TextStyle(
+                  fontSize: 12, fontWeight: FontWeight.bold, color: color)),
+        ],
+      ),
+    );
+  }
+
+  // --- Gráfico de barras (tu lógica, restyled) ---
+  Widget _tarjetaGrafica(List<ResumenMensual> resumen) {
+    final ultimos =
+        resumen.length > 6 ? resumen.sublist(resumen.length - 6) : resumen;
+
+    final maxG =
+        ultimos.map((r) => r.ganancia).fold<double>(0, (a, b) => b > a ? b : a);
+    final minG =
+        ultimos.map((r) => r.ganancia).fold<double>(0, (a, b) => b < a ? b : a);
+    final maxY = maxG <= 0 ? 100.0 : maxG * 1.2;
+    final minY = minG < 0 ? minG * 1.2 : 0.0;
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Ganancia por mes',
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: AppColores.texto)),
+            const SizedBox(height: 16),
+            SizedBox(
+              height: 240,
+              child: BarChart(
+                BarChartData(
+                  alignment: BarChartAlignment.spaceAround,
+                  maxY: maxY,
+                  minY: minY,
+                  gridData: const FlGridData(show: false),
+                  borderData: FlBorderData(show: false),
+                  titlesData: FlTitlesData(
+                    leftTitles: const AxisTitles(
+                        sideTitles: SideTitles(showTitles: false)),
+                    rightTitles: const AxisTitles(
+                        sideTitles: SideTitles(showTitles: false)),
+                    topTitles: const AxisTitles(
+                        sideTitles: SideTitles(showTitles: false)),
+                    bottomTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        reservedSize: 28,
+                        getTitlesWidget: (value, meta) {
+                          final i = value.toInt();
+                          if (i < 0 || i >= ultimos.length) {
+                            return const SizedBox.shrink();
+                          }
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 6),
+                            child: Text(ultimos[i].etiquetaCorta,
+                                style: const TextStyle(
+                                    fontSize: 11,
+                                    color: AppColores.textoSuave)),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                  barGroups: List.generate(ultimos.length, (i) {
+                    final r = ultimos[i];
+                    return BarChartGroupData(
+                      x: i,
+                      barRods: [
+                        BarChartRodData(
+                          toY: r.ganancia,
+                          color: r.ganancia >= 0
+                              ? AppColores.verde
+                              : AppColores.rojo,
+                          width: 18,
+                          borderRadius: const BorderRadius.vertical(
+                              top: Radius.circular(4)),
+                        ),
+                      ],
+                    );
+                  }),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // --- Detalle por mes (temporal; en la Fase D se moverá a "Reportes
+  // mensuales" con la exportación a Excel) ---
+  Widget _detalleTemporal(List<ResumenMensual> resumen) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text('Detalle por mes',
+            style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: AppColores.texto)),
+        const SizedBox(height: 8),
+        ...resumen.reversed.map((r) {
+          return Card(
+            child: ListTile(
+              title: Text(r.etiqueta,
+                  style: const TextStyle(fontWeight: FontWeight.w600)),
+              subtitle: Text(
+                  'Ingresos: ${pesos(r.ingresos)}  ·  Gastos: ${pesos(r.gastos)}'),
+              trailing: Text(
+                pesos(r.ganancia),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: r.ganancia >= 0 ? AppColores.verde : AppColores.rojo,
+                ),
+              ),
+            ),
+          );
+        }),
+      ],
     );
   }
 }
