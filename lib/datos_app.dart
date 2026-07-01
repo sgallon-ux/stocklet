@@ -40,6 +40,23 @@ class ProductoVendido {
   ProductoVendido(this.nombre, this.cantidad, this.total);
 }
 
+class AnalisisVentas {
+  final int numVentas;
+  final double totalVendido;
+  final double ticketPromedio;
+  final List<MapEntry<String, double>> porMes;      // 'Mmm aaaa' -> total
+  final List<MapEntry<int, double>> porDiaSemana;   // 1=Lun..7=Dom -> total
+  final List<MapEntry<DateTime, double>> fechasPico; // día -> total
+  AnalisisVentas({
+    required this.numVentas,
+    required this.totalVendido,
+    required this.ticketPromedio,
+    required this.porMes,
+    required this.porDiaSemana,
+    required this.fechasPico,
+  });
+}
+
 class DatosApp extends ChangeNotifier {
   final _db = FirebaseFirestore.instance;
   final _storage = FirebaseStorage.instance;
@@ -523,6 +540,62 @@ Future<void> _cargarNegocioId(String uid) async {
     }
     lista.sort((a, b) => b.compareTo(a)); // más reciente primero
     return lista;
+  }
+
+  // --- Análisis de todas las ventas (productos, manuales y pedidos) ---
+  AnalisisVentas analisisVentas() {
+    if (ventas.isEmpty) {
+      return AnalisisVentas(
+        numVentas: 0,
+        totalVendido: 0,
+        ticketPromedio: 0,
+        porMes: const [],
+        porDiaSemana: const [],
+        fechasPico: const [],
+      );
+    }
+
+    double total = 0;
+    final porMesMapa = <String, double>{};
+    final ordenMes = <String, DateTime>{};
+    final porDia = <int, double>{};
+    final porFecha = <DateTime, double>{};
+
+    for (final v in ventas) {
+      total += v.total;
+
+      final claveMes =
+          '${_mesesCorto[v.fecha.month - 1]} ${v.fecha.year}';
+      porMesMapa[claveMes] = (porMesMapa[claveMes] ?? 0) + v.total;
+      ordenMes[claveMes] = DateTime(v.fecha.year, v.fecha.month, 1);
+
+      porDia[v.fecha.weekday] = (porDia[v.fecha.weekday] ?? 0) + v.total;
+
+      final dia = DateTime(v.fecha.year, v.fecha.month, v.fecha.day);
+      porFecha[dia] = (porFecha[dia] ?? 0) + v.total;
+    }
+
+    // Meses ordenados cronológicamente
+    final porMes = porMesMapa.entries.toList()
+      ..sort((a, b) => ordenMes[a.key]!.compareTo(ordenMes[b.key]!));
+
+    // Día de la semana ordenado Lun..Dom
+    final porDiaSemana = [
+      for (int d = 1; d <= 7; d++) MapEntry(d, porDia[d] ?? 0.0)
+    ];
+
+    // Fechas pico: top 5 días por total
+    final fechasPico = porFecha.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
+
+    return AnalisisVentas(
+      numVentas: ventas.length,
+      totalVendido: total,
+      ticketPromedio: total / ventas.length,
+      porMes: porMes,
+      porDiaSemana: porDiaSemana,
+      fechasPico: fechasPico.take(5).toList(),
+    );
   }
 
   List<ResumenMensual> get resumenPorMes {

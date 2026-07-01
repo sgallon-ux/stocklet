@@ -6,6 +6,8 @@ import '../models/resumen_mensual.dart';
 import '../tema.dart';
 import '../formato.dart';
 import 'widgets/widget_top_productos.dart';
+import 'widgets/widget_analisis_ventas.dart';
+import 'reportes_mensuales.dart';
 
 class PantallaReportes extends StatelessWidget {
   const PantallaReportes({super.key});
@@ -48,9 +50,9 @@ class PantallaReportes extends StatelessWidget {
               const SizedBox(height: 16),
               const WidgetTopProductos(),
               const SizedBox(height: 16),
-              // Aquí irán: Análisis de ventas (Fase C) y
-              // Reportes mensuales (Fase D).
-              _detalleTemporal(resumen),
+              const WidgetAnalisisVentas(),
+              const SizedBox(height: 16),
+              _entradaReportesMensuales(context),
             ],
           );
         },
@@ -226,34 +228,33 @@ class PantallaReportes extends StatelessWidget {
 
   // --- Detalle por mes (temporal; en la Fase D se moverá a "Reportes
   // mensuales" con la exportación a Excel) ---
-  Widget _detalleTemporal(List<ResumenMensual> resumen) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text('Detalle por mes',
+  Widget _entradaReportesMensuales(BuildContext context) {
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: ListTile(
+        onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (_) => const PantallaReportesMensuales())),
+        leading: Container(
+          height: 44,
+          width: 44,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: AppColores.verde.withValues(alpha: 0.12),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child:
+              const Icon(Icons.description_outlined, color: AppColores.verde),
+        ),
+        title: const Text('Reportes mensuales',
             style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: AppColores.texto)),
-        const SizedBox(height: 8),
-        ...resumen.reversed.map((r) {
-          return Card(
-            child: ListTile(
-              title: Text(r.etiqueta,
-                  style: const TextStyle(fontWeight: FontWeight.w600)),
-              subtitle: Text(
-                  'Ingresos: ${pesos(r.ingresos)}  ·  Gastos: ${pesos(r.gastos)}'),
-              trailing: Text(
-                pesos(r.ganancia),
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: r.ganancia >= 0 ? AppColores.verde : AppColores.rojo,
-                ),
-              ),
-            ),
-          );
-        }),
-      ],
+                fontWeight: FontWeight.bold, color: AppColores.texto)),
+        subtitle:
+            const Text('Descarga el extracto en PDF de cada mes cerrado'),
+        trailing:
+            const Icon(Icons.chevron_right, color: AppColores.textoSuave),
+      ),
     );
   }
 }
