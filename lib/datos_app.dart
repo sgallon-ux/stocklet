@@ -63,6 +63,9 @@ class DatosApp extends ChangeNotifier {
   String? _negocioId; // a qué negocio pertenece el usuario actual
   EstadoApp estado = EstadoApp.cargando;
   Negocio? negocio;
+  String perfilNombre = '';
+  String perfilCelular = '';
+  String perfilFotoUrl = '';
 
   List<Insumo> insumos = [];
   List<Producto> productos = [];
@@ -105,6 +108,9 @@ Future<void> _cargarNegocioId(String uid) async {
     try {
       final doc = await _db.collection('usuarios').doc(uid).get();
       _negocioId = doc.exists ? (doc.data()?['negocioId'] as String?) : null;
+      perfilNombre = (doc.data()?['nombre'] as String?) ?? '';
+      perfilCelular = (doc.data()?['celular'] as String?) ?? '';
+      perfilFotoUrl = (doc.data()?['fotoUrl'] as String?) ?? '';
     } catch (e) {
       _negocioId = null;
       return;
@@ -161,6 +167,20 @@ Future<void> _cargarNegocioId(String uid) async {
     configurarMoneda(moneda: moneda, idioma: idioma, pais: pais);
     _escucharTodo();
     estado = EstadoApp.listo;
+    notifyListeners();
+  }
+
+  // Guarda los datos personales del usuario (en usuarios/{uid})
+  Future<void> guardarPerfil(
+      {required String nombre, required String celular}) async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) return;
+    await _db.collection('usuarios').doc(uid).set(
+      {'nombre': nombre, 'celular': celular},
+      SetOptions(merge: true),
+    );
+    perfilNombre = nombre;
+    perfilCelular = celular;
     notifyListeners();
   }
 
@@ -727,7 +747,99 @@ Future<void> _cargarNegocioId(String uid) async {
     notas = [];
     recetas = [];
     catalogos = [];
+    perfilNombre = '';
+    perfilCelular = '';
+    perfilFotoUrl = '';
     _productosRaw = [];
+    notifyListeners();
+  }
+
+  // Sube/reemplaza el logo del negocio (solo el dueño, según las reglas)
+  Future<void> guardarLogo(Uint8List bytes, String contentType) async {
+    if (_negocioId == null || negocio == null) return;
+    final ref = _storage.ref('negocios/$_negocioId/logo/imagen');
+    await ref.putData(bytes, SettableMetadata(contentType: contentType));
+    final url = await ref.getDownloadURL();
+    await _db.collection('negocios').doc(_negocioId).set(
+      {'logoUrl': url},
+      SetOptions(merge: true),
+    );
+    negocio!.logoUrl = url;
+    notifyListeners();
+  }
+
+  // Quitar la foto de perfil (borra el archivo y limpia la URL)
+  Future<void> eliminarFotoPerfil() async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) return;
+    try {
+      await _storage.ref('usuarios/$uid/foto_perfil').delete();
+    } catch (_) {
+      // Si el archivo ya no existe, igual limpiamos la URL.
+    }
+    await _db.collection('usuarios').doc(uid).set(
+      {'fotoUrl': ''},
+      SetOptions(merge: true),
+    );
+    perfilFotoUrl = '';
+    notifyListeners();
+  }
+
+  // Quitar el logo de la empresa (solo el dueño, según las reglas)
+  Future<void> eliminarLogo() async {
+    if (_negocioId == null || negocio == null) return;
+    try {
+      await _storage.ref('negocios/$_negocioId/logo/imagen').delete();
+    } catch (_) {
+      // Si el archivo ya no existe, igual limpiamos la URL.
+    }
+    await _db.collection('negocios').doc(_negocioId).set(
+      {'logoUrl': ''},
+      SetOptions(merge: true),
+    );
+    negocio!.logoUrl = '';
+    notifyListeners();
+  }
+
+  // Actualiza los datos de la empresa (solo el dueño, según las reglas)
+  Future<void> editarNegocioDatos({
+    required String nombre,
+    required String nit,
+    required String correo,
+    required String tel,
+    required String ubicacion,
+  }) async {
+    if (_negocioId == null || negocio == null) return;
+    await _db.collection('negocios').doc(_negocioId).set(
+      {
+        'nombre': nombre,
+        'nit': nit,
+        'correo': correo,
+        'tel': tel,
+        'ubicacion': ubicacion,
+      },
+      SetOptions(merge: true),
+    );
+    negocio!.nombre = nombre;
+    negocio!.nit = nit;
+    negocio!.correo = correo;
+    negocio!.tel = tel;
+    negocio!.ubicacion = ubicacion;
+    notifyListeners();
+  }
+
+  // Sube/reemplaza la foto de perfil (privada) y guarda su URL
+  Future<void> guardarFotoPerfil(Uint8List bytes, String contentType) async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) return;
+    final ref = _storage.ref('usuarios/$uid/foto_perfil');
+    await ref.putData(bytes, SettableMetadata(contentType: contentType));
+    final url = await ref.getDownloadURL();
+    await _db.collection('usuarios').doc(uid).set(
+      {'fotoUrl': url},
+      SetOptions(merge: true),
+    );
+    perfilFotoUrl = url;
     notifyListeners();
   }
 

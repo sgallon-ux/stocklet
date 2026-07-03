@@ -21,7 +21,21 @@ class PantallaInicio extends StatelessWidget {
           onPressed: () => Navigator.push(context,
               MaterialPageRoute(builder: (_) => const PantallaAjustes())),
         ),
-        title: Text(context.watch<DatosApp>().negocio?.nombre ?? 'Mi negocio'),
+        title: Builder(
+          builder: (context) {
+            final negocio = context.watch<DatosApp>().negocio;
+            final logo = negocio?.logoUrl ?? '';
+            return logo.isEmpty
+                ? Text(negocio?.nombre ?? 'Mi negocio')
+                : Image.network(
+                    logo,
+                    height: 36,
+                    fit: BoxFit.contain,
+                    errorBuilder: (_, _, _) =>
+                        Text(negocio?.nombre ?? 'Mi negocio'),
+                  );
+          },
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.search),
