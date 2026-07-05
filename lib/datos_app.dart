@@ -17,6 +17,7 @@ import 'models/guia_receta.dart';
 import 'models/item_pedido.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'models/catalogo.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum EstadoApp { cargando, sinSesion, sinNegocio, listo }
 
@@ -66,6 +67,9 @@ class DatosApp extends ChangeNotifier {
   String perfilNombre = '';
   String perfilCelular = '';
   String perfilFotoUrl = '';
+  bool notifPedidos = true;
+  bool notifNotas = true;
+  bool notifInsumos = true;
 
   List<Insumo> insumos = [];
   List<Producto> productos = [];
@@ -81,6 +85,7 @@ class DatosApp extends ChangeNotifier {
   final List<StreamSubscription> _suscripciones = [];
 
   DatosApp() {
+    _cargarPrefsNotif();
     FirebaseAuth.instance.authStateChanges().listen((usuario) async {
       if (usuario != null) {
         estado = EstadoApp.cargando;
@@ -88,6 +93,7 @@ class DatosApp extends ChangeNotifier {
         await _cargarNegocioId(usuario.uid);
         if (_negocioId != null) {
           _escucharTodo();
+          await _cargarUltimaRevision();
           estado = EstadoApp.listo;
         } else {
           estado = EstadoApp.sinNegocio;
@@ -181,6 +187,86 @@ Future<void> _cargarNegocioId(String uid) async {
     );
     perfilNombre = nombre;
     perfilCelular = celular;
+    notifyListeners();
+  }
+
+  Future<void> _cargarPrefsNotif() async {
+    final prefs = await SharedPreferences.getInstance();
+    notifPedidos = prefs.getBool('notifPedidos') ?? true;
+    notifNotas = prefs.getBool('notifNotas') ?? true;
+    notifInsumos = prefs.getBool('notifInsumos') ?? true;
+    notifyListeners();
+  }
+
+  Future<void> setNotif({bool? pedidos, bool? notas, bool? insumos}) async {
+    final prefs = await SharedPreferences.getInstance();
+    if (pedidos != null) {
+      notifPedidos = pedidos;
+      await prefs.setBool('notifPedidos', pedidos);
+    }
+    if (notas != null) {
+      notifNotas = notas;
+      await prefs.setBool('notifNotas', notas);
+    }
+    if (insumos != null) {
+      notifInsumos = insumos;
+      await prefs.setBool('notifInsumos', insumos);
+    }
+    notifyListeners();
+  }
+
+  // --- Avisos en-app (respetan los interruptores) ---
+  List<Pedido> get avisosPedidos {
+    if (!notifPedidos) return [];
+    return pedidos.where((p) {
+      if (p.entregado || p.archivado) return false;
+      final hoy = DateTime.now();
+      final a = DateTime(hoy.year, hoy.month, hoy.day);
+      final b = DateTime(
+          p.fechaEntrega.year, p.fechaEntrega.month, p.fechaEntrega.day);
+      return b.difference(a).inDays <= 1; // atrasados, hoy y mañana
+    }).toList()
+      ..sort((x, y) => x.fechaEntrega.compareTo(y.fechaEntrega));
+  }
+
+  List<Insumo> get avisosInsumos {
+    if (!notifInsumos) return [];
+    return insumos.where((i) => i.bajoMinimo).toList()
+      ..sort((a, b) => a.nombre.toLowerCase().compareTo(b.nombre.toLowerCase()));
+  }
+
+  List<Nota> get avisosNotas {
+    if (!notifNotas) return [];
+    final uid = FirebaseAuth.instance.currentUser?.uid ?? '';
+    return notas.where((n) {
+      if (n.autorUid == uid) return false; // no aviso de mis propias notas
+      return n.fecha.isAfter(_notasUltimaRevision);
+    }).toList()
+      ..sort((a, b) => b.fecha.compareTo(a.fecha));
+  }
+
+  int get totalAvisos =>
+      avisosPedidos.length + avisosInsumos.length + avisosNotas.length;
+
+  DateTime _notasUltimaRevision = DateTime.fromMillisecondsSinceEpoch(0);
+
+  Future<void> _cargarUltimaRevision() async {
+    final uid = FirebaseAuth.instance.currentUser?.uid ?? '';
+    if (uid.isEmpty) return;
+    final prefs = await SharedPreferences.getInstance();
+    final ms = prefs.getInt('notasUltimaRevision_$uid') ?? 0;
+    _notasUltimaRevision = DateTime.fromMillisecondsSinceEpoch(ms);
+    notifyListeners();
+  }
+
+  Future<void> marcarNotasRevisadas() async {
+    final uid = FirebaseAuth.instance.currentUser?.uid ?? '';
+    if (uid.isEmpty) return;
+    final ahora = DateTime.now();
+    _notasUltimaRevision = ahora;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(
+        'notasUltimaRevision_$uid', ahora.millisecondsSinceEpoch);
     notifyListeners();
   }
 
@@ -289,11 +375,13 @@ Future<void> _cargarNegocioId(String uid) async {
     required String unidad,
     required double costoPorUnidad,
     required double stockActual,
+    required double stockMinimo,
   }) {
     insumo.nombre = nombre;
     insumo.unidad = unidad;
     insumo.costoPorUnidad = costoPorUnidad;
     insumo.stockActual = stockActual;
+    insumo.stockMinimo = stockMinimo;
     _col('insumos').doc(insumo.id).set(insumo.toMap());
     notifyListeners();
   }
@@ -406,6 +494,11 @@ Future<void> _cargarNegocioId(String uid) async {
   }
 
   void agregarNota(Nota nota) {
+    // Autor: nombre de Perfil (o correo como respaldo) + uid
+    final user = FirebaseAuth.instance.currentUser;
+    nota.autorUid = user?.uid ?? '';
+    nota.autorNombre =
+        perfilNombre.isNotEmpty ? perfilNombre : (user?.email ?? '');
     notas.add(nota);
     _col('notas').doc(nota.id).set(nota.toMap());
     notifyListeners();

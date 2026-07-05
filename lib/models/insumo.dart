@@ -4,6 +4,7 @@ class Insumo {
   String unidad;
   double costoPorUnidad;
   double stockActual;
+  double stockMinimo;
 
   Insumo({
     String? id,
@@ -11,7 +12,11 @@ class Insumo {
     required this.unidad,
     required this.costoPorUnidad,
     required this.stockActual,
+    this.stockMinimo = 0,
   }) : id = id ?? DateTime.now().microsecondsSinceEpoch.toString();
+
+  // ¿Está por debajo de su mínimo? (0 = sin mínimo, no avisa)
+  bool get bajoMinimo => stockMinimo > 0 && stockActual < stockMinimo;
 
   // objeto -> Map (para GUARDAR en Firestore)
   Map<String, dynamic> toMap() {
@@ -20,6 +25,7 @@ class Insumo {
       'unidad': unidad,
       'costoPorUnidad': costoPorUnidad,
       'stockActual': stockActual,
+      'stockMinimo': stockMinimo,
     };
   }
 
@@ -31,6 +37,7 @@ class Insumo {
       unidad: map['unidad'] as String,
       costoPorUnidad: (map['costoPorUnidad'] as num).toDouble(),
       stockActual: (map['stockActual'] as num).toDouble(),
+      stockMinimo: (map['stockMinimo'] as num?)?.toDouble() ?? 0,
     );
   }
 }

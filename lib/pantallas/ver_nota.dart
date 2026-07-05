@@ -75,7 +75,10 @@ class PantallaVerNota extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   color: AppColores.texto)),
           const SizedBox(height: 6),
-          Text('${f.day}/${f.month}/${f.year}',
+          Text(
+              n.autorNombre.isEmpty
+                  ? '${f.day}/${f.month}/${f.year}'
+                  : '${f.day}/${f.month}/${f.year}  ·  Por ${n.autorNombre}',
               style:
                   const TextStyle(fontSize: 12, color: AppColores.textoSuave)),
           const Divider(height: 28),

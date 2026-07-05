@@ -6,6 +6,7 @@ import '../tema.dart';
 import 'proximamente.dart';
 import 'panel_usuario.dart';
 import 'ajustes_seguridad.dart';
+import 'notificaciones_config.dart';
 
 class PantallaAjustes extends StatelessWidget {
   const PantallaAjustes({super.key});
@@ -155,8 +156,8 @@ class PantallaAjustes extends StatelessWidget {
                   icono: Icons.notifications_outlined,
                   titulo: 'Notificaciones',
                   subtitulo: 'Avisos de pedidos, notas e inventario',
-                  onTap: () => _ir(
-                      context, const PantallaProximamente('Notificaciones')),
+                  onTap: () =>
+                      _ir(context, const PantallaNotificacionesConfig()),
                 ),
                 const Divider(height: 1),
                 _opcion(

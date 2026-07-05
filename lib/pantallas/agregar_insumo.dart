@@ -15,6 +15,7 @@ class _PantallaAgregarInsumoState extends State<PantallaAgregarInsumo> {
   final nombreCtrl = TextEditingController();
   final cantidadCtrl = TextEditingController();
   final precioCtrl = TextEditingController();
+  final minimoCtrl = TextEditingController();
   String unidad = 'g';
 
   @override
@@ -22,6 +23,7 @@ class _PantallaAgregarInsumoState extends State<PantallaAgregarInsumo> {
     nombreCtrl.dispose();
     cantidadCtrl.dispose();
     precioCtrl.dispose();
+    minimoCtrl.dispose();
     super.dispose();
   }
 
@@ -40,11 +42,14 @@ class _PantallaAgregarInsumoState extends State<PantallaAgregarInsumo> {
 
     final costoPorUnidad = precio / cantidad; // la app hace la cuenta
 
+    final minimo = double.tryParse(minimoCtrl.text) ?? 0;
+
     context.read<DatosApp>().agregarInsumo(Insumo(
           nombre: nombre,
           unidad: unidad,
           costoPorUnidad: costoPorUnidad,
           stockActual: cantidad, // lo que compraste es tu stock inicial
+          stockMinimo: minimo,
         ));
 
     Navigator.pop(context);
@@ -105,6 +110,16 @@ class _PantallaAgregarInsumoState extends State<PantallaAgregarInsumo> {
                       prefixIcon: Icon(Icons.attach_money),
                     ),
                   ),
+                  TextField(
+                    controller: minimoCtrl,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      labelText: 'Stock mínimo (opcional)',
+                      hintText: 'Avisar cuando baje de...',
+                      prefixIcon: Icon(Icons.notifications_active_outlined),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
                 ],
               ),
             ),

@@ -7,6 +7,8 @@ import 'ajustes.dart';
 import 'widgets/panel_resumen.dart';
 import 'widgets/widget_pedidos.dart';
 import 'widgets/widget_notas.dart';
+import '../tema.dart';
+import 'notificaciones.dart';
 
 class PantallaInicio extends StatelessWidget {
   const PantallaInicio({super.key});
@@ -37,6 +39,46 @@ class PantallaInicio extends StatelessWidget {
           },
         ),
         actions: [
+          Consumer<DatosApp>(
+            builder: (context, datos, child) {
+              final n = datos.totalAvisos;
+              return Stack(
+                alignment: Alignment.center,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.notifications_outlined),
+                    tooltip: 'Notificaciones',
+                    onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => const PantallaNotificaciones())),
+                  ),
+                  if (n > 0)
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        constraints:
+                            const BoxConstraints(minWidth: 18, minHeight: 18),
+                        decoration: const BoxDecoration(
+                          color: AppColores.rojo,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Text(
+                          n > 9 ? '9+' : '$n',
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                ],
+              );
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.search),
             tooltip: 'Buscar',

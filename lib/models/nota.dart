@@ -5,12 +5,16 @@ class Nota {
   String asunto;
   String contenido;
   DateTime fecha;
+  String autorNombre;
+  String autorUid;
 
   Nota({
     String? id,
     required this.asunto,
     required this.contenido,
     required this.fecha,
+    this.autorNombre = '',
+    this.autorUid = '',
   }) : id = id ?? DateTime.now().microsecondsSinceEpoch.toString();
 
   Map<String, dynamic> toMap() {
@@ -18,6 +22,8 @@ class Nota {
       'asunto': asunto,
       'contenido': contenido,
       'fecha': Timestamp.fromDate(fecha),
+      'autorNombre': autorNombre,
+      'autorUid': autorUid,
     };
   }
 
@@ -27,6 +33,8 @@ class Nota {
       asunto: map['asunto'] as String,
       contenido: (map['contenido'] as String?) ?? '',
       fecha: (map['fecha'] as Timestamp).toDate(),
+      autorNombre: (map['autorNombre'] as String?) ?? '',
+      autorUid: (map['autorUid'] as String?) ?? '',
     );
   }
 }

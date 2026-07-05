@@ -15,6 +15,7 @@ class _PantallaEditarInsumoState extends State<PantallaEditarInsumo> {
   late final TextEditingController nombreCtrl;
   late final TextEditingController costoCtrl;
   late final TextEditingController stockCtrl;
+  late final TextEditingController minimoCtrl;
   late String unidad;
 
   @override
@@ -25,6 +26,7 @@ class _PantallaEditarInsumoState extends State<PantallaEditarInsumo> {
         TextEditingController(text: widget.insumo.costoPorUnidad.toString());
     stockCtrl =
         TextEditingController(text: widget.insumo.stockActual.toString());
+    minimoCtrl = TextEditingController(text: widget.insumo.stockMinimo.toString());
     unidad = widget.insumo.unidad;
   }
 
@@ -33,6 +35,7 @@ class _PantallaEditarInsumoState extends State<PantallaEditarInsumo> {
     nombreCtrl.dispose();
     costoCtrl.dispose();
     stockCtrl.dispose();
+    minimoCtrl.dispose();
     super.dispose();
   }
 
@@ -50,13 +53,16 @@ class _PantallaEditarInsumoState extends State<PantallaEditarInsumo> {
       return;
     }
 
+    final minimo = double.tryParse(minimoCtrl.text) ?? 0;
+
     context.read<DatosApp>().editarInsumo(
-          widget.insumo,
-          nombre: nombre,
-          unidad: unidad,
-          costoPorUnidad: costo,
-          stockActual: stock,
-        );
+      widget.insumo,
+      nombre: nombre,
+      unidad: unidad,
+      costoPorUnidad: costo,
+      stockActual: stock,
+      stockMinimo: minimo,
+    );
 
     Navigator.pop(context);
   }
@@ -112,6 +118,16 @@ class _PantallaEditarInsumoState extends State<PantallaEditarInsumo> {
                     decoration: const InputDecoration(
                       labelText: 'Stock actual',
                       prefixIcon: Icon(Icons.inventory_2_outlined),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: minimoCtrl,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      labelText: 'Stock mínimo (opcional)',
+                      hintText: 'Avisar cuando baje de...',
+                      prefixIcon: Icon(Icons.notifications_active_outlined),
                     ),
                   ),
                 ],
