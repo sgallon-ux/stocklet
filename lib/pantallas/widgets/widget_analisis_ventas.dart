@@ -13,6 +13,7 @@ class WidgetAnalisisVentas extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final datos = context.watch<DatosApp>();
+    final m = AppColores.of(context);
     final a = datos.analisisVentas();
 
     String resumen;
@@ -35,12 +36,12 @@ class WidgetAnalisisVentas extends StatelessWidget {
           children: [
             Row(
               children: [
-                const Expanded(
+                Expanded(
                   child: Text('Análisis de ventas',
                       style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: AppColores.texto)),
+                          color: m.texto)),
                 ),
                 TextButton(
                   onPressed: () => Navigator.push(
@@ -54,12 +55,10 @@ class WidgetAnalisisVentas extends StatelessWidget {
             const SizedBox(height: 4),
             Row(
               children: [
-                const Icon(Icons.insights,
-                    size: 18, color: AppColores.textoSuave),
+                Icon(Icons.insights, size: 18, color: m.textoSuave),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: Text(resumen,
-                      style: const TextStyle(color: AppColores.textoSuave)),
+                  child: Text(resumen, style: TextStyle(color: m.textoSuave)),
                 ),
               ],
             ),

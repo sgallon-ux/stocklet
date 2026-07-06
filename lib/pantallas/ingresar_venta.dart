@@ -24,7 +24,6 @@ class _PantallaIngresarVentaState extends State<PantallaIngresarVenta> {
     super.dispose();
   }
 
-  // --- Venta desde el catálogo ---
   void _venderProducto(Producto producto) {
     showDialog(
       context: context,
@@ -53,7 +52,6 @@ class _PantallaIngresarVentaState extends State<PantallaIngresarVenta> {
     );
   }
 
-  // --- Venta manual ---
   void _venderManual() {
     final descripcion = descripcionCtrl.text.trim();
     final valor = double.tryParse(valorCtrl.text) ?? 0;
@@ -96,6 +94,7 @@ class _PantallaIngresarVentaState extends State<PantallaIngresarVenta> {
       appBar: AppBar(title: const Text('Ingresar venta')),
       body: Consumer<DatosApp>(
         builder: (context, datos, child) {
+          final m = AppColores.of(context);
           final productos = (tipoFiltro == 'Todos'
               ? [...datos.productos]
               : datos.productos.where((p) => p.tipo == tipoFiltro).toList())
@@ -110,15 +109,14 @@ class _PantallaIngresarVentaState extends State<PantallaIngresarVenta> {
           return ListView(
             padding: const EdgeInsets.all(16),
             children: [
-              // ====== Venta manual ======
-              const Text('Venta rápida',
+              Text('Venta rápida',
                   style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: AppColores.texto)),
+                      color: m.texto)),
               const SizedBox(height: 4),
-              const Text('Para ventas que no son de un producto del catálogo',
-                  style: TextStyle(fontSize: 12, color: AppColores.textoSuave)),
+              Text('Para ventas que no son de un producto del catálogo',
+                  style: TextStyle(fontSize: 12, color: m.textoSuave)),
               const SizedBox(height: 12),
               Card(
                 child: Padding(
@@ -155,8 +153,6 @@ class _PantallaIngresarVentaState extends State<PantallaIngresarVenta> {
                 ),
               ),
               const SizedBox(height: 24),
-
-              // ====== Catálogo ======
               Row(
                 children: [
                   Expanded(
@@ -167,10 +163,10 @@ class _PantallaIngresarVentaState extends State<PantallaIngresarVenta> {
                             tipoFiltro == 'Todos'
                                 ? 'Vender un producto'
                                 : 'Productos: $tipoFiltro',
-                            style: const TextStyle(
+                            style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
-                                color: AppColores.texto),
+                                color: m.texto),
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
@@ -190,7 +186,6 @@ class _PantallaIngresarVentaState extends State<PantallaIngresarVenta> {
                 ],
               ),
               const SizedBox(height: 4),
-
               if (productos.isEmpty)
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: 24),
@@ -207,16 +202,17 @@ class _PantallaIngresarVentaState extends State<PantallaIngresarVenta> {
                         width: 44,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                          color: AppColores.verde.withValues(alpha: 0.12),
+                          color: m.verde.withValues(alpha: 0.12),
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: const Icon(Icons.shopping_bag_outlined,
-                            color: AppColores.verde),
+                        child: Icon(Icons.shopping_bag_outlined,
+                            color: m.verde),
                       ),
                       title: Text(producto.nombre,
                           style: const TextStyle(fontWeight: FontWeight.bold)),
                       subtitle: Text(pesos(producto.precioVenta)),
-                      trailing: const Icon(Icons.add_shopping_cart_outlined, color: AppColores.verde),
+                      trailing: Icon(Icons.add_shopping_cart_outlined,
+                          color: m.verde),
                     ),
                   );
                 }),

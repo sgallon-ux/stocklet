@@ -26,9 +26,20 @@ class MiApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final acentoId = context.select<DatosApp, String>((d) => d.acentoId);
+    final modoTemaId = context.select<DatosApp, String>((d) => d.modoTemaId);
+    final acento = colorDeAcento(acentoId);
+    final modo = switch (modoTemaId) {
+      'oscuro' => ThemeMode.dark,
+      'auto' => ThemeMode.system,
+      _ => ThemeMode.light,
+    };
+
     return MaterialApp(
       title: 'Contabilidad',
-      theme: temaApp(),
+      theme: temaApp(acento: acento),
+      darkTheme: temaOscuro(acento: acento),
+      themeMode: modo,
       localizationsDelegates: const [
         CountryLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,

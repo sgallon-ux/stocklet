@@ -125,11 +125,12 @@ class _PantallaAgregarInsumoState extends State<PantallaAgregarInsumo> {
             ),
           ),
           const SizedBox(height: 8),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 4),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
             child: Text(
               'Con la cantidad y el precio, la app calcula sola el costo por unidad.',
-              style: TextStyle(fontSize: 12, color: AppColores.textoSuave),
+              style:
+                  TextStyle(fontSize: 12, color: AppColores.of(context).textoSuave),
             ),
           ),
           const SizedBox(height: 16),

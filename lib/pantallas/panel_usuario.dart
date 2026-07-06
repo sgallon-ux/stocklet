@@ -15,12 +15,10 @@ class PantallaPanelUsuario extends StatefulWidget {
 }
 
 class _PantallaPanelUsuarioState extends State<PantallaPanelUsuario> {
-  // Perfil personal
   late final TextEditingController nombreCtrl;
   late final TextEditingController celularCtrl;
   bool guardandoPerfil = false;
 
-  // Datos de la empresa
   late final TextEditingController empNombreCtrl;
   late final TextEditingController empNitCtrl;
   late final TextEditingController empCorreoCtrl;
@@ -130,6 +128,7 @@ class _PantallaPanelUsuarioState extends State<PantallaPanelUsuario> {
   }
 
   Future<bool?> _confirmar(String titulo, String mensaje) {
+    final m = AppColores.of(context);
     return showDialog<bool>(
       context: context,
       builder: (dc) => AlertDialog(
@@ -141,7 +140,7 @@ class _PantallaPanelUsuarioState extends State<PantallaPanelUsuario> {
               child: const Text('Cancelar')),
           TextButton(
             onPressed: () => Navigator.pop(dc, true),
-            style: TextButton.styleFrom(foregroundColor: AppColores.rojo),
+            style: TextButton.styleFrom(foregroundColor: m.rojo),
             child: const Text('Quitar'),
           ),
         ],
@@ -178,6 +177,7 @@ class _PantallaPanelUsuarioState extends State<PantallaPanelUsuario> {
   }
 
   Widget _logoEmpresa(String url, bool esDueno) {
+    final m = AppColores.of(context);
     return Row(
       children: [
         Container(
@@ -186,27 +186,27 @@ class _PantallaPanelUsuarioState extends State<PantallaPanelUsuario> {
           clipBehavior: Clip.antiAlias,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: AppColores.verde.withValues(alpha: 0.08),
+            color: m.verde.withValues(alpha: 0.08),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: AppColores.borde),
+            border: Border.all(color: m.borde),
           ),
           child: url.isEmpty
-              ? const Icon(Icons.image_outlined, color: AppColores.textoSuave)
+              ? Icon(Icons.image_outlined, color: m.textoSuave)
               : Image.network(url,
                   width: 64,
                   height: 64,
                   fit: BoxFit.cover,
-                  errorBuilder: (_, _, _) => const Icon(
-                      Icons.image_outlined, color: AppColores.textoSuave)),
+                  errorBuilder: (_, _, _) =>
+                      Icon(Icons.image_outlined, color: m.textoSuave)),
         ),
         const SizedBox(width: 12),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Logo de la empresa',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w600, color: AppColores.texto)),
+              Text('Logo de la empresa',
+                  style:
+                      TextStyle(fontWeight: FontWeight.w600, color: m.texto)),
               const SizedBox(height: 4),
               if (esDueno) ...[
                 OutlinedButton.icon(
@@ -224,15 +224,13 @@ class _PantallaPanelUsuarioState extends State<PantallaPanelUsuario> {
                 if (url.isNotEmpty)
                   TextButton.icon(
                     onPressed: subiendoLogo ? null : _eliminarLogo,
-                    icon: const Icon(Icons.delete_outline,
-                        size: 18, color: AppColores.rojo),
-                    label: const Text('Quitar logo',
-                        style: TextStyle(color: AppColores.rojo)),
+                    icon: Icon(Icons.delete_outline, size: 18, color: m.rojo),
+                    label:
+                        Text('Quitar logo', style: TextStyle(color: m.rojo)),
                   ),
               ] else
-                const Text('Solo el dueño puede cambiarlo',
-                    style:
-                        TextStyle(fontSize: 12, color: AppColores.textoSuave)),
+                Text('Solo el dueño puede cambiarlo',
+                    style: TextStyle(fontSize: 12, color: m.textoSuave)),
             ],
           ),
         ),
@@ -241,6 +239,7 @@ class _PantallaPanelUsuarioState extends State<PantallaPanelUsuario> {
   }
 
   Widget _avatar(String url) {
+    final m = AppColores.of(context);
     return Stack(
       children: [
         Container(
@@ -249,25 +248,25 @@ class _PantallaPanelUsuarioState extends State<PantallaPanelUsuario> {
           clipBehavior: Clip.antiAlias,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: AppColores.verde.withValues(alpha: 0.12),
+            color: m.verde.withValues(alpha: 0.12),
             shape: BoxShape.circle,
           ),
           child: url.isEmpty
-              ? const Icon(Icons.person, color: AppColores.verde, size: 44)
+              ? Icon(Icons.person, color: m.verde, size: 44)
               : Image.network(
                   url,
                   width: 88,
                   height: 88,
                   fit: BoxFit.cover,
-                  errorBuilder: (_, _, _) => const Icon(Icons.person,
-                      color: AppColores.verde, size: 44),
+                  errorBuilder: (_, _, _) =>
+                      Icon(Icons.person, color: m.verde, size: 44),
                 ),
         ),
         Positioned(
           right: 0,
           bottom: 0,
           child: Material(
-            color: AppColores.verde,
+            color: m.verde,
             shape: const CircleBorder(),
             child: InkWell(
               customBorder: const CircleBorder(),
@@ -331,6 +330,7 @@ class _PantallaPanelUsuarioState extends State<PantallaPanelUsuario> {
   @override
   Widget build(BuildContext context) {
     final datos = context.watch<DatosApp>();
+    final m = AppColores.of(context);
     final uid = FirebaseAuth.instance.currentUser?.uid;
     final correo = FirebaseAuth.instance.currentUser?.email ?? '—';
     final negocio = datos.negocio;
@@ -346,33 +346,28 @@ class _PantallaPanelUsuarioState extends State<PantallaPanelUsuario> {
               children: [
                 _avatar(datos.perfilFotoUrl),
                 const SizedBox(height: 8),
-                const Text('Toca la cámara para cambiar tu foto',
-                    style:
-                        TextStyle(fontSize: 12, color: AppColores.textoSuave)),
+                Text('Toca la cámara para cambiar tu foto',
+                    style: TextStyle(fontSize: 12, color: m.textoSuave)),
                 if (datos.perfilFotoUrl.isNotEmpty)
                   TextButton.icon(
                     onPressed: subiendoFoto ? null : _eliminarFoto,
-                    icon: const Icon(Icons.delete_outline,
-                        size: 18, color: AppColores.rojo),
-                    label: const Text('Quitar foto',
-                        style: TextStyle(color: AppColores.rojo)),
+                    icon: Icon(Icons.delete_outline, size: 18, color: m.rojo),
+                    label:
+                        Text('Quitar foto', style: TextStyle(color: m.rojo)),
                   ),
               ],
             ),
           ),
           const SizedBox(height: 20),
-
-          // ---- Información personal ----
           Card(
             child: Padding(
               padding: const EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const Text('Información personal',
+                  Text('Información personal',
                       style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: AppColores.texto)),
+                          fontWeight: FontWeight.bold, color: m.texto)),
                   const SizedBox(height: 16),
                   TextField(
                     controller: nombreCtrl,
@@ -418,8 +413,6 @@ class _PantallaPanelUsuarioState extends State<PantallaPanelUsuario> {
             ),
           ),
           const SizedBox(height: 16),
-
-          // ---- Datos de la empresa ----
           Card(
             child: Padding(
               padding: const EdgeInsets.all(20),
@@ -428,16 +421,15 @@ class _PantallaPanelUsuarioState extends State<PantallaPanelUsuario> {
                 children: [
                   Row(
                     children: [
-                      const Expanded(
+                      Expanded(
                         child: Text('Datos de la empresa',
                             style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: AppColores.texto)),
+                                fontWeight: FontWeight.bold, color: m.texto)),
                       ),
                       if (!esDueno)
-                        const Text('Solo lectura',
-                            style: TextStyle(
-                                fontSize: 11, color: AppColores.textoSuave)),
+                        Text('Solo lectura',
+                            style:
+                                TextStyle(fontSize: 11, color: m.textoSuave)),
                     ],
                   ),
                   const SizedBox(height: 16),
@@ -453,16 +445,13 @@ class _PantallaPanelUsuarioState extends State<PantallaPanelUsuario> {
           ),
           if (!esDueno) ...[
             const SizedBox(height: 8),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 4),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
               child: Text('Solo el dueño del negocio puede editar estos datos.',
-                  style:
-                      TextStyle(fontSize: 12, color: AppColores.textoSuave)),
+                  style: TextStyle(fontSize: 12, color: m.textoSuave)),
             ),
           ],
           const SizedBox(height: 16),
-
-          // ---- Cambiar contraseña ----
           OutlinedButton.icon(
             onPressed: () => Navigator.push(
                 context,
@@ -537,21 +526,21 @@ class _PantallaPanelUsuarioState extends State<PantallaPanelUsuario> {
   }
 
   List<Widget> _camposEmpresaLectura(Negocio? negocio) {
+    final m = AppColores.of(context);
     Widget fila(IconData ic, String label, String valor) => Padding(
           padding: const EdgeInsets.symmetric(vertical: 8),
           child: Row(
             children: [
-              Icon(ic, size: 20, color: AppColores.textoSuave),
+              Icon(ic, size: 20, color: m.textoSuave),
               const SizedBox(width: 12),
-              Text(label, style: const TextStyle(color: AppColores.textoSuave)),
+              Text(label, style: TextStyle(color: m.textoSuave)),
               const Spacer(),
               Flexible(
                 child: Text(valor.isEmpty ? '—' : valor,
                     textAlign: TextAlign.right,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                        color: AppColores.texto,
-                        fontWeight: FontWeight.w600)),
+                    style: TextStyle(
+                        color: m.texto, fontWeight: FontWeight.w600)),
               ),
             ],
           ),

@@ -118,11 +118,12 @@ class _PantallaEditorRecetaState extends State<PantallaEditorReceta> {
             ),
           ),
           const SizedBox(height: 8),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 4),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
             child: Text(
               'Escribe cada ingrediente y cada paso en su propia línea (Enter para separar).',
-              style: TextStyle(fontSize: 12, color: AppColores.textoSuave),
+              style:
+                  TextStyle(fontSize: 12, color: AppColores.of(context).textoSuave),
             ),
           ),
           const SizedBox(height: 16),

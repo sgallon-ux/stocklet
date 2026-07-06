@@ -201,19 +201,19 @@ class _PantallaCrearPedidoState extends State<PantallaCrearPedido> {
 
   @override
   Widget build(BuildContext context) {
+    final m = AppColores.of(context);
     final otro = double.tryParse(otroValorCtrl.text) ?? 0;
     final precioItems = items.fold<double>(0, (s, i) => s + i.precioTotal);
     final precioTotal = precioItems + otro;
     final costoTotal = items.fold<double>(0, (s, i) => s + i.costoTotal);
     final ganancia = precioTotal - costoTotal;
-    final gColor = ganancia >= 0 ? AppColores.verde : AppColores.rojo;
+    final gColor = ganancia >= 0 ? m.verde : m.rojo;
 
     return Scaffold(
       appBar: AppBar(title: const Text('Nuevo pedido')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          // Cliente
           Card(
             child: Padding(
               padding: const EdgeInsets.all(20),
@@ -242,13 +242,11 @@ class _PantallaCrearPedidoState extends State<PantallaCrearPedido> {
             ),
           ),
           const SizedBox(height: 20),
-
-          // Ítems
-          const Text('Productos del pedido',
+          Text('Productos del pedido',
               style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: AppColores.texto)),
+                  color: m.texto)),
           const SizedBox(height: 8),
           Row(
             children: [
@@ -271,10 +269,10 @@ class _PantallaCrearPedidoState extends State<PantallaCrearPedido> {
           ),
           const SizedBox(height: 12),
           if (items.isEmpty)
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 8),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
               child: Text('Agrega productos del catálogo o ítems manuales.',
-                  style: TextStyle(color: AppColores.textoSuave)),
+                  style: TextStyle(color: m.textoSuave)),
             )
           else
             ...items.asMap().entries.map((e) {
@@ -286,16 +284,13 @@ class _PantallaCrearPedidoState extends State<PantallaCrearPedido> {
                       style: const TextStyle(fontWeight: FontWeight.w600)),
                   subtitle: Text(pesos(it.precioTotal)),
                   trailing: IconButton(
-                    icon: const Icon(Icons.delete_outline,
-                        color: AppColores.rojo),
+                    icon: Icon(Icons.delete_outline, color: m.rojo),
                     onPressed: () => setState(() => items.removeAt(e.key)),
                   ),
                 ),
               );
             }),
           const SizedBox(height: 16),
-
-          // Otro valor
           TextField(
             controller: otroValorCtrl,
             keyboardType: TextInputType.number,
@@ -306,27 +301,23 @@ class _PantallaCrearPedidoState extends State<PantallaCrearPedido> {
             ),
           ),
           const SizedBox(height: 20),
-
-          // Totales en vivo
           Card(
-            color: AppColores.verde.withValues(alpha: 0.06),
+            color: m.verde.withValues(alpha: 0.06),
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Row(
                 children: [
-                  _tot('Precio', pesos(precioTotal), AppColores.texto),
-                  _tot('Costo', pesos(costoTotal), AppColores.texto),
-                  _tot('Ganancia', pesos(ganancia), gColor),
+                  _tot('Precio', pesos(precioTotal), m.texto, m),
+                  _tot('Costo', pesos(costoTotal), m.texto, m),
+                  _tot('Ganancia', pesos(ganancia), gColor, m),
                 ],
               ),
             ),
           ),
           const SizedBox(height: 16),
-
-          // Fecha
           Card(
             child: ListTile(
-              leading: const Icon(Icons.event, color: AppColores.verde),
+              leading: Icon(Icons.event, color: m.verde),
               title: const Text('Fecha de entrega'),
               subtitle: Text(
                 fechaEntrega == null
@@ -345,13 +336,12 @@ class _PantallaCrearPedidoState extends State<PantallaCrearPedido> {
     );
   }
 
-  Widget _tot(String t, String v, Color c) => Expanded(
+  Widget _tot(String t, String v, Color c, MarcaColores m) => Expanded(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(t,
-                style:
-                    const TextStyle(fontSize: 12, color: AppColores.textoSuave)),
+                style: TextStyle(fontSize: 12, color: m.textoSuave)),
             const SizedBox(height: 2),
             FittedBox(
               fit: BoxFit.scaleDown,

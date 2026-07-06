@@ -134,11 +134,12 @@ class _PantallaCambiarContrasenaState extends State<PantallaCambiarContrasena> {
             ),
           ),
           const SizedBox(height: 8),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 4),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
             child: Text(
                 'La nueva contraseña debe tener al menos 6 caracteres.',
-                style: TextStyle(fontSize: 12, color: AppColores.textoSuave)),
+                style: TextStyle(
+                    fontSize: 12, color: AppColores.of(context).textoSuave)),
           ),
           const SizedBox(height: 16),
           ElevatedButton.icon(

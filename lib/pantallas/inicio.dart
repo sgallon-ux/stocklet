@@ -42,6 +42,7 @@ class PantallaInicio extends StatelessWidget {
           Consumer<DatosApp>(
             builder: (context, datos, child) {
               final n = datos.totalAvisos;
+              final m = AppColores.of(context);
               return Stack(
                 alignment: Alignment.center,
                 children: [
@@ -61,8 +62,8 @@ class PantallaInicio extends StatelessWidget {
                         padding: const EdgeInsets.all(4),
                         constraints:
                             const BoxConstraints(minWidth: 18, minHeight: 18),
-                        decoration: const BoxDecoration(
-                          color: AppColores.rojo,
+                        decoration: BoxDecoration(
+                          color: m.rojo,
                           shape: BoxShape.circle,
                         ),
                         child: Text(

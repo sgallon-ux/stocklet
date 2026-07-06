@@ -27,6 +27,7 @@ class _PanelResumenState extends State<PanelResumen> {
   @override
   Widget build(BuildContext context) {
     final datos = context.watch<DatosApp>();
+    final m = AppColores.of(context);
     final ingresos = datos.ingresosEnRango(_rango);
     final gastos = datos.gastosEnRango(_rango);
     final ganancia = ingresos - gastos;
@@ -37,15 +38,14 @@ class _PanelResumenState extends State<PanelResumen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Encabezado + filtro
             Row(
               children: [
-                const Expanded(
+                Expanded(
                   child: Text('Resumen',
                       style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: AppColores.texto)),
+                          color: m.texto)),
                 ),
                 DropdownButton<RangoTendencia>(
                   value: _rango,
@@ -60,8 +60,6 @@ class _PanelResumenState extends State<PanelResumen> {
               ],
             ),
             const SizedBox(height: 12),
-
-            // Ingresos y Gastos en una fila
             Row(
               children: [
                 Expanded(
@@ -69,11 +67,12 @@ class _PanelResumenState extends State<PanelResumen> {
                     'Ingresos',
                     pesos(ingresos),
                     Icons.trending_up,
-                    AppColores.verde,
+                    m.verde,
                     () => Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (_) => const PantallaHistorialVentas())),
+                    m,
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -82,27 +81,25 @@ class _PanelResumenState extends State<PanelResumen> {
                     'Gastos',
                     pesos(gastos),
                     Icons.trending_down,
-                    AppColores.rojo,
+                    m.rojo,
                     () => Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (_) => const PantallaHistorialGastos())),
+                    m,
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 10),
-
-            // Ganancia debajo, a todo el ancho
             _tile('Ganancia', pesos(ganancia), Icons.account_balance_wallet,
-                const Color(0xFF2563EB), null),
+                const Color(0xFF2563EB), null, m),
             const SizedBox(height: 18),
-
-            const Text('Tendencia de ganancia',
+            Text('Tendencia de ganancia',
                 style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: AppColores.textoSuave)),
+                    color: m.textoSuave)),
             const SizedBox(height: 8),
             GraficaTendencia(rango: _rango),
           ],
@@ -112,7 +109,7 @@ class _PanelResumenState extends State<PanelResumen> {
   }
 
   Widget _tile(String titulo, String valor, IconData icono, Color color,
-      VoidCallback? onTap) {
+      VoidCallback? onTap, MarcaColores m) {
     final contenido = Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -135,8 +132,7 @@ class _PanelResumenState extends State<PanelResumen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(titulo,
-                    style: const TextStyle(
-                        fontSize: 12, color: AppColores.textoSuave)),
+                    style: TextStyle(fontSize: 12, color: m.textoSuave)),
                 const SizedBox(height: 2),
                 FittedBox(
                   fit: BoxFit.scaleDown,
@@ -152,8 +148,7 @@ class _PanelResumenState extends State<PanelResumen> {
             ),
           ),
           if (onTap != null)
-            const Icon(Icons.chevron_right,
-                color: AppColores.textoSuave, size: 18),
+            Icon(Icons.chevron_right, color: m.textoSuave, size: 18),
         ],
       ),
     );

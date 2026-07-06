@@ -12,15 +12,16 @@ class GraficaTendencia extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final datos = context.watch<DatosApp>();
+    final m = AppColores.of(context);
     final puntos = datos.tendenciaGanancia(rango);
-    return SizedBox(height: 200, child: _grafica(puntos));
+    return SizedBox(height: 200, child: _grafica(puntos, m));
   }
 
-  Widget _grafica(List<PuntoTendencia> puntos) {
+  Widget _grafica(List<PuntoTendencia> puntos, MarcaColores m) {
     if (puntos.isEmpty || puntos.every((p) => p.valor == 0)) {
-      return const Center(
+      return Center(
         child: Text('Aún no hay datos suficientes para mostrar.',
-            style: TextStyle(color: AppColores.textoSuave)),
+            style: TextStyle(color: m.textoSuave)),
       );
     }
 
@@ -69,8 +70,7 @@ class GraficaTendencia extends StatelessWidget {
                 return Padding(
                   padding: const EdgeInsets.only(top: 6),
                   child: Text(puntos[i].etiqueta,
-                      style: const TextStyle(
-                          fontSize: 10, color: AppColores.textoSuave)),
+                      style: TextStyle(fontSize: 10, color: m.textoSuave)),
                 );
               },
             ),
@@ -94,13 +94,13 @@ class GraficaTendencia extends StatelessWidget {
             spots: spots,
             isCurved: true,
             preventCurveOverShooting: true,
-            color: AppColores.verde,
+            color: m.verde,
             barWidth: 3,
             isStrokeCapRound: true,
             dotData: FlDotData(show: puntos.length <= 12),
             belowBarData: BarAreaData(
               show: true,
-              color: AppColores.verde.withValues(alpha: 0.12),
+              color: m.verde.withValues(alpha: 0.12),
             ),
           ),
         ],

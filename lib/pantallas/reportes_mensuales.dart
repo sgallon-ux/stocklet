@@ -16,7 +16,7 @@ class PantallaReportesMensuales extends StatefulWidget {
 }
 
 class _PantallaReportesMensualesState extends State<PantallaReportesMensuales> {
-  String? _generando; // clave 'anio-mes' del reporte que se está generando
+  String? _generando;
 
   Future<void> _descargar(ResumenMensual r) async {
     final datos = context.read<DatosApp>();
@@ -46,9 +46,9 @@ class _PantallaReportesMensualesState extends State<PantallaReportesMensuales> {
   @override
   Widget build(BuildContext context) {
     final datos = context.watch<DatosApp>();
+    final m = AppColores.of(context);
     final ahora = DateTime.now();
 
-    // Meses cerrados: todos menos el mes en curso, del más reciente al más viejo.
     final meses = datos.resumenPorMes
         .where((r) => !(r.anio == ahora.year && r.mes == ahora.month))
         .toList()
@@ -60,13 +60,13 @@ class _PantallaReportesMensualesState extends State<PantallaReportesMensuales> {
     return Scaffold(
       appBar: AppBar(title: const Text('Reportes mensuales')),
       body: meses.isEmpty
-          ? const Center(
+          ? Center(
               child: Padding(
-                padding: EdgeInsets.all(32),
+                padding: const EdgeInsets.all(32),
                 child: Text(
                     'Aún no hay meses cerrados para reportar.\nAl terminar el mes actual, aparecerá aquí.',
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: AppColores.textoSuave)),
+                    style: TextStyle(color: m.textoSuave)),
               ),
             )
           : ListView(
@@ -83,22 +83,20 @@ class _PantallaReportesMensualesState extends State<PantallaReportesMensuales> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(r.etiqueta,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      color: AppColores.texto)),
+                                      color: m.texto)),
                               const SizedBox(height: 4),
                               Text(
                                   'Ingresos: ${pesos(r.ingresos)}  ·  Gastos: ${pesos(r.gastos)}',
-                                  style: const TextStyle(
-                                      fontSize: 12,
-                                      color: AppColores.textoSuave)),
+                                  style: TextStyle(
+                                      fontSize: 12, color: m.textoSuave)),
                               Text('Ganancia: ${pesos(r.ganancia)}',
                                   style: TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w600,
-                                      color: r.ganancia >= 0
-                                          ? AppColores.verde
-                                          : AppColores.rojo)),
+                                      color:
+                                          r.ganancia >= 0 ? m.verde : m.rojo)),
                             ],
                           ),
                         ),

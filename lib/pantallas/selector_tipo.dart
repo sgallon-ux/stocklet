@@ -35,6 +35,7 @@ class _DialogoTipoState extends State<_DialogoTipo> {
 
   @override
   Widget build(BuildContext context) {
+    final m = AppColores.of(context);
     return AlertDialog(
       title: const Text('Tipo de producto'),
       content: SizedBox(
@@ -63,25 +64,24 @@ class _DialogoTipoState extends State<_DialogoTipo> {
             const Divider(height: 24),
             ListTile(
               dense: true,
-              leading:
-                  const Icon(Icons.block, color: AppColores.textoSuave),
+              leading: Icon(Icons.block, color: m.textoSuave),
               title: const Text('Sin tipo'),
               onTap: () => Navigator.pop(context, ''),
             ),
             Flexible(
               child: widget.tipos.isEmpty
-                  ? const Padding(
-                      padding: EdgeInsets.all(8),
+                  ? Padding(
+                      padding: const EdgeInsets.all(8),
                       child: Text('Aún no has creado tipos.',
-                          style: TextStyle(color: AppColores.textoSuave)),
+                          style: TextStyle(color: m.textoSuave)),
                     )
                   : ListView(
                       shrinkWrap: true,
                       children: widget.tipos.map((t) {
                         return ListTile(
                           dense: true,
-                          leading: const Icon(Icons.label_outline,
-                              color: AppColores.verde),
+                          leading:
+                              Icon(Icons.label_outline, color: m.verde),
                           title: Text(t),
                           onTap: () => Navigator.pop(context, t),
                         );

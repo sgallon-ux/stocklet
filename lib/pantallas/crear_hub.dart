@@ -11,6 +11,7 @@ class CrearHub extends StatelessWidget {
 
   Widget _item(BuildContext context, IconData icono, String titulo,
       String sub, Widget destino) {
+    final m = AppColores.of(context);
     return Card(
       clipBehavior: Clip.antiAlias,
       child: ListTile(
@@ -22,16 +23,16 @@ class CrearHub extends StatelessWidget {
           width: 44,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: AppColores.verde.withValues(alpha: 0.12),
+            color: m.verde.withValues(alpha: 0.12),
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Icon(icono, color: AppColores.verde),
+          child: Icon(icono, color: m.verde),
         ),
         title: Text(titulo,
-            style: const TextStyle(
-                fontWeight: FontWeight.bold, color: AppColores.texto)),
+            style: TextStyle(
+                fontWeight: FontWeight.bold, color: m.texto)),
         subtitle: Text(sub),
-        trailing: const Icon(Icons.chevron_right, color: AppColores.textoSuave),
+        trailing: Icon(Icons.chevron_right, color: m.textoSuave),
       ),
     );
   }

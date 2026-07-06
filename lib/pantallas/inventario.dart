@@ -99,13 +99,14 @@ class _PantallaInventarioState extends State<PantallaInventario> {
       ),
       body: Consumer<DatosApp>(
         builder: (context, datos, child) {
+          final m = AppColores.of(context);
           if (datos.insumos.isEmpty) {
-            return const Center(
+            return Center(
               child: Padding(
-                padding: EdgeInsets.all(32),
+                padding: const EdgeInsets.all(32),
                 child: Text('Aún no hay insumos.\nAgrega el primero con el botón +',
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: AppColores.textoSuave)),
+                    style: TextStyle(color: m.textoSuave)),
               ),
             );
           }
@@ -142,11 +143,11 @@ class _PantallaInventarioState extends State<PantallaInventario> {
                           width: 44,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
-                            color: AppColores.verde.withValues(alpha: 0.12),
+                            color: m.verde.withValues(alpha: 0.12),
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: const Icon(Icons.category_outlined,
-                              color: AppColores.verde),
+                          child: Icon(Icons.category_outlined,
+                              color: m.verde),
                         ),
                         const SizedBox(width: 12),
                         Expanded(
@@ -156,20 +157,20 @@ class _PantallaInventarioState extends State<PantallaInventario> {
                               Text(insumo.nombre,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      color: AppColores.texto)),
+                                      color: m.texto)),
                               const SizedBox(height: 3),
                               Text(
                                   '${pesos(insumo.costoPorUnidad)} por ${insumo.unidad}',
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                       fontSize: 12,
-                                      color: AppColores.textoSuave)),
+                                      color: m.textoSuave)),
                               Text(
                                   'Stock: ${insumo.stockActual.toStringAsFixed(0)} ${insumo.unidad}',
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                       fontSize: 12,
-                                      color: AppColores.textoSuave)),
+                                      color: m.textoSuave)),
                             ],
                           ),
                         ),

@@ -18,15 +18,16 @@ class PantallaReportes extends StatelessWidget {
       appBar: AppBar(title: const Text('Análisis y reportes')),
       body: Consumer<DatosApp>(
         builder: (context, datos, child) {
-          final resumen = datos.resumenPorMes; // ascendente por fecha
+          final m = AppColores.of(context);
+          final resumen = datos.resumenPorMes;
           if (resumen.isEmpty) {
-            return const Center(
+            return Center(
               child: Padding(
-                padding: EdgeInsets.all(32),
+                padding: const EdgeInsets.all(32),
                 child: Text(
                     'Aún no hay datos para analizar.\nRegistra ventas y gastos para ver tus reportes.',
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: AppColores.textoSuave)),
+                    style: TextStyle(color: m.textoSuave)),
               ),
             );
           }
@@ -44,15 +45,15 @@ class PantallaReportes extends StatelessWidget {
           return ListView(
             padding: const EdgeInsets.all(16),
             children: [
-              _tarjetaGanancia(actual, anterior, crecimiento),
+              _tarjetaGanancia(m, actual, anterior, crecimiento),
               const SizedBox(height: 16),
-              _tarjetaGrafica(resumen),
+              _tarjetaGrafica(m, resumen),
               const SizedBox(height: 16),
               const WidgetTopProductos(),
               const SizedBox(height: 16),
               const WidgetAnalisisVentas(),
               const SizedBox(height: 16),
-              _entradaReportesMensuales(context),
+              _entradaReportesMensuales(context, m),
             ],
           );
         },
@@ -60,9 +61,8 @@ class PantallaReportes extends StatelessWidget {
     );
   }
 
-  // --- Indicador de ganancia + crecimiento ---
-  Widget _tarjetaGanancia(
-      ResumenMensual actual, ResumenMensual? anterior, double? crecimiento) {
+  Widget _tarjetaGanancia(MarcaColores m, ResumenMensual actual,
+      ResumenMensual? anterior, double? crecimiento) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -73,10 +73,9 @@ class PantallaReportes extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text('Ganancia de ${actual.etiqueta}',
-                      style: const TextStyle(
-                          fontSize: 13, color: AppColores.textoSuave)),
+                      style: TextStyle(fontSize: 13, color: m.textoSuave)),
                 ),
-                _badgeCrecimiento(crecimiento),
+                _badgeCrecimiento(m, crecimiento),
               ],
             ),
             const SizedBox(height: 6),
@@ -88,17 +87,14 @@ class PantallaReportes extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
-                  color: actual.ganancia >= 0
-                      ? AppColores.texto
-                      : AppColores.rojo,
+                  color: actual.ganancia >= 0 ? m.texto : m.rojo,
                 ),
               ),
             ),
             if (anterior != null) ...[
               const SizedBox(height: 4),
               Text('Mes anterior (${anterior.etiquetaCorta}): ${pesos(anterior.ganancia)}',
-                  style: const TextStyle(
-                      fontSize: 12, color: AppColores.textoSuave)),
+                  style: TextStyle(fontSize: 12, color: m.textoSuave)),
             ],
           ],
         ),
@@ -106,20 +102,20 @@ class PantallaReportes extends StatelessWidget {
     );
   }
 
-  Widget _badgeCrecimiento(double? pct) {
+  Widget _badgeCrecimiento(MarcaColores m, double? pct) {
     if (pct == null) {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         decoration: BoxDecoration(
-          color: AppColores.textoSuave.withValues(alpha: 0.12),
+          color: m.textoSuave.withValues(alpha: 0.12),
           borderRadius: BorderRadius.circular(20),
         ),
-        child: const Text('— sin comparación',
-            style: TextStyle(fontSize: 12, color: AppColores.textoSuave)),
+        child: Text('— sin comparación',
+            style: TextStyle(fontSize: 12, color: m.textoSuave)),
       );
     }
     final sube = pct >= 0;
-    final color = sube ? AppColores.verde : AppColores.rojo;
+    final color = sube ? m.verde : m.rojo;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
@@ -140,8 +136,7 @@ class PantallaReportes extends StatelessWidget {
     );
   }
 
-  // --- Gráfico de barras (tu lógica, restyled) ---
-  Widget _tarjetaGrafica(List<ResumenMensual> resumen) {
+  Widget _tarjetaGrafica(MarcaColores m, List<ResumenMensual> resumen) {
     final ultimos =
         resumen.length > 6 ? resumen.sublist(resumen.length - 6) : resumen;
 
@@ -158,11 +153,9 @@ class PantallaReportes extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Ganancia por mes',
+            Text('Ganancia por mes',
                 style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: AppColores.texto)),
+                    fontSize: 16, fontWeight: FontWeight.bold, color: m.texto)),
             const SizedBox(height: 16),
             SizedBox(
               height: 240,
@@ -192,9 +185,8 @@ class PantallaReportes extends StatelessWidget {
                           return Padding(
                             padding: const EdgeInsets.only(top: 6),
                             child: Text(ultimos[i].etiquetaCorta,
-                                style: const TextStyle(
-                                    fontSize: 11,
-                                    color: AppColores.textoSuave)),
+                                style: TextStyle(
+                                    fontSize: 11, color: m.textoSuave)),
                           );
                         },
                       ),
@@ -207,9 +199,7 @@ class PantallaReportes extends StatelessWidget {
                       barRods: [
                         BarChartRodData(
                           toY: r.ganancia,
-                          color: r.ganancia >= 0
-                              ? AppColores.verde
-                              : AppColores.rojo,
+                          color: r.ganancia >= 0 ? m.verde : m.rojo,
                           width: 18,
                           borderRadius: const BorderRadius.vertical(
                               top: Radius.circular(4)),
@@ -226,9 +216,7 @@ class PantallaReportes extends StatelessWidget {
     );
   }
 
-  // --- Detalle por mes (temporal; en la Fase D se moverá a "Reportes
-  // mensuales" con la exportación a Excel) ---
-  Widget _entradaReportesMensuales(BuildContext context) {
+  Widget _entradaReportesMensuales(BuildContext context, MarcaColores m) {
     return Card(
       clipBehavior: Clip.antiAlias,
       child: ListTile(
@@ -241,19 +229,16 @@ class PantallaReportes extends StatelessWidget {
           width: 44,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: AppColores.verde.withValues(alpha: 0.12),
+            color: m.verde.withValues(alpha: 0.12),
             borderRadius: BorderRadius.circular(12),
           ),
-          child:
-              const Icon(Icons.description_outlined, color: AppColores.verde),
+          child: Icon(Icons.description_outlined, color: m.verde),
         ),
-        title: const Text('Reportes mensuales',
-            style: TextStyle(
-                fontWeight: FontWeight.bold, color: AppColores.texto)),
+        title: Text('Reportes mensuales',
+            style: TextStyle(fontWeight: FontWeight.bold, color: m.texto)),
         subtitle:
             const Text('Descarga el extracto en PDF de cada mes cerrado'),
-        trailing:
-            const Icon(Icons.chevron_right, color: AppColores.textoSuave),
+        trailing: Icon(Icons.chevron_right, color: m.textoSuave),
       ),
     );
   }

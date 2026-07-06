@@ -48,6 +48,7 @@ class PantallaVerNota extends StatelessWidget {
     }
     final n = existentes.first;
     final f = n.fecha;
+    final m = AppColores.of(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -70,22 +71,20 @@ class PantallaVerNota extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         children: [
           Text(n.asunto,
-              style: const TextStyle(
+              style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
-                  color: AppColores.texto)),
+                  color: m.texto)),
           const SizedBox(height: 6),
           Text(
               n.autorNombre.isEmpty
                   ? '${f.day}/${f.month}/${f.year}'
                   : '${f.day}/${f.month}/${f.year}  ·  Por ${n.autorNombre}',
-              style:
-                  const TextStyle(fontSize: 12, color: AppColores.textoSuave)),
+              style: TextStyle(fontSize: 12, color: m.textoSuave)),
           const Divider(height: 28),
           SelectableText(
             n.contenido.isEmpty ? '(Sin contenido)' : n.contenido,
-            style: const TextStyle(
-                fontSize: 15, height: 1.5, color: AppColores.texto),
+            style: TextStyle(fontSize: 15, height: 1.5, color: m.texto),
           ),
         ],
       ),

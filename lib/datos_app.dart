@@ -70,6 +70,8 @@ class DatosApp extends ChangeNotifier {
   bool notifPedidos = true;
   bool notifNotas = true;
   bool notifInsumos = true;
+  String acentoId = 'verde';
+  String modoTemaId = 'claro'; // 'claro' | 'oscuro' | 'auto'
 
   List<Insumo> insumos = [];
   List<Producto> productos = [];
@@ -195,6 +197,8 @@ Future<void> _cargarNegocioId(String uid) async {
     notifPedidos = prefs.getBool('notifPedidos') ?? true;
     notifNotas = prefs.getBool('notifNotas') ?? true;
     notifInsumos = prefs.getBool('notifInsumos') ?? true;
+    acentoId = prefs.getString('acentoId') ?? 'verde';
+    modoTemaId = prefs.getString('modoTemaId') ?? 'claro';
     notifyListeners();
   }
 
@@ -212,6 +216,20 @@ Future<void> _cargarNegocioId(String uid) async {
       notifInsumos = insumos;
       await prefs.setBool('notifInsumos', insumos);
     }
+    notifyListeners();
+  }
+
+  Future<void> setAcento(String id) async {
+    acentoId = id;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('acentoId', id);
+    notifyListeners();
+  }
+
+  Future<void> setModoTema(String id) async {
+    modoTemaId = id;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('modoTemaId', id);
     notifyListeners();
   }
 

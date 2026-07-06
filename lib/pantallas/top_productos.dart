@@ -12,21 +12,22 @@ class PantallaTopProductos extends StatefulWidget {
 }
 
 class _PantallaTopProductosState extends State<PantallaTopProductos> {
-  DateTime? _mes; // primer día del mes seleccionado
+  DateTime? _mes;
 
   static const _nombresMes = [
     'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
     'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
   ];
 
-  String _label(DateTime m) => '${_nombresMes[m.month - 1]} ${m.year}';
+  String _label(DateTime fecha) =>
+      '${_nombresMes[fecha.month - 1]} ${fecha.year}';
 
   @override
   Widget build(BuildContext context) {
     final datos = context.watch<DatosApp>();
+    final m = AppColores.of(context);
     final meses = datos.mesesConVentasDeProductos();
 
-    // Por defecto: mes actual si tiene ventas; si no, el más reciente.
     DateTime? sel = _mes;
     if (sel == null && meses.isNotEmpty) {
       final ahora = DateTime.now();
@@ -41,12 +42,12 @@ class _PantallaTopProductosState extends State<PantallaTopProductos> {
     return Scaffold(
       appBar: AppBar(title: const Text('Top de productos')),
       body: meses.isEmpty
-          ? const Center(
+          ? Center(
               child: Padding(
-                padding: EdgeInsets.all(32),
+                padding: const EdgeInsets.all(32),
                 child: Text('Aún no hay ventas de productos registradas.',
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: AppColores.textoSuave)),
+                    style: TextStyle(color: m.textoSuave)),
               ),
             )
           : ListView(
@@ -54,8 +55,7 @@ class _PantallaTopProductosState extends State<PantallaTopProductos> {
               children: [
                 Row(
                   children: [
-                    const Text('Mes:',
-                        style: TextStyle(color: AppColores.textoSuave)),
+                    Text('Mes:', style: TextStyle(color: m.textoSuave)),
                     const SizedBox(width: 12),
                     Expanded(
                       child: DropdownButton<DateTime>(
@@ -63,8 +63,8 @@ class _PantallaTopProductosState extends State<PantallaTopProductos> {
                         isExpanded: true,
                         borderRadius: BorderRadius.circular(12),
                         items: meses
-                            .map((m) => DropdownMenuItem(
-                                value: m, child: Text(_label(m))))
+                            .map((mes) => DropdownMenuItem(
+                                value: mes, child: Text(_label(mes))))
                             .toList(),
                         onChanged: (v) => setState(() => _mes = v),
                       ),
@@ -73,10 +73,10 @@ class _PantallaTopProductosState extends State<PantallaTopProductos> {
                 ),
                 const SizedBox(height: 8),
                 if (top.isEmpty)
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 16),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
                     child: Text('No hubo ventas de productos en este mes.',
-                        style: TextStyle(color: AppColores.textoSuave)),
+                        style: TextStyle(color: m.textoSuave)),
                   )
                 else
                   ...top.asMap().entries.map((e) {
@@ -89,22 +89,23 @@ class _PantallaTopProductosState extends State<PantallaTopProductos> {
                           width: 36,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
-                            color: AppColores.verde.withValues(alpha: 0.12),
+                            color: m.verde.withValues(alpha: 0.12),
                             shape: BoxShape.circle,
                           ),
                           child: Text('$puesto',
-                              style: const TextStyle(
+                              style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  color: AppColores.verdeOscuro)),
+                                  color: m.verdeOscuro)),
                         ),
                         title: Text(p.nombre,
-                            style: const TextStyle(fontWeight: FontWeight.w600)),
+                            style:
+                                const TextStyle(fontWeight: FontWeight.w600)),
                         subtitle: Text('Total: ${pesos(p.total)}'),
                         trailing: Text('${p.cantidad}',
-                            style: const TextStyle(
+                            style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
-                                color: AppColores.texto)),
+                                color: m.texto)),
                       ),
                     );
                   }),

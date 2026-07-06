@@ -24,13 +24,14 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
 
   @override
   Widget build(BuildContext context) {
+    final m = AppColores.of(context);
     return Scaffold(
       body: IndexedStack(index: _indice, children: _pantallas),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _indice,
         onDestinationSelected: (i) => setState(() => _indice = i),
-        backgroundColor: Colors.white,
-        indicatorColor: AppColores.verde.withValues(alpha: 0.14),
+        backgroundColor: m.superficie,
+        indicatorColor: m.verde.withValues(alpha: 0.14),
         destinations: const [
           NavigationDestination(
               icon: Icon(Icons.home_outlined),

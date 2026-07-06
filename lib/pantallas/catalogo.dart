@@ -144,17 +144,18 @@ class _PantallaCatalogoState extends State<PantallaCatalogo> {
       ),
       body: Consumer<DatosApp>(
         builder: (context, datos, child) {
+          final m = AppColores.of(context);
           final catalogos = [...datos.catalogos]
             ..sort((a, b) => b.fecha.compareTo(a.fecha));
 
           if (catalogos.isEmpty) {
-            return const Center(
+            return Center(
               child: Padding(
-                padding: EdgeInsets.all(32),
+                padding: const EdgeInsets.all(32),
                 child: Text(
                     'Aún no tienes catálogos.\nSube un PDF con el botón de abajo.',
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: AppColores.textoSuave)),
+                    style: TextStyle(color: m.textoSuave)),
               ),
             );
           }
@@ -171,18 +172,16 @@ class _PantallaCatalogoState extends State<PantallaCatalogo> {
                     width: 44,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: AppColores.rojo.withValues(alpha: 0.10),
+                      color: m.rojo.withValues(alpha: 0.10),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Icon(Icons.picture_as_pdf,
-                        color: AppColores.rojo),
+                    child: Icon(Icons.picture_as_pdf, color: m.rojo),
                   ),
                   title: Text(c.nombre,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: AppColores.texto)),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, color: m.texto)),
                   subtitle: Text('${c.fecha.day}/${c.fecha.month}/${c.fecha.year}'),
                   trailing: PopupMenuButton<String>(
                     onSelected: (op) {

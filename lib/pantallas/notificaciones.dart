@@ -18,7 +18,6 @@ class _PantallaNotificacionesState extends State<PantallaNotificaciones> {
   @override
   void initState() {
     super.initState();
-    // Al abrir, las notas quedan "vistas" (pedidos e insumos siguen).
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<DatosApp>().marcarNotasRevisadas();
     });
@@ -42,6 +41,7 @@ class _PantallaNotificacionesState extends State<PantallaNotificaciones> {
   @override
   Widget build(BuildContext context) {
     final datos = context.watch<DatosApp>();
+    final m = AppColores.of(context);
     final pedidos = datos.avisosPedidos;
     final insumos = datos.avisosInsumos;
     final notas = datos.avisosNotas;
@@ -50,12 +50,12 @@ class _PantallaNotificacionesState extends State<PantallaNotificaciones> {
     return Scaffold(
       appBar: AppBar(title: const Text('Notificaciones')),
       body: vacio
-          ? const Center(
+          ? Center(
               child: Padding(
-                padding: EdgeInsets.all(32),
+                padding: const EdgeInsets.all(32),
                 child: Text('No tienes avisos por ahora. ¡Todo al día!',
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: AppColores.textoSuave)),
+                    style: TextStyle(color: m.textoSuave)),
               ),
             )
           : ListView(
@@ -67,7 +67,7 @@ class _PantallaNotificacionesState extends State<PantallaNotificaciones> {
                     final atrasado = _diasHasta(p.fechaEntrega) < 0;
                     return _aviso(
                       icono: Icons.receipt_long_outlined,
-                      color: atrasado ? AppColores.rojo : const Color(0xFFE08600),
+                      color: atrasado ? m.rojo : const Color(0xFFE08600),
                       titulo: '${p.cliente.nombre} — ${p.descripcion}',
                       detalle:
                           '${_urgencia(p.fechaEntrega)}  ·  ${pesos(p.precio)}',
@@ -81,7 +81,7 @@ class _PantallaNotificacionesState extends State<PantallaNotificaciones> {
                   _titulo('Inventario bajo'),
                   ...insumos.map((i) => _aviso(
                         icono: Icons.inventory_2_outlined,
-                        color: AppColores.rojo,
+                        color: m.rojo,
                         titulo: i.nombre,
                         detalle:
                             'Quedan ${i.stockActual.toStringAsFixed(0)} ${i.unidad} (mínimo ${i.stockMinimo.toStringAsFixed(0)})',
@@ -94,7 +94,7 @@ class _PantallaNotificacionesState extends State<PantallaNotificaciones> {
                   _titulo('Notas nuevas'),
                   ...notas.map((n) => _aviso(
                         icono: Icons.sticky_note_2_outlined,
-                        color: AppColores.verde,
+                        color: m.verde,
                         titulo: n.asunto,
                         detalle: n.autorNombre.isEmpty
                             ? 'Nueva nota'
@@ -108,14 +108,15 @@ class _PantallaNotificacionesState extends State<PantallaNotificaciones> {
     );
   }
 
-  Widget _titulo(String t) => Padding(
-        padding: const EdgeInsets.only(bottom: 8, top: 4),
-        child: Text(t,
-            style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-                color: AppColores.texto)),
-      );
+  Widget _titulo(String t) {
+    final m = AppColores.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8, top: 4),
+      child: Text(t,
+          style: TextStyle(
+              fontSize: 15, fontWeight: FontWeight.bold, color: m.texto)),
+    );
+  }
 
   Widget _aviso({
     required IconData icono,
@@ -124,6 +125,7 @@ class _PantallaNotificacionesState extends State<PantallaNotificaciones> {
     required String detalle,
     required VoidCallback onTap,
   }) {
+    final m = AppColores.of(context);
     return Card(
       clipBehavior: Clip.antiAlias,
       child: ListTile(
@@ -141,11 +143,10 @@ class _PantallaNotificacionesState extends State<PantallaNotificaciones> {
         title: Text(titulo,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-                fontWeight: FontWeight.w600, color: AppColores.texto)),
-        subtitle: Text(detalle,
-            maxLines: 1, overflow: TextOverflow.ellipsis),
-        trailing: const Icon(Icons.chevron_right, color: AppColores.textoSuave),
+            style: TextStyle(fontWeight: FontWeight.w600, color: m.texto)),
+        subtitle:
+            Text(detalle, maxLines: 1, overflow: TextOverflow.ellipsis),
+        trailing: Icon(Icons.chevron_right, color: m.textoSuave),
       ),
     );
   }

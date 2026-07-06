@@ -12,6 +12,7 @@ class WidgetNotas extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<DatosApp>(
       builder: (context, datos, child) {
+        final m = AppColores.of(context);
         final notas = [...datos.notas]
           ..sort((a, b) => b.fecha.compareTo(a.fecha));
 
@@ -23,18 +24,17 @@ class WidgetNotas extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    const Icon(Icons.push_pin_outlined,
-                        size: 20, color: AppColores.verde),
+                    Icon(Icons.push_pin_outlined, size: 20, color: m.verde),
                     const SizedBox(width: 8),
-                    const Expanded(
+                    Expanded(
                       child: Text('Notas importantes',
                           style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: AppColores.texto)),
+                              color: m.texto)),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.add, color: AppColores.verde),
+                      icon: Icon(Icons.add, color: m.verde),
                       tooltip: 'Nueva nota',
                       onPressed: () => Navigator.push(
                           context,
@@ -44,11 +44,11 @@ class WidgetNotas extends StatelessWidget {
                   ],
                 ),
                 if (notas.isEmpty)
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 16),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
                     child: Center(
                       child: Text('No tienes notas. Crea una con el +',
-                          style: TextStyle(color: AppColores.textoSuave)),
+                          style: TextStyle(color: m.textoSuave)),
                     ),
                   )
                 else
@@ -63,19 +63,19 @@ class WidgetNotas extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(vertical: 10),
                         child: Row(
                           children: [
-                            const Icon(Icons.sticky_note_2_outlined,
-                                size: 18, color: AppColores.textoSuave),
+                            Icon(Icons.sticky_note_2_outlined,
+                                size: 18, color: m.textoSuave),
                             const SizedBox(width: 10),
                             Expanded(
                               child: Text(n.asunto,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                      color: AppColores.texto,
+                                  style: TextStyle(
+                                      color: m.texto,
                                       fontWeight: FontWeight.w500)),
                             ),
-                            const Icon(Icons.chevron_right,
-                                size: 18, color: AppColores.textoSuave),
+                            Icon(Icons.chevron_right,
+                                size: 18, color: m.textoSuave),
                           ],
                         ),
                       ),

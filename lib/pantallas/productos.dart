@@ -46,17 +46,18 @@ class PantallaProductos extends StatelessWidget {
       ),
       body: Consumer<DatosApp>(
         builder: (context, datos, child) {
+          final m = AppColores.of(context);
           final productos = [...datos.productos]
             ..sort((a, b) =>
                 a.nombre.toLowerCase().compareTo(b.nombre.toLowerCase()));
 
           if (productos.isEmpty) {
-            return const Center(
+            return Center(
               child: Padding(
-                padding: EdgeInsets.all(32),
+                padding: const EdgeInsets.all(32),
                 child: Text('Aún no tienes productos.\nCrea uno con el botón +',
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: AppColores.textoSuave)),
+                    style: TextStyle(color: m.textoSuave)),
               ),
             );
           }
@@ -64,8 +65,7 @@ class PantallaProductos extends StatelessWidget {
           return ListView(
             padding: const EdgeInsets.all(16),
             children: productos.map((p) {
-              final gananciaColor =
-                  p.ganancia >= 0 ? AppColores.verde : AppColores.rojo;
+              final gananciaColor = p.ganancia >= 0 ? m.verde : m.rojo;
               return Card(
                 clipBehavior: Clip.antiAlias,
                 child: InkWell(
@@ -83,11 +83,11 @@ class PantallaProductos extends StatelessWidget {
                           width: 44,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
-                            color: AppColores.verde.withValues(alpha: 0.12),
+                            color: m.verde.withValues(alpha: 0.12),
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: const Icon(Icons.shopping_bag_outlined,
-                              color: AppColores.verde),
+                          child: Icon(Icons.shopping_bag_outlined,
+                              color: m.verde),
                         ),
                         const SizedBox(width: 12),
                         Expanded(
@@ -97,17 +97,16 @@ class PantallaProductos extends StatelessWidget {
                               Text(p.nombre,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      color: AppColores.texto)),
+                                      color: m.texto)),
                               const SizedBox(height: 2),
                               Text(
                                   p.tipo.trim().isEmpty
                                       ? pesos(p.precioVenta)
                                       : '${p.tipo}  ·  ${pesos(p.precioVenta)}',
-                                  style: const TextStyle(
-                                      fontSize: 12,
-                                      color: AppColores.textoSuave)),
+                                  style: TextStyle(
+                                      fontSize: 12, color: m.textoSuave)),
                               Text('Ganancia: ${pesos(p.ganancia)}',
                                   style: TextStyle(
                                       fontSize: 12,

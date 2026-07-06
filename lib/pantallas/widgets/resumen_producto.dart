@@ -9,18 +9,17 @@ class ResumenProducto extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final m = AppColores.of(context);
     final ganancia = precio - costo;
     final hayPrecio = precio > 0;
     final double margen = hayPrecio ? (ganancia / precio) * 100 : 0.0;
-    final gColor = ganancia >= 0 ? AppColores.verde : AppColores.rojo;
+    final gColor = ganancia >= 0 ? m.verde : m.rojo;
 
     Widget item(String t, String v, Color c) => Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(t,
-                  style: const TextStyle(
-                      fontSize: 12, color: AppColores.textoSuave)),
+              Text(t, style: TextStyle(fontSize: 12, color: m.textoSuave)),
               const SizedBox(height: 2),
               FittedBox(
                 fit: BoxFit.scaleDown,
@@ -34,12 +33,12 @@ class ResumenProducto extends StatelessWidget {
         );
 
     return Card(
-      color: AppColores.verde.withValues(alpha: 0.06),
+      color: m.verde.withValues(alpha: 0.06),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Row(
           children: [
-            item('Costo', pesos(costo), AppColores.texto),
+            item('Costo', pesos(costo), m.texto),
             const SizedBox(width: 8),
             item('Ganancia', pesos(ganancia), gColor),
             const SizedBox(width: 8),

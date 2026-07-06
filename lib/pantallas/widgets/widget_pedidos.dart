@@ -7,7 +7,6 @@ import '../pedidos.dart';
 class WidgetPedidos extends StatelessWidget {
   const WidgetPedidos({super.key});
 
-  // Días entre hoy y la fecha (solo fecha, sin hora)
   static int _diasHasta(DateTime fecha) {
     final hoy = DateTime.now();
     final a = DateTime(hoy.year, hoy.month, hoy.day);
@@ -19,6 +18,7 @@ class WidgetPedidos extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<DatosApp>(
       builder: (context, datos, child) {
+        final m = AppColores.of(context);
         final pendientes = datos.pedidos.where((p) => !p.entregado).toList()
           ..sort((a, b) => a.fechaEntrega.compareTo(b.fechaEntrega));
         final proximos = pendientes.take(3).toList();
@@ -31,15 +31,15 @@ class WidgetPedidos extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    const Icon(Icons.local_shipping_outlined,
-                        size: 20, color: AppColores.verde),
+                    Icon(Icons.local_shipping_outlined,
+                        size: 20, color: m.verde),
                     const SizedBox(width: 8),
-                    const Expanded(
+                    Expanded(
                       child: Text('Pedidos próximos',
                           style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: AppColores.texto)),
+                              color: m.texto)),
                     ),
                     TextButton(
                       onPressed: () => Navigator.push(
@@ -52,11 +52,11 @@ class WidgetPedidos extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 if (pendientes.isEmpty)
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 16),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
                     child: Center(
                       child: Text('No tienes pedidos pendientes.',
-                          style: TextStyle(color: AppColores.textoSuave)),
+                          style: TextStyle(color: m.textoSuave)),
                     ),
                   )
                 else
@@ -66,7 +66,7 @@ class WidgetPedidos extends StatelessWidget {
                     Color color;
                     if (d < 0) {
                       texto = 'Atrasado';
-                      color = AppColores.rojo;
+                      color = m.rojo;
                     } else if (d == 0) {
                       texto = 'Hoy';
                       color = const Color(0xFFE08600);
@@ -75,7 +75,7 @@ class WidgetPedidos extends StatelessWidget {
                       color = const Color(0xFFE08600);
                     } else {
                       texto = 'En $d días';
-                      color = AppColores.textoSuave;
+                      color = m.textoSuave;
                     }
 
                     return Padding(
@@ -101,15 +101,14 @@ class WidgetPedidos extends StatelessWidget {
                                 Text(p.cliente.nombre,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                         fontWeight: FontWeight.w600,
-                                        color: AppColores.texto)),
+                                        color: m.texto)),
                                 Text(p.descripcion,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                        fontSize: 12,
-                                        color: AppColores.textoSuave)),
+                                    style: TextStyle(
+                                        fontSize: 12, color: m.textoSuave)),
                               ],
                             ),
                           ),

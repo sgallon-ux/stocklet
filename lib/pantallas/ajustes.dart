@@ -3,15 +3,16 @@ import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../datos_app.dart';
 import '../tema.dart';
-import 'proximamente.dart';
 import 'panel_usuario.dart';
 import 'ajustes_seguridad.dart';
 import 'notificaciones_config.dart';
+import 'apariencia.dart';
 
 class PantallaAjustes extends StatelessWidget {
   const PantallaAjustes({super.key});
 
   void _confirmarCerrarSesion(BuildContext context) {
+    final m = AppColores.of(context);
     showDialog(
       context: context,
       builder: (dc) => AlertDialog(
@@ -26,7 +27,7 @@ class PantallaAjustes extends StatelessWidget {
               Navigator.pop(dc);
               FirebaseAuth.instance.signOut();
             },
-            style: TextButton.styleFrom(foregroundColor: AppColores.rojo),
+            style: TextButton.styleFrom(foregroundColor: m.rojo),
             child: const Text('Cerrar sesión'),
           ),
         ],
@@ -35,6 +36,7 @@ class PantallaAjustes extends StatelessWidget {
   }
 
   void _acercaDe(BuildContext context) {
+    final m = AppColores.of(context);
     showAboutDialog(
       context: context,
       applicationName: 'Dulce Nota',
@@ -44,10 +46,10 @@ class PantallaAjustes extends StatelessWidget {
         width: 48,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: AppColores.verde.withValues(alpha: 0.12),
+          color: m.verde.withValues(alpha: 0.12),
           borderRadius: BorderRadius.circular(12),
         ),
-        child: const Icon(Icons.storefront, color: AppColores.verde),
+        child: Icon(Icons.storefront, color: m.verde),
       ),
       children: const [
         Padding(
@@ -62,12 +64,14 @@ class PantallaAjustes extends StatelessWidget {
     Navigator.push(context, MaterialPageRoute(builder: (_) => destino));
   }
 
-  Widget _opcion({
+  Widget _opcion(
+    BuildContext context, {
     required IconData icono,
     required String titulo,
     required String subtitulo,
     required VoidCallback onTap,
   }) {
+    final m = AppColores.of(context);
     return ListTile(
       onTap: onTap,
       leading: Container(
@@ -75,22 +79,22 @@ class PantallaAjustes extends StatelessWidget {
         width: 40,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: AppColores.verde.withValues(alpha: 0.12),
+          color: m.verde.withValues(alpha: 0.12),
           borderRadius: BorderRadius.circular(10),
         ),
-        child: Icon(icono, color: AppColores.verde, size: 20),
+        child: Icon(icono, color: m.verde, size: 20),
       ),
       title: Text(titulo,
-          style: const TextStyle(
-              fontWeight: FontWeight.w600, color: AppColores.texto)),
-      subtitle: Text(subtitulo,
-          style: const TextStyle(fontSize: 12, color: AppColores.textoSuave)),
-      trailing: const Icon(Icons.chevron_right, color: AppColores.textoSuave),
+          style: TextStyle(fontWeight: FontWeight.w600, color: m.texto)),
+      subtitle:
+          Text(subtitulo, style: TextStyle(fontSize: 12, color: m.textoSuave)),
+      trailing: Icon(Icons.chevron_right, color: m.textoSuave),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final m = AppColores.of(context);
     final negocio = context.watch<DatosApp>().negocio;
 
     return Scaffold(
@@ -108,29 +112,26 @@ class PantallaAjustes extends StatelessWidget {
                   clipBehavior: Clip.antiAlias,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: AppColores.verde.withValues(alpha: 0.12),
+                    color: m.verde.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: (negocio?.logoUrl ?? '').isEmpty
-                      ? const Icon(Icons.storefront,
-                          color: AppColores.verde, size: 36)
+                      ? Icon(Icons.storefront, color: m.verde, size: 36)
                       : Image.network(
                           negocio!.logoUrl,
                           height: 72,
                           width: 72,
                           fit: BoxFit.contain,
-                          errorBuilder: (_, _, _) => const Icon(
-                              Icons.storefront,
-                              color: AppColores.verde,
-                              size: 36),
+                          errorBuilder: (_, _, _) => Icon(Icons.storefront,
+                              color: m.verde, size: 36),
                         ),
                 ),
                 const SizedBox(height: 12),
                 Text(negocio?.nombre ?? 'Mi negocio',
-                    style: const TextStyle(
+                    style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: AppColores.texto)),
+                        color: m.texto)),
               ],
             ),
           ),
@@ -139,6 +140,7 @@ class PantallaAjustes extends StatelessWidget {
             child: Column(
               children: [
                 _opcion(
+                  context,
                   icono: Icons.person_outline,
                   titulo: 'Perfil',
                   subtitulo: 'Tu información personal',
@@ -146,6 +148,7 @@ class PantallaAjustes extends StatelessWidget {
                 ),
                 const Divider(height: 1),
                 _opcion(
+                  context,
                   icono: Icons.business_outlined,
                   titulo: 'Datos de la empresa',
                   subtitulo: 'Nombre, NIT, contacto y ubicación',
@@ -153,6 +156,7 @@ class PantallaAjustes extends StatelessWidget {
                 ),
                 const Divider(height: 1),
                 _opcion(
+                  context,
                   icono: Icons.notifications_outlined,
                   titulo: 'Notificaciones',
                   subtitulo: 'Avisos de pedidos, notas e inventario',
@@ -161,6 +165,7 @@ class PantallaAjustes extends StatelessWidget {
                 ),
                 const Divider(height: 1),
                 _opcion(
+                  context,
                   icono: Icons.shield_outlined,
                   titulo: 'Ajustes y seguridad',
                   subtitulo: 'País, moneda, idioma y contraseña',
@@ -168,14 +173,15 @@ class PantallaAjustes extends StatelessWidget {
                 ),
                 const Divider(height: 1),
                 _opcion(
+                  context,
                   icono: Icons.palette_outlined,
                   titulo: 'Apariencia',
                   subtitulo: 'Tema y modo oscuro',
-                  onTap: () =>
-                      _ir(context, const PantallaProximamente('Apariencia')),
+                  onTap: () => _ir(context, const PantallaApariencia()),
                 ),
                 const Divider(height: 1),
                 _opcion(
+                  context,
                   icono: Icons.info_outline,
                   titulo: 'Acerca de',
                   subtitulo: 'Versión e información de la app',
@@ -190,8 +196,8 @@ class PantallaAjustes extends StatelessWidget {
             icon: const Icon(Icons.logout),
             label: const Text('Cerrar sesión'),
             style: OutlinedButton.styleFrom(
-              foregroundColor: AppColores.rojo,
-              side: const BorderSide(color: AppColores.rojo),
+              foregroundColor: m.rojo,
+              side: BorderSide(color: m.rojo),
               padding: const EdgeInsets.symmetric(vertical: 14),
             ),
           ),

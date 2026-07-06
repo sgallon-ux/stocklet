@@ -20,17 +20,18 @@ class PantallaRecetas extends StatelessWidget {
       ),
       body: Consumer<DatosApp>(
         builder: (context, datos, child) {
+          final m = AppColores.of(context);
           final recetas = [...datos.recetas]
             ..sort((a, b) =>
                 a.titulo.toLowerCase().compareTo(b.titulo.toLowerCase()));
 
           if (recetas.isEmpty) {
-            return const Center(
+            return Center(
               child: Padding(
-                padding: EdgeInsets.all(32),
+                padding: const EdgeInsets.all(32),
                 child: Text('Aún no tienes recetas.\nCrea una con el botón +',
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: AppColores.textoSuave)),
+                    style: TextStyle(color: m.textoSuave)),
               ),
             );
           }
@@ -50,22 +51,20 @@ class PantallaRecetas extends StatelessWidget {
                     width: 44,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: AppColores.verde.withValues(alpha: 0.12),
+                      color: m.verde.withValues(alpha: 0.12),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Icon(Icons.menu_book_outlined,
-                        color: AppColores.verde),
+                    child: Icon(Icons.menu_book_outlined, color: m.verde),
                   ),
                   title: Text(r.titulo,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: AppColores.texto)),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, color: m.texto)),
                   subtitle: Text(
                       '${r.ingredientes.length} ingredientes · ${r.pasos.length} pasos'),
-                  trailing: const Icon(Icons.chevron_right,
-                      color: AppColores.textoSuave),
+                  trailing:
+                      Icon(Icons.chevron_right, color: m.textoSuave),
                 ),
               );
             }).toList(),

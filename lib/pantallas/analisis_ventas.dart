@@ -18,52 +18,50 @@ class PantallaAnalisisVentas extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final datos = context.watch<DatosApp>();
+    final m = AppColores.of(context);
     final a = datos.analisisVentas();
 
     return Scaffold(
       appBar: AppBar(title: const Text('Análisis de ventas')),
       body: a.numVentas == 0
-          ? const Center(
+          ? Center(
               child: Padding(
-                padding: EdgeInsets.all(32),
+                padding: const EdgeInsets.all(32),
                 child: Text('Aún no hay ventas para analizar.',
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: AppColores.textoSuave)),
+                    style: TextStyle(color: m.textoSuave)),
               ),
             )
           : ListView(
               padding: const EdgeInsets.all(16),
               children: [
-                _ticket(a),
+                _ticket(m, a),
                 const SizedBox(height: 16),
-                _demanda(a),
+                _demanda(m, a),
                 const SizedBox(height: 16),
-                _diaSemana(a),
+                _diaSemana(m, a),
                 const SizedBox(height: 16),
-                _fechasPico(a),
+                _fechasPico(m, a),
               ],
             ),
     );
   }
 
-  // --- Ticket promedio y nº de ventas ---
-  Widget _ticket(AnalisisVentas a) {
+  Widget _ticket(MarcaColores m, AnalisisVentas a) {
     Widget bloque(String t, String v) => Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(t,
-                  style: const TextStyle(
-                      fontSize: 12, color: AppColores.textoSuave)),
+              Text(t, style: TextStyle(fontSize: 12, color: m.textoSuave)),
               const SizedBox(height: 2),
               FittedBox(
                 fit: BoxFit.scaleDown,
                 alignment: Alignment.centerLeft,
                 child: Text(v,
-                    style: const TextStyle(
+                    style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: AppColores.texto)),
+                        color: m.texto)),
               ),
             ],
           ),
@@ -75,11 +73,9 @@ class PantallaAnalisisVentas extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Resumen general',
+            Text('Resumen general',
                 style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: AppColores.texto)),
+                    fontSize: 16, fontWeight: FontWeight.bold, color: m.texto)),
             const SizedBox(height: 12),
             Row(
               children: [
@@ -94,8 +90,7 @@ class PantallaAnalisisVentas extends StatelessWidget {
     );
   }
 
-  // --- Meses de mayor y menor demanda ---
-  Widget _demanda(AnalisisVentas a) {
+  Widget _demanda(MarcaColores m, AnalisisVentas a) {
     final ordenados = [...a.porMes]..sort((x, y) => y.value.compareTo(x.value));
     final mejor = ordenados.first;
     final peor = ordenados.last;
@@ -107,16 +102,12 @@ class PantallaAnalisisVentas extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Demanda por mes',
+            Text('Demanda por mes',
                 style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: AppColores.texto)),
+                    fontSize: 16, fontWeight: FontWeight.bold, color: m.texto)),
             const SizedBox(height: 4),
-            Text(
-                'Más fuerte: ${mejor.key} · Más flojo: ${peor.key}',
-                style: const TextStyle(
-                    fontSize: 12, color: AppColores.textoSuave)),
+            Text('Más fuerte: ${mejor.key} · Más flojo: ${peor.key}',
+                style: TextStyle(fontSize: 12, color: m.textoSuave)),
             const SizedBox(height: 12),
             ...a.porMes.map((e) {
               final frac = (e.value / maxV).clamp(0.0, 1.0);
@@ -128,26 +119,24 @@ class PantallaAnalisisVentas extends StatelessWidget {
                     SizedBox(
                         width: 70,
                         child: Text(e.key,
-                            style: const TextStyle(
-                                fontSize: 12, color: AppColores.textoSuave))),
+                            style:
+                                TextStyle(fontSize: 12, color: m.textoSuave))),
                     Expanded(
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(6),
                         child: LinearProgressIndicator(
                           value: frac,
                           minHeight: 10,
-                          backgroundColor:
-                              AppColores.borde.withValues(alpha: 0.5),
+                          backgroundColor: m.borde.withValues(alpha: 0.5),
                           color: esMejor
-                              ? AppColores.verde
-                              : AppColores.verde.withValues(alpha: 0.45),
+                              ? m.verde
+                              : m.verde.withValues(alpha: 0.45),
                         ),
                       ),
                     ),
                     const SizedBox(width: 8),
                     Text(pesos(e.value),
-                        style: const TextStyle(
-                            fontSize: 11, color: AppColores.textoSuave)),
+                        style: TextStyle(fontSize: 11, color: m.textoSuave)),
                   ],
                 ),
               );
@@ -158,11 +147,10 @@ class PantallaAnalisisVentas extends StatelessWidget {
     );
   }
 
-  // --- Mejor día de la semana ---
-  Widget _diaSemana(AnalisisVentas a) {
+  Widget _diaSemana(MarcaColores m, AnalisisVentas a) {
     final maxV = a.porDiaSemana
         .map((e) => e.value)
-        .fold<double>(0, (m, v) => v > m ? v : m);
+        .fold<double>(0, (mx, v) => v > mx ? v : mx);
     final mejor = [...a.porDiaSemana]..sort((x, y) => y.value.compareTo(x.value));
     final base = maxV <= 0 ? 1 : maxV;
 
@@ -172,18 +160,15 @@ class PantallaAnalisisVentas extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Ventas por día de la semana',
+            Text('Ventas por día de la semana',
                 style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: AppColores.texto)),
+                    fontSize: 16, fontWeight: FontWeight.bold, color: m.texto)),
             const SizedBox(height: 4),
             Text(
                 mejor.first.value > 0
                     ? 'Tu mejor día es el ${_dias[mejor.first.key - 1].toLowerCase()}'
                     : 'Sin datos suficientes',
-                style: const TextStyle(
-                    fontSize: 12, color: AppColores.textoSuave)),
+                style: TextStyle(fontSize: 12, color: m.textoSuave)),
             const SizedBox(height: 12),
             ...a.porDiaSemana.map((e) {
               final frac = (e.value / base).clamp(0.0, 1.0);
@@ -195,26 +180,24 @@ class PantallaAnalisisVentas extends StatelessWidget {
                     SizedBox(
                         width: 70,
                         child: Text(_dias[e.key - 1],
-                            style: const TextStyle(
-                                fontSize: 12, color: AppColores.textoSuave))),
+                            style:
+                                TextStyle(fontSize: 12, color: m.textoSuave))),
                     Expanded(
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(6),
                         child: LinearProgressIndicator(
                           value: frac,
                           minHeight: 10,
-                          backgroundColor:
-                              AppColores.borde.withValues(alpha: 0.5),
+                          backgroundColor: m.borde.withValues(alpha: 0.5),
                           color: esMejor
-                              ? AppColores.verde
-                              : AppColores.verde.withValues(alpha: 0.45),
+                              ? m.verde
+                              : m.verde.withValues(alpha: 0.45),
                         ),
                       ),
                     ),
                     const SizedBox(width: 8),
                     Text(pesos(e.value),
-                        style: const TextStyle(
-                            fontSize: 11, color: AppColores.textoSuave)),
+                        style: TextStyle(fontSize: 11, color: m.textoSuave)),
                   ],
                 ),
               );
@@ -225,22 +208,19 @@ class PantallaAnalisisVentas extends StatelessWidget {
     );
   }
 
-  // --- Fechas pico ---
-  Widget _fechasPico(AnalisisVentas a) {
+  Widget _fechasPico(MarcaColores m, AnalisisVentas a) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Fechas pico',
+            Text('Fechas pico',
                 style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: AppColores.texto)),
+                    fontSize: 16, fontWeight: FontWeight.bold, color: m.texto)),
             const SizedBox(height: 4),
-            const Text('Tus días con más ventas (ahí están tus fechas especiales)',
-                style: TextStyle(fontSize: 12, color: AppColores.textoSuave)),
+            Text('Tus días con más ventas (ahí están tus fechas especiales)',
+                style: TextStyle(fontSize: 12, color: m.textoSuave)),
             const SizedBox(height: 12),
             ...a.fechasPico.asMap().entries.map((e) {
               final puesto = e.key + 1;
@@ -255,26 +235,24 @@ class PantallaAnalisisVentas extends StatelessWidget {
                       width: 28,
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        color: AppColores.verde.withValues(alpha: 0.12),
+                        color: m.verde.withValues(alpha: 0.12),
                         shape: BoxShape.circle,
                       ),
                       child: Text('$puesto',
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.bold,
-                              color: AppColores.verdeOscuro)),
+                              color: m.verdeOscuro)),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
                           '${fecha.day} de ${_nombresMes[fecha.month - 1]} ${fecha.year}',
-                          style: const TextStyle(
-                              fontWeight: FontWeight.w600,
-                              color: AppColores.texto)),
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600, color: m.texto)),
                     ),
                     Text(pesos(valor),
-                        style: const TextStyle(
-                            fontSize: 13, color: AppColores.textoSuave)),
+                        style: TextStyle(fontSize: 13, color: m.textoSuave)),
                   ],
                 ),
               );

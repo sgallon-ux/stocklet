@@ -10,6 +10,7 @@ class WidgetTopProductos extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final datos = context.watch<DatosApp>();
+    final m = AppColores.of(context);
     final ahora = DateTime.now();
     final top = datos.topProductos(ahora.year, ahora.month);
     final primeros = top.take(3).toList();
@@ -22,12 +23,12 @@ class WidgetTopProductos extends StatelessWidget {
           children: [
             Row(
               children: [
-                const Expanded(
+                Expanded(
                   child: Text('Top productos del mes',
                       style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: AppColores.texto)),
+                          color: m.texto)),
                 ),
                 TextButton(
                   onPressed: () => Navigator.push(
@@ -40,20 +41,23 @@ class WidgetTopProductos extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             if (primeros.isEmpty)
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 8),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
                 child: Text('Aún no hay ventas de productos este mes.',
-                    style: TextStyle(color: AppColores.textoSuave)),
+                    style: TextStyle(color: m.textoSuave)),
               )
             else
-              ...primeros.asMap().entries.map((e) => _fila(e.key + 1, e.value)),
+              ...primeros
+                  .asMap()
+                  .entries
+                  .map((e) => _fila(m, e.key + 1, e.value)),
           ],
         ),
       ),
     );
   }
 
-  Widget _fila(int puesto, ProductoVendido p) {
+  Widget _fila(MarcaColores m, int puesto, ProductoVendido p) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
@@ -63,25 +67,25 @@ class WidgetTopProductos extends StatelessWidget {
             width: 28,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: AppColores.verde.withValues(alpha: 0.12),
+              color: m.verde.withValues(alpha: 0.12),
               shape: BoxShape.circle,
             ),
             child: Text('$puesto',
-                style: const TextStyle(
+                style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.bold,
-                    color: AppColores.verdeOscuro)),
+                    color: m.verdeOscuro)),
           ),
           const SizedBox(width: 12),
           Expanded(
             child: Text(p.nombre,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                    fontWeight: FontWeight.w600, color: AppColores.texto)),
+                style: TextStyle(
+                    fontWeight: FontWeight.w600, color: m.texto)),
           ),
           Text('${p.cantidad} vend.',
-              style: const TextStyle(fontSize: 13, color: AppColores.textoSuave)),
+              style: TextStyle(fontSize: 13, color: m.textoSuave)),
         ],
       ),
     );

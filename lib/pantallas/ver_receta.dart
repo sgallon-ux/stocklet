@@ -36,6 +36,7 @@ class PantallaVerReceta extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final datos = context.watch<DatosApp>();
+    final m = AppColores.of(context);
     final existentes = datos.recetas.where((r) => r.id == receta.id).toList();
     if (existentes.isEmpty) {
       return Scaffold(
@@ -68,45 +69,44 @@ class PantallaVerReceta extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         children: [
           Text(r.titulo,
-              style: const TextStyle(
+              style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: AppColores.texto)),
+                  color: m.texto)),
           const SizedBox(height: 20),
           if (r.ingredientes.isNotEmpty) ...[
-            const Text('Ingredientes',
+            Text('Ingredientes',
                 style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: AppColores.verdeOscuro)),
+                    color: m.verdeOscuro)),
             const SizedBox(height: 8),
             ...r.ingredientes.map((ing) => Padding(
                   padding: const EdgeInsets.symmetric(vertical: 3),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.only(top: 6, right: 8),
-                        child: Icon(Icons.circle,
-                            size: 7, color: AppColores.verde),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 6, right: 8),
+                        child: Icon(Icons.circle, size: 7, color: m.verde),
                       ),
                       Expanded(
                         child: Text(ing,
-                            style: const TextStyle(
+                            style: TextStyle(
                                 fontSize: 15,
                                 height: 1.4,
-                                color: AppColores.texto)),
+                                color: m.texto)),
                       ),
                     ],
                   ),
                 )),
             const SizedBox(height: 20),
           ],
-          const Text('Preparación',
+          Text('Preparación',
               style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: AppColores.verdeOscuro)),
+                  color: m.verdeOscuro)),
           const SizedBox(height: 8),
           ...r.pasos.asMap().entries.map((e) {
             final n = e.key + 1;
@@ -120,24 +120,22 @@ class PantallaVerReceta extends StatelessWidget {
                     width: 26,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: AppColores.verde.withValues(alpha: 0.12),
+                      color: m.verde.withValues(alpha: 0.12),
                       shape: BoxShape.circle,
                     ),
                     child: Text('$n',
-                        style: const TextStyle(
+                        style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.bold,
-                            color: AppColores.verdeOscuro)),
+                            color: m.verdeOscuro)),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.only(top: 3),
                       child: Text(e.value,
-                          style: const TextStyle(
-                              fontSize: 15,
-                              height: 1.5,
-                              color: AppColores.texto)),
+                          style: TextStyle(
+                              fontSize: 15, height: 1.5, color: m.texto)),
                     ),
                   ),
                 ],

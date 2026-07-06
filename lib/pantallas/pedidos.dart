@@ -115,13 +115,14 @@ class _PantallaPedidosState extends State<PantallaPedidos> {
       ),
       body: Consumer<DatosApp>(
         builder: (context, datos, child) {
+          final m = AppColores.of(context);
           if (datos.pedidos.isEmpty) {
-            return const Center(
+            return Center(
               child: Padding(
-                padding: EdgeInsets.all(32),
+                padding: const EdgeInsets.all(32),
                 child: Text('Aún no hay pedidos.\nCrea el primero con el botón +',
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: AppColores.textoSuave)),
+                    style: TextStyle(color: m.textoSuave)),
               ),
             );
           }
@@ -140,15 +141,15 @@ class _PantallaPedidosState extends State<PantallaPedidos> {
           return ListView(
             padding: const EdgeInsets.all(16),
             children: [
-              _encabezado('Pendientes', pendientes.length),
+              _encabezado(m, 'Pendientes', pendientes.length),
               if (pendientes.isEmpty)
-                _vacio('No tienes pedidos pendientes.')
+                _vacio(m, 'No tienes pedidos pendientes.')
               else
                 ...pendientes.map((p) => _tarjeta(context, p, 'pendiente')),
               const SizedBox(height: 16),
-              _encabezado('Entregados', entregados.length),
+              _encabezado(m, 'Entregados', entregados.length),
               if (entregados.isEmpty)
-                _vacio('Aún no has entregado pedidos.')
+                _vacio(m, 'Aún no has entregado pedidos.')
               else
                 ...entregados.map((p) => _tarjeta(context, p, 'entregado')),
               if (archivados.isNotEmpty) ...[
@@ -172,32 +173,33 @@ class _PantallaPedidosState extends State<PantallaPedidos> {
     );
   }
 
-  Widget _encabezado(String texto, int n) {
+  Widget _encabezado(MarcaColores m, String texto, int n) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8, top: 4),
       child: Text('$texto ($n)',
-          style: const TextStyle(
+          style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: AppColores.texto)),
+              color: m.texto)),
     );
   }
 
-  Widget _vacio(String texto) {
+  Widget _vacio(MarcaColores m, String texto) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Text(texto, style: const TextStyle(color: AppColores.textoSuave)),
+      child: Text(texto, style: TextStyle(color: m.textoSuave)),
     );
   }
 
   Widget _tarjeta(BuildContext context, Pedido pedido, String tipo) {
+    final m = AppColores.of(context);
     String urg = '';
-    Color urgColor = AppColores.textoSuave;
+    Color urgColor = m.textoSuave;
     if (tipo == 'pendiente') {
       final d = _diasHasta(pedido.fechaEntrega);
       if (d < 0) {
         urg = 'Atrasado';
-        urgColor = AppColores.rojo;
+        urgColor = m.rojo;
       } else if (d == 0) {
         urg = 'Hoy';
         urgColor = const Color(0xFFE08600);
@@ -206,11 +208,11 @@ class _PantallaPedidosState extends State<PantallaPedidos> {
         urgColor = const Color(0xFFE08600);
       } else {
         urg = 'En $d días';
-        urgColor = AppColores.textoSuave;
+        urgColor = m.textoSuave;
       }
     }
 
-    final iconColor = tipo == 'pendiente' ? urgColor : AppColores.verde;
+    final iconColor = tipo == 'pendiente' ? urgColor : m.verde;
     final icono = tipo == 'pendiente' ? Icons.schedule : Icons.check_circle;
 
     final menu = <PopupMenuEntry<String>>[
@@ -247,14 +249,14 @@ class _PantallaPedidosState extends State<PantallaPedidos> {
                       Text(pedido.cliente.nombre,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: AppColores.texto)),
+                              color: m.texto)),
                       Text(pedido.descripcion,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                              fontSize: 12, color: AppColores.textoSuave)),
+                          style: TextStyle(
+                              fontSize: 12, color: m.textoSuave)),
                     ],
                   ),
                 ),
@@ -277,19 +279,18 @@ class _PantallaPedidosState extends State<PantallaPedidos> {
             const SizedBox(height: 10),
             Row(
               children: [
-                const Icon(Icons.event, size: 15, color: AppColores.textoSuave),
+                Icon(Icons.event, size: 15, color: m.textoSuave),
                 const SizedBox(width: 4),
                 Text(
                   '${pedido.fechaEntrega.day}/${pedido.fechaEntrega.month}/${pedido.fechaEntrega.year}',
-                  style: const TextStyle(
-                      fontSize: 12, color: AppColores.textoSuave),
+                  style: TextStyle(fontSize: 12, color: m.textoSuave),
                 ),
                 const SizedBox(width: 10),
                 Text(pesos(pedido.precio),
-                    style: const TextStyle(
+                    style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.bold,
-                        color: AppColores.texto)),
+                        color: m.texto)),
                 const Spacer(),
                 if (tipo == 'pendiente')
                   Text(urg,
@@ -298,15 +299,14 @@ class _PantallaPedidosState extends State<PantallaPedidos> {
                           fontWeight: FontWeight.bold,
                           color: urgColor))
                 else if (tipo == 'entregado')
-                  const Text('Entregado',
+                  Text('Entregado',
                       style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
-                          color: AppColores.verde))
+                          color: m.verde))
                 else
-                  const Text('Archivado',
-                      style: TextStyle(
-                          fontSize: 12, color: AppColores.textoSuave)),
+                  Text('Archivado',
+                      style: TextStyle(fontSize: 12, color: m.textoSuave)),
               ],
             ),
             if (tipo == 'pendiente') ...[

@@ -99,6 +99,7 @@ class _PantallaEditarProductoState extends State<PantallaEditarProducto> {
   @override
   Widget build(BuildContext context) {
     final datos = context.watch<DatosApp>();
+    final m = AppColores.of(context);
     final insumosDisponibles = [...datos.insumos]
       ..sort((a, b) => a.nombre.toLowerCase().compareTo(b.nombre.toLowerCase()));
     final tiposExistentes = (<String>{
@@ -162,17 +163,15 @@ class _PantallaEditarProductoState extends State<PantallaEditarProducto> {
             ),
           ),
           const SizedBox(height: 20),
-
-          const Text('Receta',
+          Text('Receta',
               style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: AppColores.texto)),
+                  color: m.texto)),
           const SizedBox(height: 4),
-          const Text('Agrega los insumos y cantidades que lleva una unidad',
-              style: TextStyle(fontSize: 12, color: AppColores.textoSuave)),
+          Text('Agrega los insumos y cantidades que lleva una unidad',
+              style: TextStyle(fontSize: 12, color: m.textoSuave)),
           const SizedBox(height: 12),
-
           if (insumosDisponibles.isEmpty)
             const Card(
               child: Padding(
@@ -226,12 +225,11 @@ class _PantallaEditarProductoState extends State<PantallaEditarProducto> {
               ),
             ),
           const SizedBox(height: 12),
-
           if (receta.isEmpty)
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 8),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
               child: Text('La receta está vacía.',
-                  style: TextStyle(color: AppColores.textoSuave)),
+                  style: TextStyle(color: m.textoSuave)),
             )
           else
             ...receta.map((ing) {
@@ -243,18 +241,15 @@ class _PantallaEditarProductoState extends State<PantallaEditarProducto> {
                     '${ing.cantidad.toStringAsFixed(0)} ${ing.insumo.unidad}  ·  ${pesos(ing.costo)}',
                   ),
                   trailing: IconButton(
-                    icon: const Icon(Icons.delete_outline,
-                        color: AppColores.rojo),
+                    icon: Icon(Icons.delete_outline, color: m.rojo),
                     onPressed: () => setState(() => receta.remove(ing)),
                   ),
                 ),
               );
             }),
           const SizedBox(height: 20),
-
           ResumenProducto(costo: costoActual, precio: precio),
           const SizedBox(height: 20),
-
           ElevatedButton(
               onPressed: guardarCambios,
               child: const Text('Guardar cambios')),
