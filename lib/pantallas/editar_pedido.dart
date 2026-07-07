@@ -36,7 +36,8 @@ class _PantallaEditarPedidoState extends State<PantallaEditarPedido> {
             nombre: i.nombre,
             cantidad: i.cantidad,
             precioUnitario: i.precioUnitario,
-            costoUnitario: i.costoUnitario))
+            costoUnitario: i.costoUnitario,
+            receta: i.receta))
         .toList();
   }
 
@@ -105,6 +106,10 @@ class _PantallaEditarPedidoState extends State<PantallaEditarPedido> {
           cantidad: cant,
           precioUnitario: prod.precioVenta,
           costoUnitario: prod.costoProduccion(),
+          receta: prod.receta
+              .map((ing) =>
+                  RecetaItem(insumoId: ing.insumo.id, cantidad: ing.cantidad))
+              .toList(),
         )));
   }
 

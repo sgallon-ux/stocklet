@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import '../datos_app.dart';
 import 'ingresar_venta.dart';
 import 'registrar_gasto.dart';
-import 'ajustes.dart';
+import 'panel_usuario.dart';
 import 'widgets/panel_resumen.dart';
 import 'widgets/widget_pedidos.dart';
 import 'widgets/widget_notas.dart';
@@ -21,7 +21,7 @@ class PantallaInicio extends StatelessWidget {
           icon: const Icon(Icons.account_circle_outlined),
           tooltip: 'Panel de usuario',
           onPressed: () => Navigator.push(context,
-              MaterialPageRoute(builder: (_) => const PantallaAjustes())),
+              MaterialPageRoute(builder: (_) => const PantallaPanelUsuario())),
         ),
         title: Builder(
           builder: (context) {
@@ -56,12 +56,12 @@ class PantallaInicio extends StatelessWidget {
                   ),
                   if (n > 0)
                     Positioned(
-                      top: 8,
-                      right: 8,
+                      top: 2,
+                      right: 2,
                       child: Container(
                         padding: const EdgeInsets.all(4),
                         constraints:
-                            const BoxConstraints(minWidth: 18, minHeight: 18),
+                            const BoxConstraints(minWidth: 16, minHeight: 16),
                         decoration: BoxDecoration(
                           color: m.rojo,
                           shape: BoxShape.circle,

@@ -41,6 +41,13 @@ class ProductoVendido {
   ProductoVendido(this.nombre, this.cantidad, this.total);
 }
 
+class LineaCompraInsumo {
+  final Insumo insumo;
+  final double cantidad;
+  final double total;
+  LineaCompraInsumo(this.insumo, this.cantidad, this.total);
+}
+
 class AnalisisVentas {
   final int numVentas;
   final double totalVendido;
@@ -348,19 +355,77 @@ Future<void> _cargarNegocioId(String uid) async {
     notifyListeners();
   }
 
+  // Compra de insumos: repone el stock (promedio ponderado) y registra el gasto.
+  void comprarInsumos({
+    required List<LineaCompraInsumo> lineas,
+    required String descripcion,
+  }) {
+    double totalGasto = 0;
+    for (final l in lineas) {
+      totalGasto += l.total;
+      final insumo = l.insumo;
+      final costoCompraUnit =
+          l.cantidad > 0 ? l.total / l.cantidad : insumo.costoPorUnidad;
+      // Promedio ponderado; el stock viejo negativo no pondera el costo.
+      final viejoPositivo = insumo.stockActual > 0 ? insumo.stockActual : 0.0;
+      final denom = viejoPositivo + l.cantidad;
+      final nuevoCosto = denom > 0
+          ? (viejoPositivo * insumo.costoPorUnidad +
+                  l.cantidad * costoCompraUnit) /
+              denom
+          : insumo.costoPorUnidad;
+      insumo.stockActual = insumo.stockActual + l.cantidad;
+      insumo.costoPorUnidad = nuevoCosto;
+      _col('insumos').doc(insumo.id).set(insumo.toMap());
+    }
+
+    final gasto = Gasto(
+      fecha: DateTime.now(),
+      descripcion: descripcion.trim().isEmpty
+          ? 'Compra de insumos'
+          : descripcion.trim(),
+      categoria: CategoriaGasto.insumos,
+      monto: totalGasto,
+    );
+    gastos.add(gasto);
+    _col('gastos').doc(gasto.id).set(gasto.toMap());
+    notifyListeners();
+  }
+
   void registrarPedido(Pedido pedido) {
     pedidos.add(pedido);
     _col('pedidos').doc(pedido.id).set(pedido.toMap());
     notifyListeners();
   }
 
-  void marcarPedidoEntregado(Pedido pedido) {
+  // Entrega el pedido: descuenta insumos (según la copia de receta de cada
+  // ítem del catálogo) y registra el ingreso. Devuelve los insumos que
+  // quedaron en negativo (para avisar).
+  List<String> marcarPedidoEntregado(Pedido pedido) {
     pedido.entregado = true;
     _col('pedidos').doc(pedido.id).set(pedido.toMap());
 
+    // Acumular cuánto descontar por insumo (sumando todos los ítems).
+    final descuento = <String, double>{};
+    for (final item in pedido.items) {
+      for (final r in item.receta) {
+        descuento[r.insumoId] =
+            (descuento[r.insumoId] ?? 0) + r.cantidad * item.cantidad;
+      }
+    }
+
+    final negativos = <String>[];
+    descuento.forEach((insumoId, cantidad) {
+      final idx = insumos.indexWhere((i) => i.id == insumoId);
+      if (idx == -1) return; // el insumo fue eliminado: no se descuenta
+      final insumo = insumos[idx];
+      insumo.stockActual -= cantidad;
+      _col('insumos').doc(insumo.id).set(insumo.toMap());
+      if (insumo.stockActual < 0) negativos.add(insumo.nombre);
+    });
+
     // El ingreso del pedido se registra como una venta propia: así aparece
-    // en el historial y queda independiente del pedido (archivar/eliminar
-    // el pedido ya no afecta los ingresos).
+    // en el historial y queda independiente del pedido.
     final venta = Venta(
       fecha: DateTime.now(),
       descripcion: 'Pedido: ${pedido.cliente.nombre} — ${pedido.descripcion}',
@@ -372,6 +437,7 @@ Future<void> _cargarNegocioId(String uid) async {
     _col('ventas').doc(venta.id).set(venta.toMap());
 
     notifyListeners();
+    return negativos;
   }
 
   void archivarPedido(Pedido pedido) {

@@ -40,12 +40,13 @@ class _PantallaPedidosState extends State<PantallaPedidos> {
               child: const Text('Cancelar')),
           ElevatedButton(
             onPressed: () {
-              datos.marcarPedidoEntregado(pedido);
+              final negativos = datos.marcarPedidoEntregado(pedido);
               Navigator.pop(dc);
+              final msg = negativos.isEmpty
+                  ? 'Pedido entregado y registrado en ingresos'
+                  : 'Entregado. Stock en negativo: ${negativos.join(', ')}';
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                    content:
-                        Text('Pedido entregado y registrado en ingresos')),
+                SnackBar(content: Text(msg)),
               );
             },
             child: const Text('Entregar'),
