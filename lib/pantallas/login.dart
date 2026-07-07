@@ -86,6 +86,7 @@ class _PantallaLoginState extends State<PantallaLogin> {
 
   @override
   Widget build(BuildContext context) {
+    final m = AppColores.of(context);
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -102,26 +103,25 @@ class _PantallaLoginState extends State<PantallaLogin> {
                     width: 72,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: AppColores.verde.withValues(alpha: 0.12),
+                      color: m.verde.withValues(alpha: 0.12),
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: const Icon(Icons.storefront,
-                        color: AppColores.verde, size: 38),
+                    child: Icon(Icons.storefront, color: m.verde, size: 38),
                   ),
                   const SizedBox(height: 20),
-                  const Text(
+                  Text(
                     'Bienvenido',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         fontSize: 26,
                         fontWeight: FontWeight.bold,
-                        color: AppColores.texto),
+                        color: m.texto),
                   ),
                   const SizedBox(height: 6),
-                  const Text(
+                  Text(
                     'Inicia sesión para gestionar tu negocio',
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 14, color: AppColores.textoSuave),
+                    style: TextStyle(fontSize: 14, color: m.textoSuave),
                   ),
                   const SizedBox(height: 32),
                   Card(
@@ -184,8 +184,8 @@ class _PantallaLoginState extends State<PantallaLogin> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text('¿Eres nuevo?',
-                          style: TextStyle(color: AppColores.textoSuave)),
+                      Text('¿Eres nuevo?',
+                          style: TextStyle(color: m.textoSuave)),
                       TextButton(
                         onPressed: () {
                           Navigator.push(

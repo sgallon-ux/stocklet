@@ -121,8 +121,9 @@ class _PantallaCrearNegocioState extends State<PantallaCrearNegocio> {
     );
   }
 
-  @override
+ @override
   Widget build(BuildContext context) {
+    final m = AppColores.of(context);
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -136,24 +137,23 @@ class _PantallaCrearNegocioState extends State<PantallaCrearNegocio> {
                   Container(
                     height: 72, width: 72, alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: AppColores.verde.withValues(alpha: 0.12),
+                      color: m.verde.withValues(alpha: 0.12),
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: const Icon(Icons.storefront,
-                        color: AppColores.verde, size: 36),
+                    child: Icon(Icons.storefront, color: m.verde, size: 36),
                   ),
                   const SizedBox(height: 20),
-                  const Text('¡Bienvenido!',
+                  Text('¡Bienvenido!',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontSize: 26,
                           fontWeight: FontWeight.bold,
-                          color: AppColores.texto)),
+                          color: m.texto)),
                   const SizedBox(height: 6),
-                  const Text(
+                  Text(
                     'Cuéntanos de tu microempresa para personalizar la app',
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 14, color: AppColores.textoSuave),
+                    style: TextStyle(fontSize: 14, color: m.textoSuave),
                   ),
                   const SizedBox(height: 28),
                   Card(

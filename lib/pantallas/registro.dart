@@ -54,6 +54,7 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
 
   @override
   Widget build(BuildContext context) {
+    final m = AppColores.of(context);
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -71,26 +72,26 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
                     width: 72,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: AppColores.verde.withValues(alpha: 0.12),
+                      color: m.verde.withValues(alpha: 0.12),
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: const Icon(Icons.person_add_alt_1,
-                        color: AppColores.verde, size: 36),
+                    child: Icon(Icons.person_add_alt_1,
+                        color: m.verde, size: 36),
                   ),
                   const SizedBox(height: 20),
-                  const Text(
+                  Text(
                     'Crea tu cuenta',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         fontSize: 26,
                         fontWeight: FontWeight.bold,
-                        color: AppColores.texto),
+                        color: m.texto),
                   ),
                   const SizedBox(height: 6),
-                  const Text(
+                  Text(
                     'Regístrate para empezar con tu negocio',
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 14, color: AppColores.textoSuave),
+                    style: TextStyle(fontSize: 14, color: m.textoSuave),
                   ),
                   const SizedBox(height: 32),
 
@@ -147,8 +148,8 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text('¿Ya tienes cuenta?',
-                          style: TextStyle(color: AppColores.textoSuave)),
+                      Text('¿Ya tienes cuenta?',
+                          style: TextStyle(color: m.textoSuave)),
                       TextButton(
                         onPressed: () => Navigator.pop(context),
                         child: const Text('Inicia sesión'),
