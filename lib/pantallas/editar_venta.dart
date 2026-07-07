@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../datos_app.dart';
 import '../models/venta.dart';
 
@@ -33,13 +34,14 @@ class _PantallaEditarVentaState extends State<PantallaEditarVenta> {
   }
 
   void guardar() {
+    final t = AppLocalizations.of(context)!;
     final descripcion = descripcionCtrl.text.trim();
     final cantidad = int.tryParse(cantidadCtrl.text) ?? 0;
     final precio = double.tryParse(precioCtrl.text) ?? 0;
 
     if (descripcion.isEmpty || cantidad <= 0 || precio <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Revisa los campos: valores válidos y mayores a cero')),
+        SnackBar(content: Text(t.revisaCamposMayorCero)),
       );
       return;
     }
@@ -56,8 +58,9 @@ class _PantallaEditarVentaState extends State<PantallaEditarVenta> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Editar venta')),
+      appBar: AppBar(title: Text(t.editarVentaTitulo)),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -65,22 +68,24 @@ class _PantallaEditarVentaState extends State<PantallaEditarVenta> {
           children: [
             TextField(
               controller: descripcionCtrl,
-              decoration: const InputDecoration(labelText: 'Descripción'),
+              decoration: InputDecoration(labelText: t.descripcion),
             ),
             const SizedBox(height: 16),
             TextField(
               controller: cantidadCtrl,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(labelText: 'Cantidad'),
+              decoration: InputDecoration(labelText: t.cantidad),
             ),
             const SizedBox(height: 16),
             TextField(
               controller: precioCtrl,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(labelText: 'Precio unitario', prefixText: '\$ '),
+              decoration: InputDecoration(
+                  labelText: t.precioUnitario, prefixText: '\$ '),
             ),
             const SizedBox(height: 24),
-            ElevatedButton(onPressed: guardar, child: const Text('Guardar cambios')),
+            ElevatedButton(
+                onPressed: guardar, child: Text(t.guardarCambios)),
           ],
         ),
       ),

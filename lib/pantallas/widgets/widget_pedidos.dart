@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../../datos_app.dart';
 import '../../tema.dart';
 import '../pedidos.dart';
@@ -19,6 +20,7 @@ class WidgetPedidos extends StatelessWidget {
     return Consumer<DatosApp>(
       builder: (context, datos, child) {
         final m = AppColores.of(context);
+        final t = AppLocalizations.of(context)!;
         final pendientes = datos.pedidos.where((p) => !p.entregado).toList()
           ..sort((a, b) => a.fechaEntrega.compareTo(b.fechaEntrega));
         final proximos = pendientes.take(3).toList();
@@ -35,7 +37,7 @@ class WidgetPedidos extends StatelessWidget {
                         size: 20, color: m.verde),
                     const SizedBox(width: 8),
                     Expanded(
-                      child: Text('Pedidos próximos',
+                      child: Text(t.pedidosProximos,
                           style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -46,7 +48,7 @@ class WidgetPedidos extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                               builder: (_) => const PantallaPedidos())),
-                      child: const Text('Ver todos'),
+                      child: Text(t.verTodos),
                     ),
                   ],
                 ),
@@ -55,7 +57,7 @@ class WidgetPedidos extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     child: Center(
-                      child: Text('No tienes pedidos pendientes.',
+                      child: Text(t.sinPedidosPendientes,
                           style: TextStyle(color: m.textoSuave)),
                     ),
                   )
@@ -65,16 +67,16 @@ class WidgetPedidos extends StatelessWidget {
                     String texto;
                     Color color;
                     if (d < 0) {
-                      texto = 'Atrasado';
+                      texto = t.pedidoAtrasado;
                       color = m.rojo;
                     } else if (d == 0) {
-                      texto = 'Hoy';
+                      texto = t.hoy;
                       color = const Color(0xFFE08600);
                     } else if (d == 1) {
-                      texto = 'Mañana';
+                      texto = t.manana;
                       color = const Color(0xFFE08600);
                     } else {
-                      texto = 'En $d días';
+                      texto = t.enDias(d);
                       color = m.textoSuave;
                     }
 

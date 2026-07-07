@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../tema.dart';
 import 'inicio.dart';
 import 'crear_hub.dart';
@@ -25,6 +26,7 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
   @override
   Widget build(BuildContext context) {
     final m = AppColores.of(context);
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
       body: IndexedStack(index: _indice, children: _pantallas),
       bottomNavigationBar: NavigationBar(
@@ -32,23 +34,23 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
         onDestinationSelected: (i) => setState(() => _indice = i),
         backgroundColor: m.superficie,
         indicatorColor: m.verde.withValues(alpha: 0.14),
-        destinations: const [
+        destinations: [
           NavigationDestination(
-              icon: Icon(Icons.home_outlined),
-              selectedIcon: Icon(Icons.home),
-              label: 'Inicio'),
+              icon: const Icon(Icons.home_outlined),
+              selectedIcon: const Icon(Icons.home),
+              label: t.navInicio),
           NavigationDestination(
-              icon: Icon(Icons.add_box_outlined),
-              selectedIcon: Icon(Icons.add_box),
-              label: 'Crear'),
+              icon: const Icon(Icons.add_box_outlined),
+              selectedIcon: const Icon(Icons.add_box),
+              label: t.navCrear),
           NavigationDestination(
-              icon: Icon(Icons.bar_chart_outlined),
-              selectedIcon: Icon(Icons.bar_chart),
-              label: 'Reportes'),
+              icon: const Icon(Icons.bar_chart_outlined),
+              selectedIcon: const Icon(Icons.bar_chart),
+              label: t.navReportes),
           NavigationDestination(
-              icon: Icon(Icons.settings_outlined),
-              selectedIcon: Icon(Icons.settings),
-              label: 'Ajustes'),
+              icon: const Icon(Icons.settings_outlined),
+              selectedIcon: const Icon(Icons.settings),
+              label: t.ajustesTitulo),
         ],
       ),
     );

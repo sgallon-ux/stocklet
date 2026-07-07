@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../datos_app.dart';
 import '../models/pedido.dart';
 import '../models/item_pedido.dart';
@@ -60,27 +61,28 @@ class _PantallaEditarPedidoState extends State<PantallaEditarPedido> {
   }
 
   Future<int?> _pedirCantidad() async {
+    final t = AppLocalizations.of(context)!;
     final ctrl = TextEditingController(text: '1');
     final r = await showDialog<int>(
       context: context,
       builder: (dc) => AlertDialog(
-        title: const Text('Cantidad'),
+        title: Text(t.cantidad),
         content: TextField(
           controller: ctrl,
           autofocus: true,
           keyboardType: TextInputType.number,
-          decoration: const InputDecoration(labelText: 'Cantidad'),
+          decoration: InputDecoration(labelText: t.cantidad),
         ),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(dc),
-              child: const Text('Cancelar')),
+              child: Text(t.cancelar)),
           ElevatedButton(
             onPressed: () {
               final n = int.tryParse(ctrl.text) ?? 0;
               Navigator.pop(dc, n > 0 ? n : 1);
             },
-            child: const Text('Agregar'),
+            child: Text(t.agregar),
           ),
         ],
       ),
@@ -90,10 +92,11 @@ class _PantallaEditarPedidoState extends State<PantallaEditarPedido> {
   }
 
   Future<void> _agregarDelCatalogo() async {
+    final t = AppLocalizations.of(context)!;
     final productos = [...context.read<DatosApp>().productos];
     if (productos.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Aún no tienes productos creados')),
+        SnackBar(content: Text(t.sinProductosCreados)),
       );
       return;
     }
@@ -114,6 +117,7 @@ class _PantallaEditarPedidoState extends State<PantallaEditarPedido> {
   }
 
   Future<void> _agregarManual() async {
+    final t = AppLocalizations.of(context)!;
     final nombreCtrl = TextEditingController();
     final precioCtrl = TextEditingController();
     final costoCtrl = TextEditingController();
@@ -121,7 +125,7 @@ class _PantallaEditarPedidoState extends State<PantallaEditarPedido> {
     final item = await showDialog<ItemPedido>(
       context: context,
       builder: (dc) => AlertDialog(
-        title: const Text('Ítem manual'),
+        title: Text(t.itemManual),
         content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -129,31 +133,30 @@ class _PantallaEditarPedidoState extends State<PantallaEditarPedido> {
               TextField(
                   controller: nombreCtrl,
                   textCapitalization: TextCapitalization.sentences,
-                  decoration: const InputDecoration(labelText: 'Descripción')),
+                  decoration: InputDecoration(labelText: t.descripcion)),
               const SizedBox(height: 8),
               TextField(
                   controller: precioCtrl,
                   keyboardType: TextInputType.number,
-                  decoration:
-                      const InputDecoration(labelText: 'Precio unitario')),
+                  decoration: InputDecoration(labelText: t.precioUnitario)),
               const SizedBox(height: 8),
               TextField(
                   controller: costoCtrl,
                   keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                      labelText: 'Costo unitario (opcional)')),
+                  decoration:
+                      InputDecoration(labelText: t.costoUnitarioOpcional)),
               const SizedBox(height: 8),
               TextField(
                   controller: cantCtrl,
                   keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(labelText: 'Cantidad')),
+                  decoration: InputDecoration(labelText: t.cantidad)),
             ],
           ),
         ),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(dc),
-              child: const Text('Cancelar')),
+              child: Text(t.cancelar)),
           ElevatedButton(
             onPressed: () {
               final nombre = nombreCtrl.text.trim();
@@ -169,7 +172,7 @@ class _PantallaEditarPedidoState extends State<PantallaEditarPedido> {
                       precioUnitario: precio,
                       costoUnitario: costo));
             },
-            child: const Text('Agregar'),
+            child: Text(t.agregar),
           ),
         ],
       ),
@@ -182,6 +185,7 @@ class _PantallaEditarPedidoState extends State<PantallaEditarPedido> {
   }
 
   void guardar() {
+    final t = AppLocalizations.of(context)!;
     final nombre = clienteNombreCtrl.text.trim();
     final telefono = clienteTelefonoCtrl.text.trim();
     final otro = double.tryParse(otroValorCtrl.text) ?? 0;
@@ -191,15 +195,14 @@ class _PantallaEditarPedidoState extends State<PantallaEditarPedido> {
 
     if (nombre.isEmpty || precioTotal <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Falta el cliente o al menos un ítem (o valor)')),
+        SnackBar(content: Text(t.faltaClienteItem)),
       );
       return;
     }
 
     final partes = items.map((i) => '${i.cantidad}x ${i.nombre}').toList();
-    if (otro > 0) partes.add('Otro valor');
-    final descripcion = partes.isEmpty ? 'Pedido' : partes.join(', ');
+    if (otro > 0) partes.add(t.otroValorItem);
+    final descripcion = partes.isEmpty ? t.pedidoFallback : partes.join(', ');
 
     context.read<DatosApp>().editarPedido(
           widget.pedido,
@@ -218,6 +221,7 @@ class _PantallaEditarPedidoState extends State<PantallaEditarPedido> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     final m = AppColores.of(context);
     final otro = double.tryParse(otroValorCtrl.text) ?? 0;
     final precioItems = items.fold<double>(0, (s, i) => s + i.precioTotal);
@@ -227,7 +231,7 @@ class _PantallaEditarPedidoState extends State<PantallaEditarPedido> {
     final gColor = ganancia >= 0 ? m.verde : m.rojo;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Editar pedido')),
+      appBar: AppBar(title: Text(t.editarPedidoTitulo)),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -235,7 +239,7 @@ class _PantallaEditarPedidoState extends State<PantallaEditarPedido> {
             Padding(
               padding: const EdgeInsets.only(bottom: 12),
               child: Text(
-                'Este pedido ya fue entregado. Editarlo no cambia el ingreso ya registrado.',
+                t.editarPedidoEntregado,
                 style: TextStyle(fontSize: 12, color: m.textoSuave),
               ),
             ),
@@ -248,18 +252,18 @@ class _PantallaEditarPedidoState extends State<PantallaEditarPedido> {
                   TextField(
                     controller: clienteNombreCtrl,
                     textCapitalization: TextCapitalization.words,
-                    decoration: const InputDecoration(
-                      labelText: 'Nombre del cliente',
-                      prefixIcon: Icon(Icons.person_outline),
+                    decoration: InputDecoration(
+                      labelText: t.nombreCliente,
+                      prefixIcon: const Icon(Icons.person_outline),
                     ),
                   ),
                   const SizedBox(height: 16),
                   TextField(
                     controller: clienteTelefonoCtrl,
                     keyboardType: TextInputType.phone,
-                    decoration: const InputDecoration(
-                      labelText: 'Teléfono (opcional)',
-                      prefixIcon: Icon(Icons.phone_outlined),
+                    decoration: InputDecoration(
+                      labelText: t.telefonoOpcional,
+                      prefixIcon: const Icon(Icons.phone_outlined),
                     ),
                   ),
                 ],
@@ -267,7 +271,7 @@ class _PantallaEditarPedidoState extends State<PantallaEditarPedido> {
             ),
           ),
           const SizedBox(height: 20),
-          Text('Productos del pedido',
+          Text(t.productosDelPedido,
               style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -279,7 +283,7 @@ class _PantallaEditarPedidoState extends State<PantallaEditarPedido> {
                 child: OutlinedButton.icon(
                   onPressed: _agregarDelCatalogo,
                   icon: const Icon(Icons.shopping_bag_outlined),
-                  label: const Text('Del catálogo'),
+                  label: Text(t.delCatalogo),
                 ),
               ),
               const SizedBox(width: 8),
@@ -287,7 +291,7 @@ class _PantallaEditarPedidoState extends State<PantallaEditarPedido> {
                 child: OutlinedButton.icon(
                   onPressed: _agregarManual,
                   icon: const Icon(Icons.edit_outlined),
-                  label: const Text('Manual'),
+                  label: Text(t.manual),
                 ),
               ),
             ],
@@ -296,7 +300,7 @@ class _PantallaEditarPedidoState extends State<PantallaEditarPedido> {
           if (items.isEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Text('Sin ítems. Agrega del catálogo o manuales.',
+              child: Text(t.sinItemsEditar,
                   style: TextStyle(color: m.textoSuave)),
             )
           else
@@ -320,9 +324,9 @@ class _PantallaEditarPedidoState extends State<PantallaEditarPedido> {
             controller: otroValorCtrl,
             keyboardType: TextInputType.number,
             onChanged: (_) => setState(() {}),
-            decoration: const InputDecoration(
-              labelText: 'Otro valor (domicilio, servicios...)',
-              prefixIcon: Icon(Icons.add_road),
+            decoration: InputDecoration(
+              labelText: t.otroValorLabel,
+              prefixIcon: const Icon(Icons.add_road),
             ),
           ),
           const SizedBox(height: 20),
@@ -332,9 +336,9 @@ class _PantallaEditarPedidoState extends State<PantallaEditarPedido> {
               padding: const EdgeInsets.all(16),
               child: Row(
                 children: [
-                  _tot('Precio', pesos(precioTotal), m.texto, m),
-                  _tot('Costo', pesos(costoTotal), m.texto, m),
-                  _tot('Ganancia', pesos(ganancia), gColor, m),
+                  _tot(t.precio, pesos(precioTotal), m.texto, m),
+                  _tot(t.costo, pesos(costoTotal), m.texto, m),
+                  _tot(t.ganancia, pesos(ganancia), gColor, m),
                 ],
               ),
             ),
@@ -343,26 +347,26 @@ class _PantallaEditarPedidoState extends State<PantallaEditarPedido> {
           Card(
             child: ListTile(
               leading: Icon(Icons.event, color: m.verde),
-              title: const Text('Fecha de entrega'),
+              title: Text(t.fechaEntrega),
               subtitle: Text(
                   '${fechaEntrega.day}/${fechaEntrega.month}/${fechaEntrega.year}'),
               trailing: TextButton(
-                  onPressed: elegirFecha, child: const Text('Cambiar')),
+                  onPressed: elegirFecha, child: Text(t.cambiar)),
             ),
           ),
           const SizedBox(height: 24),
           ElevatedButton(
-              onPressed: guardar, child: const Text('Guardar cambios')),
+              onPressed: guardar, child: Text(t.guardarCambios)),
         ],
       ),
     );
   }
 
-  Widget _tot(String t, String v, Color c, MarcaColores m) => Expanded(
+  Widget _tot(String label, String v, Color c, MarcaColores m) => Expanded(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(t,
+            Text(label,
                 style: TextStyle(fontSize: 12, color: m.textoSuave)),
             const SizedBox(height: 2),
             FittedBox(

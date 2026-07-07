@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../datos_app.dart';
 import 'ingresar_venta.dart';
 import 'registrar_gasto.dart';
@@ -15,11 +16,12 @@ class PantallaInicio extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.account_circle_outlined),
-          tooltip: 'Panel de usuario',
+          tooltip: t.panelUsuario,
           onPressed: () => Navigator.push(context,
               MaterialPageRoute(builder: (_) => const PantallaPanelUsuario())),
         ),
@@ -28,13 +30,13 @@ class PantallaInicio extends StatelessWidget {
             final negocio = context.watch<DatosApp>().negocio;
             final logo = negocio?.logoUrl ?? '';
             return logo.isEmpty
-                ? Text(negocio?.nombre ?? 'Mi negocio')
+                ? Text(negocio?.nombre ?? t.miNegocio)
                 : Image.network(
                     logo,
                     height: 36,
                     fit: BoxFit.contain,
                     errorBuilder: (_, _, _) =>
-                        Text(negocio?.nombre ?? 'Mi negocio'),
+                        Text(negocio?.nombre ?? t.miNegocio),
                   );
           },
         ),
@@ -48,7 +50,7 @@ class PantallaInicio extends StatelessWidget {
                 children: [
                   IconButton(
                     icon: const Icon(Icons.notifications_outlined),
-                    tooltip: 'Notificaciones',
+                    tooltip: t.notificaciones,
                     onPressed: () => Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -82,10 +84,10 @@ class PantallaInicio extends StatelessWidget {
           ),
           IconButton(
             icon: const Icon(Icons.search),
-            tooltip: 'Buscar',
+            tooltip: t.buscar,
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Búsqueda próximamente')),
+                SnackBar(content: Text(t.busquedaProximamente)),
               );
             },
           ),
@@ -107,7 +109,7 @@ class PantallaInicio extends StatelessWidget {
                       MaterialPageRoute(
                           builder: (_) => const PantallaIngresarVenta())),
                   icon: const Icon(Icons.add),
-                  label: const Text('Agregar venta'),
+                  label: Text(t.agregarVenta),
                 ),
               ),
               const SizedBox(width: 10),
@@ -118,7 +120,7 @@ class PantallaInicio extends StatelessWidget {
                       MaterialPageRoute(
                           builder: (_) => const PantallaRegistrarGasto())),
                   icon: const Icon(Icons.add),
-                  label: const Text('Agregar gasto'),
+                  label: Text(t.agregarGasto),
                 ),
               ),
             ],

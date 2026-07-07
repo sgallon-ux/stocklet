@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../datos_app.dart';
 import '../tema.dart';
 import '../formato.dart';
@@ -30,16 +31,17 @@ class _PantallaNotificacionesState extends State<PantallaNotificaciones> {
     return b.difference(a).inDays;
   }
 
-  static String _urgencia(DateTime f) {
+  String _urgencia(AppLocalizations t, DateTime f) {
     final d = _diasHasta(f);
-    if (d < 0) return 'Atrasado';
-    if (d == 0) return 'Entrega hoy';
-    if (d == 1) return 'Entrega mañana';
-    return 'En $d días';
+    if (d < 0) return t.pedidoAtrasado;
+    if (d == 0) return t.entregaHoy;
+    if (d == 1) return t.entregaManana;
+    return t.enDias(d);
   }
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     final datos = context.watch<DatosApp>();
     final m = AppColores.of(context);
     final pedidos = datos.avisosPedidos;
@@ -48,12 +50,12 @@ class _PantallaNotificacionesState extends State<PantallaNotificaciones> {
     final vacio = pedidos.isEmpty && insumos.isEmpty && notas.isEmpty;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Notificaciones')),
+      appBar: AppBar(title: Text(t.notificaciones)),
       body: vacio
           ? Center(
               child: Padding(
                 padding: const EdgeInsets.all(32),
-                child: Text('No tienes avisos por ahora. ¡Todo al día!',
+                child: Text(t.sinAvisos,
                     textAlign: TextAlign.center,
                     style: TextStyle(color: m.textoSuave)),
               ),
@@ -62,15 +64,15 @@ class _PantallaNotificacionesState extends State<PantallaNotificaciones> {
               padding: const EdgeInsets.all(16),
               children: [
                 if (pedidos.isNotEmpty) ...[
-                  _titulo('Pedidos próximos'),
+                  _titulo(t.pedidosProximos),
                   ...pedidos.map((p) {
                     final atrasado = _diasHasta(p.fechaEntrega) < 0;
                     return _aviso(
                       icono: Icons.receipt_long_outlined,
                       color: atrasado ? m.rojo : const Color(0xFFE08600),
                       titulo: '${p.cliente.nombre} — ${p.descripcion}',
-                      detalle:
-                          '${_urgencia(p.fechaEntrega)}  ·  ${pesos(p.precio)}',
+                      detalle: t.avisoPedidoDetalle(
+                          _urgencia(t, p.fechaEntrega), pesos(p.precio)),
                       onTap: () => Navigator.push(context,
                           MaterialPageRoute(builder: (_) => const PantallaPedidos())),
                     );
@@ -78,27 +80,29 @@ class _PantallaNotificacionesState extends State<PantallaNotificaciones> {
                   const SizedBox(height: 8),
                 ],
                 if (insumos.isNotEmpty) ...[
-                  _titulo('Inventario bajo'),
+                  _titulo(t.inventarioBajo),
                   ...insumos.map((i) => _aviso(
                         icono: Icons.inventory_2_outlined,
                         color: m.rojo,
                         titulo: i.nombre,
-                        detalle:
-                            'Quedan ${i.stockActual.toStringAsFixed(0)} ${i.unidad} (mínimo ${i.stockMinimo.toStringAsFixed(0)})',
+                        detalle: t.insumoBajoDetalle(
+                            i.stockActual.toStringAsFixed(0),
+                            i.unidad,
+                            i.stockMinimo.toStringAsFixed(0)),
                         onTap: () => Navigator.push(context,
                             MaterialPageRoute(builder: (_) => const PantallaInventario())),
                       )),
                   const SizedBox(height: 8),
                 ],
                 if (notas.isNotEmpty) ...[
-                  _titulo('Notas nuevas'),
+                  _titulo(t.notasNuevas),
                   ...notas.map((n) => _aviso(
                         icono: Icons.sticky_note_2_outlined,
                         color: m.verde,
                         titulo: n.asunto,
                         detalle: n.autorNombre.isEmpty
-                            ? 'Nueva nota'
-                            : 'Por ${n.autorNombre}',
+                            ? t.nuevaNota
+                            : t.porAutor(n.autorNombre),
                         onTap: () => Navigator.push(context,
                             MaterialPageRoute(builder: (_) => PantallaVerNota(nota: n))),
                       )),
@@ -108,11 +112,11 @@ class _PantallaNotificacionesState extends State<PantallaNotificaciones> {
     );
   }
 
-  Widget _titulo(String t) {
+  Widget _titulo(String texto) {
     final m = AppColores.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 8, top: 4),
-      child: Text(t,
+      child: Text(texto,
           style: TextStyle(
               fontSize: 15, fontWeight: FontWeight.bold, color: m.texto)),
     );

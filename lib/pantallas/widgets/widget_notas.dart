@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../../datos_app.dart';
 import '../../tema.dart';
 import '../editor_nota.dart';
@@ -13,6 +14,7 @@ class WidgetNotas extends StatelessWidget {
     return Consumer<DatosApp>(
       builder: (context, datos, child) {
         final m = AppColores.of(context);
+        final t = AppLocalizations.of(context)!;
         final notas = [...datos.notas]
           ..sort((a, b) => b.fecha.compareTo(a.fecha));
 
@@ -27,7 +29,7 @@ class WidgetNotas extends StatelessWidget {
                     Icon(Icons.push_pin_outlined, size: 20, color: m.verde),
                     const SizedBox(width: 8),
                     Expanded(
-                      child: Text('Notas importantes',
+                      child: Text(t.notasImportantes,
                           style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -35,7 +37,7 @@ class WidgetNotas extends StatelessWidget {
                     ),
                     IconButton(
                       icon: Icon(Icons.add, color: m.verde),
-                      tooltip: 'Nueva nota',
+                      tooltip: t.nuevaNota,
                       onPressed: () => Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -47,7 +49,7 @@ class WidgetNotas extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     child: Center(
-                      child: Text('No tienes notas. Crea una con el +',
+                      child: Text(t.sinNotas,
                           style: TextStyle(color: m.textoSuave)),
                     ),
                   )

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../../datos_app.dart';
 import '../../tema.dart';
 import '../../formato.dart';
@@ -17,20 +18,22 @@ class PanelResumen extends StatefulWidget {
 class _PanelResumenState extends State<PanelResumen> {
   RangoTendencia _rango = RangoTendencia.mes;
 
-  static const _opciones = {
-    RangoTendencia.mes: 'Este mes',
-    RangoTendencia.tres: '3 meses',
-    RangoTendencia.seis: '6 meses',
-    RangoTendencia.anio: 'Año',
-  };
-
   @override
   Widget build(BuildContext context) {
     final datos = context.watch<DatosApp>();
     final m = AppColores.of(context);
+    final t = AppLocalizations.of(context)!;
     final ingresos = datos.ingresosEnRango(_rango);
     final gastos = datos.gastosEnRango(_rango);
     final ganancia = ingresos - gastos;
+
+    // Etiquetas del selector de rango (traducidas).
+    final opciones = {
+      RangoTendencia.mes: t.rangoEsteMes,
+      RangoTendencia.tres: t.rango3Meses,
+      RangoTendencia.seis: t.rango6Meses,
+      RangoTendencia.anio: t.rangoAnio,
+    };
 
     return Card(
       child: Padding(
@@ -41,7 +44,7 @@ class _PanelResumenState extends State<PanelResumen> {
             Row(
               children: [
                 Expanded(
-                  child: Text('Resumen',
+                  child: Text(t.resumen,
                       style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -51,7 +54,7 @@ class _PanelResumenState extends State<PanelResumen> {
                   value: _rango,
                   underline: const SizedBox.shrink(),
                   borderRadius: BorderRadius.circular(12),
-                  items: _opciones.entries
+                  items: opciones.entries
                       .map((e) =>
                           DropdownMenuItem(value: e.key, child: Text(e.value)))
                       .toList(),
@@ -64,7 +67,7 @@ class _PanelResumenState extends State<PanelResumen> {
               children: [
                 Expanded(
                   child: _tile(
-                    'Ingresos',
+                    t.ingresos,
                     pesos(ingresos),
                     Icons.trending_up,
                     m.verde,
@@ -78,7 +81,7 @@ class _PanelResumenState extends State<PanelResumen> {
                 const SizedBox(width: 10),
                 Expanded(
                   child: _tile(
-                    'Gastos',
+                    t.gastos,
                     pesos(gastos),
                     Icons.trending_down,
                     m.rojo,
@@ -92,10 +95,10 @@ class _PanelResumenState extends State<PanelResumen> {
               ],
             ),
             const SizedBox(height: 10),
-            _tile('Ganancia', pesos(ganancia), Icons.account_balance_wallet,
+            _tile(t.ganancia, pesos(ganancia), Icons.account_balance_wallet,
                 const Color(0xFF2563EB), null, m),
             const SizedBox(height: 18),
-            Text('Tendencia de ganancia',
+            Text(t.tendenciaGanancia,
                 style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,

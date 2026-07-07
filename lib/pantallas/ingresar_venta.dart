@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../datos_app.dart';
 import '../models/producto.dart';
 import '../tema.dart';
@@ -15,7 +16,7 @@ class PantallaIngresarVenta extends StatefulWidget {
 class _PantallaIngresarVentaState extends State<PantallaIngresarVenta> {
   final descripcionCtrl = TextEditingController();
   final valorCtrl = TextEditingController();
-  String tipoFiltro = 'Todos';
+  String tipoFiltro = 'Todos'; // 'Todos' = centinela interno (no traducir)
 
   @override
   void dispose() {
@@ -25,27 +26,31 @@ class _PantallaIngresarVentaState extends State<PantallaIngresarVenta> {
   }
 
   void _venderProducto(Producto producto) {
+    final t = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Confirmar venta'),
+        title: Text(t.confirmarVenta),
         content: Text(
-          '¿Registrar la venta de ${producto.nombre} por ${pesos(producto.precioVenta)}?',
+          t.confirmarVentaProducto(
+              producto.nombre, pesos(producto.precioVenta)),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancelar'),
+            child: Text(t.cancelar),
           ),
           TextButton(
             onPressed: () {
               context.read<DatosApp>().registrarVenta(producto, 1);
               Navigator.pop(dialogContext);
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Venta de ${producto.nombre} registrada')),
+                SnackBar(
+                    content:
+                        Text(t.ventaProductoRegistrada(producto.nombre))),
               );
             },
-            child: const Text('Vender'),
+            child: Text(t.vender),
           ),
         ],
       ),
@@ -53,23 +58,24 @@ class _PantallaIngresarVentaState extends State<PantallaIngresarVenta> {
   }
 
   void _venderManual() {
+    final t = AppLocalizations.of(context)!;
     final descripcion = descripcionCtrl.text.trim();
     final valor = double.tryParse(valorCtrl.text) ?? 0;
     if (descripcion.isEmpty || valor <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Escribe una descripción y un valor válido')),
+        SnackBar(content: Text(t.ventaDescripcionValor)),
       );
       return;
     }
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Confirmar venta'),
-        content: Text('¿Registrar la venta "$descripcion" por ${pesos(valor)}?'),
+        title: Text(t.confirmarVenta),
+        content: Text(t.confirmarVentaManual(descripcion, pesos(valor))),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancelar'),
+            child: Text(t.cancelar),
           ),
           TextButton(
             onPressed: () {
@@ -78,10 +84,10 @@ class _PantallaIngresarVentaState extends State<PantallaIngresarVenta> {
               descripcionCtrl.clear();
               valorCtrl.clear();
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Venta registrada')),
+                SnackBar(content: Text(t.ventaRegistrada)),
               );
             },
-            child: const Text('Registrar'),
+            child: Text(t.registrar),
           ),
         ],
       ),
@@ -90,8 +96,9 @@ class _PantallaIngresarVentaState extends State<PantallaIngresarVenta> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Ingresar venta')),
+      appBar: AppBar(title: Text(t.ingresarVentaTitulo)),
       body: Consumer<DatosApp>(
         builder: (context, datos, child) {
           final m = AppColores.of(context);
@@ -109,13 +116,13 @@ class _PantallaIngresarVentaState extends State<PantallaIngresarVenta> {
           return ListView(
             padding: const EdgeInsets.all(16),
             children: [
-              Text('Venta rápida',
+              Text(t.ventaRapida,
                   style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                       color: m.texto)),
               const SizedBox(height: 4),
-              Text('Para ventas que no son de un producto del catálogo',
+              Text(t.ventaRapidaAyuda,
                   style: TextStyle(fontSize: 12, color: m.textoSuave)),
               const SizedBox(height: 12),
               Card(
@@ -125,19 +132,19 @@ class _PantallaIngresarVentaState extends State<PantallaIngresarVenta> {
                     children: [
                       TextField(
                         controller: descripcionCtrl,
-                        decoration: const InputDecoration(
-                          labelText: 'Descripción',
-                          hintText: 'Ej: café, domicilio…',
-                          prefixIcon: Icon(Icons.edit_note),
+                        decoration: InputDecoration(
+                          labelText: t.descripcion,
+                          hintText: t.ventaDescripcionHint,
+                          prefixIcon: const Icon(Icons.edit_note),
                         ),
                       ),
                       const SizedBox(height: 12),
                       TextField(
                         controller: valorCtrl,
                         keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          labelText: 'Valor',
-                          prefixIcon: Icon(Icons.attach_money),
+                        decoration: InputDecoration(
+                          labelText: t.valor,
+                          prefixIcon: const Icon(Icons.attach_money),
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -145,7 +152,7 @@ class _PantallaIngresarVentaState extends State<PantallaIngresarVenta> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: _venderManual,
-                          child: const Text('Registrar venta'),
+                          child: Text(t.registrarVenta),
                         ),
                       ),
                     ],
@@ -161,8 +168,8 @@ class _PantallaIngresarVentaState extends State<PantallaIngresarVenta> {
                         Flexible(
                           child: Text(
                             tipoFiltro == 'Todos'
-                                ? 'Vender un producto'
-                                : 'Productos: $tipoFiltro',
+                                ? t.venderProducto
+                                : t.productosFiltro(tipoFiltro),
                             style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -172,12 +179,14 @@ class _PantallaIngresarVentaState extends State<PantallaIngresarVenta> {
                         ),
                         PopupMenuButton<String>(
                           icon: const Icon(Icons.arrow_drop_down),
-                          tooltip: 'Filtrar por tipo',
+                          tooltip: t.filtrarPorTipo,
                           onSelected: (valor) =>
                               setState(() => tipoFiltro = valor),
                           itemBuilder: (context) =>
-                              ['Todos', ...tipos].map((t) {
-                            return PopupMenuItem(value: t, child: Text(t));
+                              ['Todos', ...tipos].map((tf) {
+                            return PopupMenuItem(
+                                value: tf,
+                                child: Text(tf == 'Todos' ? t.todos : tf));
                           }).toList(),
                         ),
                       ],
@@ -187,10 +196,9 @@ class _PantallaIngresarVentaState extends State<PantallaIngresarVenta> {
               ),
               const SizedBox(height: 4),
               if (productos.isEmpty)
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 24),
-                  child: Center(
-                      child: Text('No hay productos. Créalos desde el menú Crear.')),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 24),
+                  child: Center(child: Text(t.sinProductosVenta)),
                 )
               else
                 ...productos.map((producto) {

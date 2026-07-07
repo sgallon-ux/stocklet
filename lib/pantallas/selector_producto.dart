@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../models/producto.dart';
 import '../formato.dart';
 
@@ -30,13 +31,14 @@ class _DialogoSelectorProductoState extends State<_DialogoSelectorProducto> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     final filtrados = widget.productos
         .where((p) => p.nombre.toLowerCase().contains(consulta.toLowerCase()))
         .toList()
       ..sort((a, b) => a.nombre.toLowerCase().compareTo(b.nombre.toLowerCase()));
 
     return AlertDialog(
-      title: const Text('Elegir producto'),
+      title: Text(t.elegirProductoTitulo),
       content: SizedBox(
         width: double.maxFinite,
         child: Column(
@@ -45,18 +47,18 @@ class _DialogoSelectorProductoState extends State<_DialogoSelectorProducto> {
             TextField(
               controller: busquedaCtrl,
               autofocus: true,
-              decoration: const InputDecoration(
-                hintText: 'Buscar...',
-                prefixIcon: Icon(Icons.search),
+              decoration: InputDecoration(
+                hintText: t.buscarHint,
+                prefixIcon: const Icon(Icons.search),
               ),
               onChanged: (v) => setState(() => consulta = v),
             ),
             const SizedBox(height: 8),
             Flexible(
               child: filtrados.isEmpty
-                  ? const Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Text('Ningún producto coincide.'))
+                  ? Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Text(t.ningunProductoCoincide))
                   : ListView(
                       shrinkWrap: true,
                       children: filtrados.map((p) {
@@ -74,7 +76,7 @@ class _DialogoSelectorProductoState extends State<_DialogoSelectorProducto> {
       actions: [
         TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancelar')),
+            child: Text(t.cancelar)),
       ],
     );
   }

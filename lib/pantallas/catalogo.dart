@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../datos_app.dart';
 import '../models/catalogo.dart';
 import '../tema.dart';
@@ -16,33 +17,34 @@ class PantallaCatalogo extends StatefulWidget {
 class _PantallaCatalogoState extends State<PantallaCatalogo> {
   bool subiendo = false;
 
-  void _aviso(String t) {
+  void _aviso(String msg) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(t)));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
   }
 
   Future<String?> _pedirNombre(String sugerido) async {
+    final t = AppLocalizations.of(context)!;
     final ctrl = TextEditingController(text: sugerido);
     final r = await showDialog<String>(
       context: context,
       builder: (dc) => AlertDialog(
-        title: const Text('Nombre del catálogo'),
+        title: Text(t.nombreCatalogo),
         content: TextField(
           controller: ctrl,
           autofocus: true,
           textCapitalization: TextCapitalization.sentences,
-          decoration: const InputDecoration(labelText: 'Nombre'),
+          decoration: InputDecoration(labelText: t.campoNombre),
         ),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(dc),
-              child: const Text('Cancelar')),
+              child: Text(t.cancelar)),
           ElevatedButton(
             onPressed: () {
               final n = ctrl.text.trim();
               if (n.isNotEmpty) Navigator.pop(dc, n);
             },
-            child: const Text('Subir'),
+            child: Text(t.subir),
           ),
         ],
       ),
@@ -52,6 +54,7 @@ class _PantallaCatalogoState extends State<PantallaCatalogo> {
   }
 
   Future<void> _subir() async {
+    final t = AppLocalizations.of(context)!;
     final result = await FilePicker.pickFiles(
       type: FileType.any, // iPhone a veces no deja elegir si se filtra a 'pdf'
       withData: true,
@@ -60,15 +63,15 @@ class _PantallaCatalogoState extends State<PantallaCatalogo> {
     final archivo = result.files.first;
     final bytes = archivo.bytes;
     if (bytes == null) {
-      _aviso('No se pudo leer el archivo.');
+      _aviso(t.errorLeerArchivo);
       return;
     }
     if (!archivo.name.toLowerCase().endsWith('.pdf')) {
-      _aviso('Por ahora solo se admiten archivos PDF.');
+      _aviso(t.soloPdf);
       return;
     }
     if (archivo.size > 15 * 1024 * 1024) {
-      _aviso('El archivo supera el límite de 15 MB.');
+      _aviso(t.archivoSupera15);
       return;
     }
     final sugerido =
@@ -84,13 +87,14 @@ class _PantallaCatalogoState extends State<PantallaCatalogo> {
             nombreArchivo: archivo.name,
           );
     } catch (e) {
-      _aviso('No se pudo subir el catálogo. Intenta de nuevo.');
+      _aviso(t.errorSubirCatalogo);
     } finally {
       if (mounted) setState(() => subiendo = false);
     }
   }
 
   Future<void> _abrir(Catalogo c) async {
+    final t = AppLocalizations.of(context)!;
     final uri = Uri.parse(c.url);
     // En PWA instalada: intentar pestaña nueva ('_blank'); si el móvil
     // la bloquea, abrir en la misma ventana ('_self').
@@ -98,29 +102,30 @@ class _PantallaCatalogoState extends State<PantallaCatalogo> {
     if (!ok) {
       ok = await launchUrl(uri, webOnlyWindowName: '_self');
     }
-    if (!ok) _aviso('No se pudo abrir el catálogo.');
+    if (!ok) _aviso(t.errorAbrirCatalogo);
   }
 
   void _confirmarEliminar(Catalogo c) {
+    final t = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (dc) => AlertDialog(
-        title: const Text('Eliminar catálogo'),
-        content: Text('¿Eliminar "${c.nombre}"? El archivo PDF se borrará.'),
+        title: Text(t.eliminarCatalogoTitulo),
+        content: Text(t.eliminarCatalogoConfirmacion(c.nombre)),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(dc),
-              child: const Text('Cancelar')),
+              child: Text(t.cancelar)),
           TextButton(
             onPressed: () async {
               Navigator.pop(dc);
               try {
                 await context.read<DatosApp>().eliminarCatalogo(c);
               } catch (e) {
-                _aviso('No se pudo eliminar.');
+                _aviso(t.errorEliminar);
               }
             },
-            child: const Text('Eliminar'),
+            child: Text(t.eliminar),
           ),
         ],
       ),
@@ -129,8 +134,9 @@ class _PantallaCatalogoState extends State<PantallaCatalogo> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Catálogo')),
+      appBar: AppBar(title: Text(t.catalogo)),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: subiendo ? null : _subir,
         icon: subiendo
@@ -140,7 +146,7 @@ class _PantallaCatalogoState extends State<PantallaCatalogo> {
                 child: CircularProgressIndicator(
                     strokeWidth: 2, color: Colors.white))
             : const Icon(Icons.upload_file),
-        label: Text(subiendo ? 'Subiendo...' : 'Subir PDF'),
+        label: Text(subiendo ? t.subiendo : t.subirPdf),
       ),
       body: Consumer<DatosApp>(
         builder: (context, datos, child) {
@@ -152,8 +158,7 @@ class _PantallaCatalogoState extends State<PantallaCatalogo> {
             return Center(
               child: Padding(
                 padding: const EdgeInsets.all(32),
-                child: Text(
-                    'Aún no tienes catálogos.\nSube un PDF con el botón de abajo.',
+                child: Text(t.catalogosVacio,
                     textAlign: TextAlign.center,
                     style: TextStyle(color: m.textoSuave)),
               ),
@@ -191,9 +196,10 @@ class _PantallaCatalogoState extends State<PantallaCatalogo> {
                         _confirmarEliminar(c);
                       }
                     },
-                    itemBuilder: (_) => const [
-                      PopupMenuItem(value: 'abrir', child: Text('Abrir')),
-                      PopupMenuItem(value: 'eliminar', child: Text('Eliminar')),
+                    itemBuilder: (_) => [
+                      PopupMenuItem(value: 'abrir', child: Text(t.abrir)),
+                      PopupMenuItem(
+                          value: 'eliminar', child: Text(t.eliminar)),
                     ],
                   ),
                 ),

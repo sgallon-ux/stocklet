@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:reposteria_app/l10n/app_localizations.dart'; // NUEVO // Generated localizations. Adjusted path to package l10n output.
 import '../datos_app.dart';
 import '../tema.dart';
 import 'panel_usuario.dart';
@@ -13,22 +14,23 @@ class PantallaAjustes extends StatelessWidget {
 
   void _confirmarCerrarSesion(BuildContext context) {
     final m = AppColores.of(context);
+    final t = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (dc) => AlertDialog(
-        title: const Text('Cerrar sesión'),
-        content: const Text('¿Seguro que quieres cerrar sesión?'),
+        title: Text(t.cerrarSesion),
+        content: Text(t.cerrarSesionConfirmacion),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(dc),
-              child: const Text('Cancelar')),
+              child: Text(t.cancelar)),
           TextButton(
             onPressed: () {
               Navigator.pop(dc);
               FirebaseAuth.instance.signOut();
             },
             style: TextButton.styleFrom(foregroundColor: m.rojo),
-            child: const Text('Cerrar sesión'),
+            child: Text(t.cerrarSesion),
           ),
         ],
       ),
@@ -37,6 +39,7 @@ class PantallaAjustes extends StatelessWidget {
 
   void _acercaDe(BuildContext context) {
     final m = AppColores.of(context);
+    final t = AppLocalizations.of(context)!;
     showAboutDialog(
       context: context,
       applicationName: 'Dulce Nota',
@@ -51,10 +54,10 @@ class PantallaAjustes extends StatelessWidget {
         ),
         child: Icon(Icons.storefront, color: m.verde),
       ),
-      children: const [
+      children: [
         Padding(
-          padding: EdgeInsets.only(top: 12),
-          child: Text('App de contabilidad para tu negocio.'),
+          padding: const EdgeInsets.only(top: 12),
+          child: Text(t.acercaDeDescripcion),
         ),
       ],
     );
@@ -95,10 +98,12 @@ class PantallaAjustes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final m = AppColores.of(context);
-    final negocio = context.watch<DatosApp>().negocio;
+    final t = AppLocalizations.of(context)!;
+    final datos = context.watch<DatosApp>();
+    final negocio = datos.negocio;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Ajustes')),
+      appBar: AppBar(title: Text(t.ajustesTitulo)),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -127,7 +132,7 @@ class PantallaAjustes extends StatelessWidget {
                         ),
                 ),
                 const SizedBox(height: 12),
-                Text(negocio?.nombre ?? 'Mi negocio',
+                Text(negocio?.nombre ?? t.miNegocio,
                     style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -142,24 +147,24 @@ class PantallaAjustes extends StatelessWidget {
                 _opcion(
                   context,
                   icono: Icons.person_outline,
-                  titulo: 'Perfil',
-                  subtitulo: 'Tu información personal',
+                  titulo: t.perfil,
+                  subtitulo: t.perfilSubtitulo,
                   onTap: () => _ir(context, const PantallaPanelUsuario()),
                 ),
                 const Divider(height: 1),
                 _opcion(
                   context,
                   icono: Icons.business_outlined,
-                  titulo: 'Datos de la empresa',
-                  subtitulo: 'Nombre, NIT, contacto y ubicación',
+                  titulo: t.datosEmpresa,
+                  subtitulo: t.datosEmpresaSubtitulo,
                   onTap: () => _ir(context, const PantallaPanelUsuario()),
                 ),
                 const Divider(height: 1),
                 _opcion(
                   context,
                   icono: Icons.notifications_outlined,
-                  titulo: 'Notificaciones',
-                  subtitulo: 'Avisos de pedidos, notas e inventario',
+                  titulo: t.notificaciones,
+                  subtitulo: t.notificacionesSubtitulo,
                   onTap: () =>
                       _ir(context, const PantallaNotificacionesConfig()),
                 ),
@@ -167,24 +172,24 @@ class PantallaAjustes extends StatelessWidget {
                 _opcion(
                   context,
                   icono: Icons.shield_outlined,
-                  titulo: 'Ajustes y seguridad',
-                  subtitulo: 'País, moneda, idioma y contraseña',
+                  titulo: t.ajustesSeguridad,
+                  subtitulo: t.ajustesSeguridadSubtitulo,
                   onTap: () => _ir(context, const PantallaAjustesSeguridad()),
                 ),
                 const Divider(height: 1),
                 _opcion(
                   context,
                   icono: Icons.palette_outlined,
-                  titulo: 'Apariencia',
-                  subtitulo: 'Tema y modo oscuro',
+                  titulo: t.apariencia,
+                  subtitulo: t.aparienciaSubtitulo,
                   onTap: () => _ir(context, const PantallaApariencia()),
                 ),
                 const Divider(height: 1),
                 _opcion(
                   context,
                   icono: Icons.info_outline,
-                  titulo: 'Acerca de',
-                  subtitulo: 'Versión e información de la app',
+                  titulo: t.acercaDe,
+                  subtitulo: t.acercaDeSubtitulo,
                   onTap: () => _acercaDe(context),
                 ),
               ],
@@ -194,7 +199,7 @@ class PantallaAjustes extends StatelessWidget {
           OutlinedButton.icon(
             onPressed: () => _confirmarCerrarSesion(context),
             icon: const Icon(Icons.logout),
-            label: const Text('Cerrar sesión'),
+            label: Text(t.cerrarSesion),
             style: OutlinedButton.styleFrom(
               foregroundColor: m.rojo,
               side: BorderSide(color: m.rojo),

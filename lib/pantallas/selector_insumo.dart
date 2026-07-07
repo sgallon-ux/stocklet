@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../models/insumo.dart';
 
 // Abre un diálogo con buscador y devuelve el insumo elegido (o null si cancela)
@@ -29,13 +30,14 @@ class _DialogoSelectorInsumoState extends State<_DialogoSelectorInsumo> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     final filtrados = widget.insumos
         .where((i) => i.nombre.toLowerCase().contains(consulta.toLowerCase()))
         .toList()
       ..sort((a, b) => a.nombre.toLowerCase().compareTo(b.nombre.toLowerCase()));
 
     return AlertDialog(
-      title: const Text('Elegir insumo'),
+      title: Text(t.elegirInsumoTitulo),
       content: SizedBox(
         width: double.maxFinite,
         child: Column(
@@ -44,18 +46,18 @@ class _DialogoSelectorInsumoState extends State<_DialogoSelectorInsumo> {
             TextField(
               controller: busquedaCtrl,
               autofocus: true,
-              decoration: const InputDecoration(
-                hintText: 'Buscar...',
-                prefixIcon: Icon(Icons.search),
+              decoration: InputDecoration(
+                hintText: t.buscarHint,
+                prefixIcon: const Icon(Icons.search),
               ),
               onChanged: (valor) => setState(() => consulta = valor),
             ),
             const SizedBox(height: 8),
             Flexible(
               child: filtrados.isEmpty
-                  ? const Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Text('Ningún insumo coincide.'),
+                  ? Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Text(t.ningunInsumoCoincide),
                     )
                   : ListView(
                       shrinkWrap: true,
@@ -73,7 +75,7 @@ class _DialogoSelectorInsumoState extends State<_DialogoSelectorInsumo> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Cancelar'),
+          child: Text(t.cancelar),
         ),
       ],
     );

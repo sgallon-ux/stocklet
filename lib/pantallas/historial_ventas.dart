@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
+import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../datos_app.dart';
 import '../models/venta.dart';
 import '../tema.dart';
@@ -17,33 +19,31 @@ class PantallaHistorialVentas extends StatefulWidget {
 class _PantallaHistorialVentasState extends State<PantallaHistorialVentas> {
   DateTime? _mes; // primer día del mes elegido (null = mes actual)
 
-  static const _nombresMes = [
-    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
-  ];
-
-  String _label(DateTime f) => '${_nombresMes[f.month - 1]} ${f.year}';
+  // Nombre del mes localizado según el idioma activo (ej. "Julio 2026").
+  String _label(BuildContext context, DateTime f) {
+    final locale = Localizations.localeOf(context).toString();
+    final texto = DateFormat.yMMMM(locale).format(f);
+    return texto.isEmpty ? texto : texto[0].toUpperCase() + texto.substring(1);
+  }
 
   void _confirmarEliminar(BuildContext context, Venta venta) {
+    final t = AppLocalizations.of(context)!;
     final datos = context.read<DatosApp>();
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Eliminar venta'),
-        content: const Text(
-          'Esto corrige los ingresos, pero no devuelve los insumos al inventario. '
-          '¿Quieres continuar?',
-        ),
+        title: Text(t.eliminarVentaTitulo),
+        content: Text(t.eliminarVentaConfirmacion),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(dialogContext),
-              child: const Text('Cancelar')),
+              child: Text(t.cancelar)),
           TextButton(
             onPressed: () {
               datos.eliminarVenta(venta);
               Navigator.pop(dialogContext);
             },
-            child: const Text('Eliminar'),
+            child: Text(t.eliminar),
           ),
         ],
       ),
@@ -53,13 +53,14 @@ class _PantallaHistorialVentasState extends State<PantallaHistorialVentas> {
   @override
   Widget build(BuildContext context) {
     final m = AppColores.of(context);
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Historial de ventas')),
+      appBar: AppBar(title: Text(t.historialVentasTitulo)),
       body: Consumer<DatosApp>(
         builder: (context, datos, child) {
           if (datos.ventas.isEmpty) {
             return Center(
-              child: Text('Aún no hay ventas registradas.',
+              child: Text(t.sinVentas,
                   style: TextStyle(color: m.textoSuave)),
             );
           }
@@ -88,7 +89,7 @@ class _PantallaHistorialVentasState extends State<PantallaHistorialVentas> {
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
                 child: Row(
                   children: [
-                    Text('Mes:', style: TextStyle(color: m.textoSuave)),
+                    Text(t.mesLabel, style: TextStyle(color: m.textoSuave)),
                     const SizedBox(width: 12),
                     Expanded(
                       child: DropdownButton<DateTime>(
@@ -97,7 +98,8 @@ class _PantallaHistorialVentasState extends State<PantallaHistorialVentas> {
                         borderRadius: BorderRadius.circular(12),
                         items: meses
                             .map((mes) => DropdownMenuItem(
-                                value: mes, child: Text(_label(mes))))
+                                value: mes,
+                                child: Text(_label(context, mes))))
                             .toList(),
                         onChanged: (v) => setState(() => _mes = v),
                       ),
@@ -108,18 +110,20 @@ class _PantallaHistorialVentasState extends State<PantallaHistorialVentas> {
               Expanded(
                 child: lista.isEmpty
                     ? Center(
-                        child: Text('No hubo ventas en ${_label(selValido)}.',
+                        child: Text(
+                            t.sinVentasEnMes(_label(context, selValido)),
                             style: TextStyle(color: m.textoSuave)),
                       )
                     : ListView(
                         padding: const EdgeInsets.all(16),
                         children: lista.map((venta) {
+                          final fechaStr =
+                              '${venta.fecha.day}/${venta.fecha.month}/${venta.fecha.year}';
                           return Card(
                             child: ListTile(
                               title: Text(venta.descripcion),
                               subtitle: Text(
-                                '${venta.fecha.day}/${venta.fecha.month}/${venta.fecha.year}'
-                                '  ·  Cant: ${venta.cantidad}',
+                                t.ventaSubtitulo(fechaStr, venta.cantidad),
                               ),
                               trailing: Row(
                                 mainAxisSize: MainAxisSize.min,
@@ -142,13 +146,13 @@ class _PantallaHistorialVentasState extends State<PantallaHistorialVentas> {
                                         _confirmarEliminar(context, venta);
                                       }
                                     },
-                                    itemBuilder: (context) => const [
+                                    itemBuilder: (context) => [
                                       PopupMenuItem(
                                           value: 'editar',
-                                          child: Text('Editar')),
+                                          child: Text(t.editar)),
                                       PopupMenuItem(
                                           value: 'eliminar',
-                                          child: Text('Eliminar')),
+                                          child: Text(t.eliminar)),
                                     ],
                                   ),
                                 ],

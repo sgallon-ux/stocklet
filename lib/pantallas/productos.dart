@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../datos_app.dart';
 import '../models/producto.dart';
 import '../tema.dart';
@@ -11,23 +12,23 @@ class PantallaProductos extends StatelessWidget {
   const PantallaProductos({super.key});
 
   void _confirmarEliminar(BuildContext context, Producto p) {
+    final t = AppLocalizations.of(context)!;
     final datos = context.read<DatosApp>();
     showDialog(
       context: context,
       builder: (dc) => AlertDialog(
-        title: const Text('Eliminar producto'),
-        content: Text(
-            '¿Eliminar "${p.nombre}"? Las ventas ya registradas no se modifican.'),
+        title: Text(t.eliminarProductoTitulo),
+        content: Text(t.eliminarProductoConfirmacion(p.nombre)),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(dc),
-              child: const Text('Cancelar')),
+              child: Text(t.cancelar)),
           TextButton(
             onPressed: () {
               datos.eliminarProducto(p);
               Navigator.pop(dc);
             },
-            child: const Text('Eliminar'),
+            child: Text(t.eliminar),
           ),
         ],
       ),
@@ -36,13 +37,14 @@ class PantallaProductos extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Productos')),
+      appBar: AppBar(title: Text(t.productos)),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => Navigator.push(context,
             MaterialPageRoute(builder: (_) => const PantallaCrearProducto())),
         icon: const Icon(Icons.add),
-        label: const Text('Nuevo'),
+        label: Text(t.nuevo),
       ),
       body: Consumer<DatosApp>(
         builder: (context, datos, child) {
@@ -55,7 +57,7 @@ class PantallaProductos extends StatelessWidget {
             return Center(
               child: Padding(
                 padding: const EdgeInsets.all(32),
-                child: Text('Aún no tienes productos.\nCrea uno con el botón +',
+                child: Text(t.productosVacio,
                     textAlign: TextAlign.center,
                     style: TextStyle(color: m.textoSuave)),
               ),
@@ -107,7 +109,7 @@ class PantallaProductos extends StatelessWidget {
                                       : '${p.tipo}  ·  ${pesos(p.precioVenta)}',
                                   style: TextStyle(
                                       fontSize: 12, color: m.textoSuave)),
-                              Text('Ganancia: ${pesos(p.ganancia)}',
+                              Text(t.gananciaTexto(pesos(p.ganancia)),
                                   style: TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w600,
@@ -127,10 +129,11 @@ class PantallaProductos extends StatelessWidget {
                               _confirmarEliminar(context, p);
                             }
                           },
-                          itemBuilder: (_) => const [
-                            PopupMenuItem(value: 'editar', child: Text('Editar')),
+                          itemBuilder: (_) => [
                             PopupMenuItem(
-                                value: 'eliminar', child: Text('Eliminar')),
+                                value: 'editar', child: Text(t.editar)),
+                            PopupMenuItem(
+                                value: 'eliminar', child: Text(t.eliminar)),
                           ],
                         ),
                       ],

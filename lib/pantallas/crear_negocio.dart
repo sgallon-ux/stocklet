@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:currency_picker/currency_picker.dart';
+import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../datos_app.dart';
 import '../tema.dart';
 
@@ -23,8 +24,13 @@ class _PantallaCrearNegocioState extends State<PantallaCrearNegocio> {
   String idioma = 'es';
   bool creando = false;
 
-  // Idiomas que de verdad soportaremos (se amplía al traducir)
-  static const idiomas = {'es': 'Español', 'en': 'English', 'pt': 'Português'};
+  // Idiomas soportados (autónimos, no se traducen). Coincide con los .arb.
+  static const idiomas = {
+    'es': 'Español',
+    'en': 'English',
+    'pt': 'Português',
+    'fr': 'Français',
+  };
 
   // Moneda sugerida por país (los demás se eligen en el selector de moneda)
   static const monedaPorPais = {
@@ -36,19 +42,28 @@ class _PantallaCrearNegocioState extends State<PantallaCrearNegocio> {
   };
 
   @override
+  void initState() {
+    super.initState();
+    // Prefija el idioma con el que ya usa la app (si el usuario eligió uno).
+    final actual = context.read<DatosApp>().idiomaId;
+    if (actual != null && idiomas.containsKey(actual)) idioma = actual;
+  }
+
+  @override
   void dispose() {
     nombreCtrl.dispose();
     super.dispose();
   }
 
   void _elegirPais() {
+    final t = AppLocalizations.of(context)!;
     showCountryPicker(
       context: context,
       countryListTheme: CountryListThemeData(
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-        inputDecoration: const InputDecoration(
-          labelText: 'Buscar país',
-          prefixIcon: Icon(Icons.search),
+        inputDecoration: InputDecoration(
+          labelText: t.onboardingBuscarPais,
+          prefixIcon: const Icon(Icons.search),
         ),
       ),
       onSelect: (Country country) {
@@ -79,22 +94,26 @@ class _PantallaCrearNegocioState extends State<PantallaCrearNegocio> {
   }
 
   void crear() async {
+    final t = AppLocalizations.of(context)!;
+    final datos = context.read<DatosApp>();
     final nombre = nombreCtrl.text.trim();
     if (nombre.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Escribe el nombre de tu negocio')),
+        SnackBar(content: Text(t.onboardingNombreVacio)),
       );
       return;
     }
     setState(() => creando = true);
     try {
-      await context.read<DatosApp>().crearNegocio(
-            nombre: nombre, pais: paisCodigo, moneda: moneda, idioma: idioma,
-          );
+      await datos.crearNegocio(
+        nombre: nombre, pais: paisCodigo, moneda: moneda, idioma: idioma,
+      );
+      // El idioma elegido al crear el negocio también cambia la interfaz.
+      await datos.setIdioma(idioma);
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Error: $e')));
+            .showSnackBar(SnackBar(content: Text(t.errorGenerico(e.toString()))));
         setState(() => creando = false);
       }
     }
@@ -124,6 +143,7 @@ class _PantallaCrearNegocioState extends State<PantallaCrearNegocio> {
  @override
   Widget build(BuildContext context) {
     final m = AppColores.of(context);
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -143,7 +163,7 @@ class _PantallaCrearNegocioState extends State<PantallaCrearNegocio> {
                     child: Icon(Icons.storefront, color: m.verde, size: 36),
                   ),
                   const SizedBox(height: 20),
-                  Text('¡Bienvenido!',
+                  Text(t.onboardingBienvenido,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontSize: 26,
@@ -151,7 +171,7 @@ class _PantallaCrearNegocioState extends State<PantallaCrearNegocio> {
                           color: m.texto)),
                   const SizedBox(height: 6),
                   Text(
-                    'Cuéntanos de tu microempresa para personalizar la app',
+                    t.onboardingSubtitulo,
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 14, color: m.textoSuave),
                   ),
@@ -165,22 +185,22 @@ class _PantallaCrearNegocioState extends State<PantallaCrearNegocio> {
                           TextField(
                             controller: nombreCtrl,
                             textCapitalization: TextCapitalization.words,
-                            decoration: const InputDecoration(
-                              labelText: 'Nombre del negocio',
-                              prefixIcon: Icon(Icons.badge_outlined),
+                            decoration: InputDecoration(
+                              labelText: t.onboardingNombreNegocio,
+                              prefixIcon: const Icon(Icons.badge_outlined),
                             ),
                           ),
                           const SizedBox(height: 16),
                           _campoTap(
                             icono: Icons.public,
-                            etiqueta: 'País',
+                            etiqueta: t.campoPais,
                             valor: paisNombre,
                             onTap: _elegirPais,
                           ),
                           const SizedBox(height: 16),
                           _campoTap(
                             icono: Icons.payments_outlined,
-                            etiqueta: 'Moneda',
+                            etiqueta: t.campoMoneda,
                             valor: monedaTexto,
                             onTap: _elegirMoneda,
                           ),
@@ -188,9 +208,9 @@ class _PantallaCrearNegocioState extends State<PantallaCrearNegocio> {
                           DropdownButtonFormField<String>(
                             initialValue: idioma,
                             isExpanded: true,
-                            decoration: const InputDecoration(
-                              labelText: 'Idioma',
-                              prefixIcon: Icon(Icons.translate),
+                            decoration: InputDecoration(
+                              labelText: t.idioma,
+                              prefixIcon: const Icon(Icons.translate),
                             ),
                             items: idiomas.entries
                                 .map((e) => DropdownMenuItem(
@@ -207,7 +227,7 @@ class _PantallaCrearNegocioState extends State<PantallaCrearNegocio> {
                                     width: 20,
                                     child: CircularProgressIndicator(
                                         strokeWidth: 2, color: Colors.white))
-                                : const Text('Crear mi negocio'),
+                                : Text(t.onboardingCrearBoton),
                           ),
                         ],
                       ),
@@ -217,7 +237,7 @@ class _PantallaCrearNegocioState extends State<PantallaCrearNegocio> {
                   TextButton.icon(
                     onPressed: () => FirebaseAuth.instance.signOut(),
                     icon: const Icon(Icons.logout, size: 18),
-                    label: const Text('Cerrar sesión'),
+                    label: Text(t.cerrarSesion),
                   ),
                 ],
               ),

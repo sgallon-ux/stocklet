@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../datos_app.dart';
 import '../models/guia_receta.dart';
 import '../tema.dart';
@@ -10,23 +11,24 @@ class PantallaVerReceta extends StatelessWidget {
   const PantallaVerReceta({super.key, required this.receta});
 
   void _confirmarEliminar(BuildContext context, GuiaReceta r) {
+    final t = AppLocalizations.of(context)!;
     final datos = context.read<DatosApp>();
     showDialog(
       context: context,
       builder: (dc) => AlertDialog(
-        title: const Text('Eliminar receta'),
-        content: Text('¿Seguro que quieres eliminar "${r.titulo}"?'),
+        title: Text(t.eliminarRecetaTitulo),
+        content: Text(t.eliminarRecetaConfirmacion(r.titulo)),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(dc),
-              child: const Text('Cancelar')),
+              child: Text(t.cancelar)),
           TextButton(
             onPressed: () {
               datos.eliminarReceta(r);
               Navigator.pop(dc);
               Navigator.pop(context);
             },
-            child: const Text('Eliminar'),
+            child: Text(t.eliminar),
           ),
         ],
       ),
@@ -35,24 +37,25 @@ class PantallaVerReceta extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     final datos = context.watch<DatosApp>();
     final m = AppColores.of(context);
     final existentes = datos.recetas.where((r) => r.id == receta.id).toList();
     if (existentes.isEmpty) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Receta')),
-        body: const Center(child: Text('Esta receta ya no existe.')),
+        appBar: AppBar(title: Text(t.recetaTitulo)),
+        body: Center(child: Text(t.recetaNoExiste)),
       );
     }
     final r = existentes.first;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Receta'),
+        title: Text(t.recetaTitulo),
         actions: [
           IconButton(
             icon: const Icon(Icons.edit_outlined),
-            tooltip: 'Editar',
+            tooltip: t.editar,
             onPressed: () => Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -60,7 +63,7 @@ class PantallaVerReceta extends StatelessWidget {
           ),
           IconButton(
             icon: const Icon(Icons.delete_outline),
-            tooltip: 'Eliminar',
+            tooltip: t.eliminar,
             onPressed: () => _confirmarEliminar(context, r),
           ),
         ],
@@ -75,7 +78,7 @@ class PantallaVerReceta extends StatelessWidget {
                   color: m.texto)),
           const SizedBox(height: 20),
           if (r.ingredientes.isNotEmpty) ...[
-            Text('Ingredientes',
+            Text(t.ingredientesLabel,
                 style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -102,7 +105,7 @@ class PantallaVerReceta extends StatelessWidget {
                 )),
             const SizedBox(height: 20),
           ],
-          Text('Preparación',
+          Text(t.preparacion,
               style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,

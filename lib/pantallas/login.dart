@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../tema.dart';
 import 'registro.dart';
 
@@ -46,11 +47,12 @@ class _PantallaLoginState extends State<PantallaLogin> {
   }
 
   void iniciarSesion() async {
+    final t = AppLocalizations.of(context)!;
     final correo = correoCtrl.text.trim();
     final password = passwordCtrl.text;
     if (correo.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Escribe tu correo y contraseña')),
+        SnackBar(content: Text(t.loginCompletaCampos)),
       );
       return;
     }
@@ -70,11 +72,11 @@ class _PantallaLoginState extends State<PantallaLogin> {
       }
       // la compuerta se encarga de llevar a la app
     } on FirebaseAuthException catch (e) {
-      String msg = 'No se pudo iniciar sesión';
-      if (e.code == 'invalid-email') msg = 'El correo no es válido';
-      if (e.code == 'user-not-found') msg = 'No existe una cuenta con ese correo';
+      String msg = t.loginErrorGeneral;
+      if (e.code == 'invalid-email') msg = t.errorCorreoInvalido;
+      if (e.code == 'user-not-found') msg = t.loginErrorNoExiste;
       if (e.code == 'wrong-password' || e.code == 'invalid-credential') {
-        msg = 'Correo o contraseña incorrectos';
+        msg = t.loginErrorCredenciales;
       }
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
@@ -87,6 +89,7 @@ class _PantallaLoginState extends State<PantallaLogin> {
   @override
   Widget build(BuildContext context) {
     final m = AppColores.of(context);
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -110,7 +113,7 @@ class _PantallaLoginState extends State<PantallaLogin> {
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    'Bienvenido',
+                    t.loginBienvenido,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         fontSize: 26,
@@ -119,7 +122,7 @@ class _PantallaLoginState extends State<PantallaLogin> {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    'Inicia sesión para gestionar tu negocio',
+                    t.loginSubtitulo,
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 14, color: m.textoSuave),
                   ),
@@ -133,9 +136,9 @@ class _PantallaLoginState extends State<PantallaLogin> {
                           TextField(
                             controller: correoCtrl,
                             keyboardType: TextInputType.emailAddress,
-                            decoration: const InputDecoration(
-                              labelText: 'Correo',
-                              prefixIcon: Icon(Icons.mail_outline),
+                            decoration: InputDecoration(
+                              labelText: t.campoCorreo,
+                              prefixIcon: const Icon(Icons.mail_outline),
                             ),
                           ),
                           const SizedBox(height: 16),
@@ -143,7 +146,7 @@ class _PantallaLoginState extends State<PantallaLogin> {
                             controller: passwordCtrl,
                             obscureText: !verPassword,
                             decoration: InputDecoration(
-                              labelText: 'Contraseña',
+                              labelText: t.campoContrasena,
                               prefixIcon: const Icon(Icons.lock_outline),
                               suffixIcon: IconButton(
                                 icon: Icon(verPassword
@@ -162,7 +165,7 @@ class _PantallaLoginState extends State<PantallaLogin> {
                                 onChanged: (v) =>
                                     setState(() => recordar = v ?? false),
                               ),
-                              const Expanded(child: Text('Recordar mi correo')),
+                              Expanded(child: Text(t.loginRecordarCorreo)),
                             ],
                           ),
                           const SizedBox(height: 12),
@@ -174,7 +177,7 @@ class _PantallaLoginState extends State<PantallaLogin> {
                                     width: 20,
                                     child: CircularProgressIndicator(
                                         strokeWidth: 2, color: Colors.white))
-                                : const Text('Iniciar sesión'),
+                                : Text(t.iniciarSesion),
                           ),
                         ],
                       ),
@@ -184,7 +187,7 @@ class _PantallaLoginState extends State<PantallaLogin> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('¿Eres nuevo?',
+                      Text(t.loginEresNuevo,
                           style: TextStyle(color: m.textoSuave)),
                       TextButton(
                         onPressed: () {
@@ -194,7 +197,7 @@ class _PantallaLoginState extends State<PantallaLogin> {
                                 builder: (context) => const PantallaRegistro()),
                           );
                         },
-                        child: const Text('Crea tu cuenta'),
+                        child: Text(t.crearCuenta),
                       ),
                     ],
                   ),

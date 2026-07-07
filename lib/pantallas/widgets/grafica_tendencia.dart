@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:intl/intl.dart';
+import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../../datos_app.dart';
 import '../../tema.dart';
 import '../../formato.dart';
@@ -13,14 +15,24 @@ class GraficaTendencia extends StatelessWidget {
   Widget build(BuildContext context) {
     final datos = context.watch<DatosApp>();
     final m = AppColores.of(context);
-    final puntos = datos.tendenciaGanancia(rango);
-    return SizedBox(height: 200, child: _grafica(puntos, m));
+    final t = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context).toString();
+    // Abreviatura de mes localizada (ej. "jul.") para el eje X en rangos largos.
+    String cap(String s) =>
+        s.isEmpty ? s : s[0].toUpperCase() + s.substring(1);
+    final puntos = datos.tendenciaGanancia(
+      rango,
+      etiquetaMesCorto: (y, mo) =>
+          cap(DateFormat.MMM(locale).format(DateTime(y, mo))),
+    );
+    return SizedBox(height: 200, child: _grafica(puntos, m, t));
   }
 
-  Widget _grafica(List<PuntoTendencia> puntos, MarcaColores m) {
+  Widget _grafica(
+      List<PuntoTendencia> puntos, MarcaColores m, AppLocalizations t) {
     if (puntos.isEmpty || puntos.every((p) => p.valor == 0)) {
       return Center(
-        child: Text('Aún no hay datos suficientes para mostrar.',
+        child: Text(t.graficaSinDatos,
             style: TextStyle(color: m.textoSuave)),
       );
     }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../datos_app.dart';
 import '../tema.dart';
 import 'editor_receta.dart';
@@ -10,13 +11,14 @@ class PantallaRecetas extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Recetas')),
+      appBar: AppBar(title: Text(t.recetas)),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => Navigator.push(context,
             MaterialPageRoute(builder: (_) => const PantallaEditorReceta())),
         icon: const Icon(Icons.add),
-        label: const Text('Receta'),
+        label: Text(t.recetaTitulo),
       ),
       body: Consumer<DatosApp>(
         builder: (context, datos, child) {
@@ -29,7 +31,7 @@ class PantallaRecetas extends StatelessWidget {
             return Center(
               child: Padding(
                 padding: const EdgeInsets.all(32),
-                child: Text('Aún no tienes recetas.\nCrea una con el botón +',
+                child: Text(t.recetasVacio,
                     textAlign: TextAlign.center,
                     style: TextStyle(color: m.textoSuave)),
               ),
@@ -62,7 +64,7 @@ class PantallaRecetas extends StatelessWidget {
                       style: TextStyle(
                           fontWeight: FontWeight.bold, color: m.texto)),
                   subtitle: Text(
-                      '${r.ingredientes.length} ingredientes · ${r.pasos.length} pasos'),
+                      t.recetaSubtitulo(r.ingredientes.length, r.pasos.length)),
                   trailing:
                       Icon(Icons.chevron_right, color: m.textoSuave),
                 ),

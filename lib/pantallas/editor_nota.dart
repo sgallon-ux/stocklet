@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../datos_app.dart';
 import '../models/nota.dart';
 
@@ -32,11 +33,12 @@ class _PantallaEditorNotaState extends State<PantallaEditorNota> {
   }
 
   void guardar() {
+    final t = AppLocalizations.of(context)!;
     final asunto = asuntoCtrl.text.trim();
     final contenido = contenidoCtrl.text.trim();
     if (asunto.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Escribe al menos el asunto de la nota')),
+        SnackBar(content: Text(t.notaFaltaAsunto)),
       );
       return;
     }
@@ -52,8 +54,10 @@ class _PantallaEditorNotaState extends State<PantallaEditorNota> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: Text(esEdicion ? 'Editar nota' : 'Nueva nota')),
+      appBar: AppBar(
+          title: Text(esEdicion ? t.editarNotaTitulo : t.nuevaNota)),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -62,9 +66,9 @@ class _PantallaEditorNotaState extends State<PantallaEditorNota> {
             TextField(
               controller: asuntoCtrl,
               textCapitalization: TextCapitalization.sentences,
-              decoration: const InputDecoration(
-                labelText: 'Asunto',
-                prefixIcon: Icon(Icons.title),
+              decoration: InputDecoration(
+                labelText: t.asunto,
+                prefixIcon: const Icon(Icons.title),
               ),
             ),
             const SizedBox(height: 16),
@@ -75,16 +79,16 @@ class _PantallaEditorNotaState extends State<PantallaEditorNota> {
                 maxLines: null,
                 expands: true,
                 textAlignVertical: TextAlignVertical.top,
-                decoration: const InputDecoration(
-                  labelText: 'Contenido',
+                decoration: InputDecoration(
+                  labelText: t.contenido,
                   alignLabelWithHint: true,
-                  hintText: 'Escribe el detalle de la nota...',
+                  hintText: t.notaContenidoHint,
                 ),
               ),
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-                onPressed: guardar, child: const Text('Guardar nota')),
+                onPressed: guardar, child: Text(t.guardarNota)),
           ],
         ),
       ),

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
+import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../datos_app.dart';
 import '../models/gasto.dart';
 import '../tema.dart';
 import '../formato.dart';
 import 'editar_gasto.dart';
+import 'gasto_categoria_l10n.dart';
 
 class PantallaHistorialGastos extends StatefulWidget {
   const PantallaHistorialGastos({super.key});
@@ -17,31 +20,32 @@ class PantallaHistorialGastos extends StatefulWidget {
 class _PantallaHistorialGastosState extends State<PantallaHistorialGastos> {
   DateTime? _mes; // primer día del mes elegido (null = mes actual)
 
-  static const _nombresMes = [
-    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
-  ];
-
-  String _label(DateTime f) => '${_nombresMes[f.month - 1]} ${f.year}';
+  // Mes localizado (ej. "Julio 2026").
+  String _label(BuildContext context, DateTime f) {
+    final locale = Localizations.localeOf(context).toString();
+    final texto = DateFormat.yMMMM(locale).format(f);
+    return texto.isEmpty ? texto : texto[0].toUpperCase() + texto.substring(1);
+  }
 
   void _confirmarEliminar(BuildContext context, Gasto gasto) {
+    final t = AppLocalizations.of(context)!;
     final datos = context.read<DatosApp>();
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Eliminar gasto'),
-        content: Text('¿Seguro que quieres eliminar "${gasto.descripcion}"?'),
+        title: Text(t.eliminarGastoTitulo),
+        content: Text(t.eliminarGastoConfirmacion(gasto.descripcion)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancelar'),
+            child: Text(t.cancelar),
           ),
           TextButton(
             onPressed: () {
               datos.eliminarGasto(gasto);
               Navigator.pop(dialogContext);
             },
-            child: const Text('Eliminar'),
+            child: Text(t.eliminar),
           ),
         ],
       ),
@@ -51,13 +55,14 @@ class _PantallaHistorialGastosState extends State<PantallaHistorialGastos> {
   @override
   Widget build(BuildContext context) {
     final m = AppColores.of(context);
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Historial de gastos')),
+      appBar: AppBar(title: Text(t.historialGastosTitulo)),
       body: Consumer<DatosApp>(
         builder: (context, datos, child) {
           if (datos.gastos.isEmpty) {
             return Center(
-              child: Text('Aún no hay gastos registrados.',
+              child: Text(t.sinGastos,
                   style: TextStyle(color: m.textoSuave)),
             );
           }
@@ -86,7 +91,7 @@ class _PantallaHistorialGastosState extends State<PantallaHistorialGastos> {
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
                 child: Row(
                   children: [
-                    Text('Mes:', style: TextStyle(color: m.textoSuave)),
+                    Text(t.mesLabel, style: TextStyle(color: m.textoSuave)),
                     const SizedBox(width: 12),
                     Expanded(
                       child: DropdownButton<DateTime>(
@@ -95,7 +100,8 @@ class _PantallaHistorialGastosState extends State<PantallaHistorialGastos> {
                         borderRadius: BorderRadius.circular(12),
                         items: meses
                             .map((mes) => DropdownMenuItem(
-                                value: mes, child: Text(_label(mes))))
+                                value: mes,
+                                child: Text(_label(context, mes))))
                             .toList(),
                         onChanged: (v) => setState(() => _mes = v),
                       ),
@@ -106,18 +112,21 @@ class _PantallaHistorialGastosState extends State<PantallaHistorialGastos> {
               Expanded(
                 child: lista.isEmpty
                     ? Center(
-                        child: Text('No hubo gastos en ${_label(selValido)}.',
+                        child: Text(
+                            t.sinGastosEnMes(_label(context, selValido)),
                             style: TextStyle(color: m.textoSuave)),
                       )
                     : ListView(
                         padding: const EdgeInsets.all(16),
                         children: lista.map((gasto) {
+                          final fechaStr =
+                              '${gasto.fecha.day}/${gasto.fecha.month}/${gasto.fecha.year}';
                           return Card(
                             child: ListTile(
                               title: Text(gasto.descripcion),
                               subtitle: Text(
-                                '${gasto.fecha.day}/${gasto.fecha.month}/${gasto.fecha.year}'
-                                '  ·  ${gasto.categoria.name}',
+                                t.gastoSubtitulo(fechaStr,
+                                    nombreCategoria(t, gasto.categoria)),
                               ),
                               trailing: Row(
                                 mainAxisSize: MainAxisSize.min,
@@ -142,13 +151,13 @@ class _PantallaHistorialGastosState extends State<PantallaHistorialGastos> {
                                         _confirmarEliminar(context, gasto);
                                       }
                                     },
-                                    itemBuilder: (context) => const [
+                                    itemBuilder: (context) => [
                                       PopupMenuItem(
                                           value: 'editar',
-                                          child: Text('Editar')),
+                                          child: Text(t.editar)),
                                       PopupMenuItem(
                                           value: 'eliminar',
-                                          child: Text('Eliminar')),
+                                          child: Text(t.eliminar)),
                                     ],
                                   ),
                                 ],

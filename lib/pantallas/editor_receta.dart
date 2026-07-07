@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../datos_app.dart';
 import '../models/guia_receta.dart';
 import '../tema.dart';
@@ -44,12 +45,13 @@ class _PantallaEditorRecetaState extends State<PantallaEditorReceta> {
       .toList();
 
   void guardar() {
+    final t = AppLocalizations.of(context)!;
     final titulo = tituloCtrl.text.trim();
     final ingredientes = _lineas(ingredientesCtrl.text);
     final pasos = _lineas(pasosCtrl.text);
     if (titulo.isEmpty || pasos.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Escribe el título y al menos un paso')),
+        SnackBar(content: Text(t.recetaFaltaTituloPaso)),
       );
       return;
     }
@@ -69,8 +71,10 @@ class _PantallaEditorRecetaState extends State<PantallaEditorReceta> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: Text(esEdicion ? 'Editar receta' : 'Nueva receta')),
+      appBar: AppBar(
+          title: Text(esEdicion ? t.editarRecetaTitulo : t.nuevaRecetaTitulo)),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -83,10 +87,10 @@ class _PantallaEditorRecetaState extends State<PantallaEditorReceta> {
                   TextField(
                     controller: tituloCtrl,
                     textCapitalization: TextCapitalization.sentences,
-                    decoration: const InputDecoration(
-                      labelText: 'Título de la receta',
-                      hintText: 'Ej: Torta de chocolate',
-                      prefixIcon: Icon(Icons.menu_book_outlined),
+                    decoration: InputDecoration(
+                      labelText: t.tituloReceta,
+                      hintText: t.nombreProductoHint,
+                      prefixIcon: const Icon(Icons.menu_book_outlined),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -95,9 +99,9 @@ class _PantallaEditorRecetaState extends State<PantallaEditorReceta> {
                     textCapitalization: TextCapitalization.sentences,
                     minLines: 3,
                     maxLines: null,
-                    decoration: const InputDecoration(
-                      labelText: 'Ingredientes',
-                      hintText: 'Un ingrediente por línea',
+                    decoration: InputDecoration(
+                      labelText: t.ingredientesLabel,
+                      hintText: t.ingredientesHint,
                       alignLabelWithHint: true,
                     ),
                   ),
@@ -107,9 +111,9 @@ class _PantallaEditorRecetaState extends State<PantallaEditorReceta> {
                     textCapitalization: TextCapitalization.sentences,
                     minLines: 4,
                     maxLines: null,
-                    decoration: const InputDecoration(
-                      labelText: 'Pasos de preparación',
-                      hintText: 'Un paso por línea',
+                    decoration: InputDecoration(
+                      labelText: t.pasosPreparacion,
+                      hintText: t.pasosHint,
                       alignLabelWithHint: true,
                     ),
                   ),
@@ -121,14 +125,14 @@ class _PantallaEditorRecetaState extends State<PantallaEditorReceta> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4),
             child: Text(
-              'Escribe cada ingrediente y cada paso en su propia línea (Enter para separar).',
+              t.recetaEditorAyuda,
               style:
                   TextStyle(fontSize: 12, color: AppColores.of(context).textoSuave),
             ),
           ),
           const SizedBox(height: 16),
           ElevatedButton(
-              onPressed: guardar, child: const Text('Guardar receta')),
+              onPressed: guardar, child: Text(t.guardarReceta)),
         ],
       ),
     );

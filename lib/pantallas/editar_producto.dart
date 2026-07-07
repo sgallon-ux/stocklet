@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../datos_app.dart';
 import '../models/insumo.dart';
 import '../models/producto.dart';
@@ -54,16 +55,17 @@ class _PantallaEditarProductoState extends State<PantallaEditarProducto> {
   }
 
   void agregarIngrediente() {
+    final t = AppLocalizations.of(context)!;
     final cantidad = double.tryParse(cantidadCtrl.text) ?? 0;
     if (insumoSeleccionado == null || cantidad <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Elige un insumo y una cantidad válida')),
+        SnackBar(content: Text(t.eligeInsumoCantidad)),
       );
       return;
     }
     if (receta.any((ing) => ing.insumo == insumoSeleccionado)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Ese insumo ya está en la receta')),
+        SnackBar(content: Text(t.insumoYaEnReceta)),
       );
       return;
     }
@@ -76,13 +78,12 @@ class _PantallaEditarProductoState extends State<PantallaEditarProducto> {
   }
 
   void guardarCambios() {
+    final t = AppLocalizations.of(context)!;
     final nombre = nombreCtrl.text.trim();
     final precio = double.tryParse(precioCtrl.text) ?? 0;
     if (nombre.isEmpty || precio <= 0 || receta.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content:
-                Text('Falta el nombre, el precio o al menos un ingrediente')),
+        SnackBar(content: Text(t.faltaNombrePrecioIngrediente)),
       );
       return;
     }
@@ -98,6 +99,7 @@ class _PantallaEditarProductoState extends State<PantallaEditarProducto> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     final datos = context.watch<DatosApp>();
     final m = AppColores.of(context);
     final insumosDisponibles = [...datos.insumos]
@@ -110,7 +112,7 @@ class _PantallaEditarProductoState extends State<PantallaEditarProducto> {
     final precio = double.tryParse(precioCtrl.text) ?? 0;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Editar producto')),
+      appBar: AppBar(title: Text(t.editarProductoTitulo)),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -123,9 +125,9 @@ class _PantallaEditarProductoState extends State<PantallaEditarProducto> {
                   TextField(
                     controller: nombreCtrl,
                     textCapitalization: TextCapitalization.sentences,
-                    decoration: const InputDecoration(
-                      labelText: 'Nombre del producto',
-                      prefixIcon: Icon(Icons.shopping_bag_outlined),
+                    decoration: InputDecoration(
+                      labelText: t.nombreProducto,
+                      prefixIcon: const Icon(Icons.shopping_bag_outlined),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -139,12 +141,12 @@ class _PantallaEditarProductoState extends State<PantallaEditarProducto> {
                     },
                     borderRadius: BorderRadius.circular(12),
                     child: InputDecorator(
-                      decoration: const InputDecoration(
-                        labelText: 'Tipo de producto',
-                        prefixIcon: Icon(Icons.category_outlined),
-                        suffixIcon: Icon(Icons.arrow_drop_down),
+                      decoration: InputDecoration(
+                        labelText: t.tipoProducto,
+                        prefixIcon: const Icon(Icons.category_outlined),
+                        suffixIcon: const Icon(Icons.arrow_drop_down),
                       ),
-                      child: Text(tipo.isEmpty ? 'Sin tipo' : tipo,
+                      child: Text(tipo.isEmpty ? t.sinTipo : tipo,
                           style: const TextStyle(fontSize: 16)),
                     ),
                   ),
@@ -153,9 +155,9 @@ class _PantallaEditarProductoState extends State<PantallaEditarProducto> {
                     controller: precioCtrl,
                     keyboardType: TextInputType.number,
                     onChanged: (_) => setState(() {}),
-                    decoration: const InputDecoration(
-                      labelText: 'Precio de venta',
-                      prefixIcon: Icon(Icons.attach_money),
+                    decoration: InputDecoration(
+                      labelText: t.precioVenta,
+                      prefixIcon: const Icon(Icons.attach_money),
                     ),
                   ),
                 ],
@@ -163,20 +165,20 @@ class _PantallaEditarProductoState extends State<PantallaEditarProducto> {
             ),
           ),
           const SizedBox(height: 20),
-          Text('Receta',
+          Text(t.recetaTitulo,
               style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: m.texto)),
           const SizedBox(height: 4),
-          Text('Agrega los insumos y cantidades que lleva una unidad',
+          Text(t.recetaAyuda,
               style: TextStyle(fontSize: 12, color: m.textoSuave)),
           const SizedBox(height: 12),
           if (insumosDisponibles.isEmpty)
-            const Card(
+            Card(
               child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Text('No hay insumos en el inventario.'),
+                padding: const EdgeInsets.all(16),
+                child: Text(t.sinInsumosInventario),
               ),
             )
           else
@@ -197,7 +199,7 @@ class _PantallaEditarProductoState extends State<PantallaEditarProducto> {
                         },
                         icon: const Icon(Icons.search),
                         label: Text(
-                          insumoSeleccionado?.nombre ?? 'Elegir insumo',
+                          insumoSeleccionado?.nombre ?? t.elegirInsumoTitulo,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -210,7 +212,7 @@ class _PantallaEditarProductoState extends State<PantallaEditarProducto> {
                             controller: cantidadCtrl,
                             keyboardType: TextInputType.number,
                             decoration:
-                                const InputDecoration(labelText: 'Cantidad'),
+                                InputDecoration(labelText: t.cantidad),
                           ),
                         ),
                         const SizedBox(width: 8),
@@ -228,7 +230,7 @@ class _PantallaEditarProductoState extends State<PantallaEditarProducto> {
           if (receta.isEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Text('La receta está vacía.',
+              child: Text(t.recetaVacia,
                   style: TextStyle(color: m.textoSuave)),
             )
           else
@@ -238,7 +240,10 @@ class _PantallaEditarProductoState extends State<PantallaEditarProducto> {
                   title: Text(ing.insumo.nombre,
                       style: const TextStyle(fontWeight: FontWeight.w600)),
                   subtitle: Text(
-                    '${ing.cantidad.toStringAsFixed(0)} ${ing.insumo.unidad}  ·  ${pesos(ing.costo)}',
+                    t.ingredienteSubtitulo(
+                        ing.cantidad.toStringAsFixed(0),
+                        ing.insumo.unidad,
+                        pesos(ing.costo)),
                   ),
                   trailing: IconButton(
                     icon: Icon(Icons.delete_outline, color: m.rojo),
@@ -252,7 +257,7 @@ class _PantallaEditarProductoState extends State<PantallaEditarProducto> {
           const SizedBox(height: 20),
           ElevatedButton(
               onPressed: guardarCambios,
-              child: const Text('Guardar cambios')),
+              child: Text(t.guardarCambios)),
         ],
       ),
     );

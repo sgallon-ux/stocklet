@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:printing/printing.dart';
+import 'package:intl/intl.dart';
+import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../datos_app.dart';
 import '../models/resumen_mensual.dart';
 import '../tema.dart';
@@ -18,12 +20,18 @@ class PantallaReportesMensuales extends StatefulWidget {
 class _PantallaReportesMensualesState extends State<PantallaReportesMensuales> {
   String? _generando;
 
+  String _mesLargo(ResumenMensual r, String locale) {
+    final texto = DateFormat.yMMMM(locale).format(DateTime(r.anio, r.mes));
+    return texto.isEmpty ? texto : texto[0].toUpperCase() + texto.substring(1);
+  }
+
   Future<void> _descargar(ResumenMensual r) async {
+    final t = AppLocalizations.of(context)!;
     final datos = context.read<DatosApp>();
     setState(() => _generando = '${r.anio}-${r.mes}');
     try {
       final bytes = await generarReporteMensualPdf(
-        negocio: datos.negocio?.nombre ?? 'Mi negocio',
+        negocio: datos.negocio?.nombre ?? t.miNegocio,
         anio: r.anio,
         mes: r.mes,
         ventas: datos.ventas,
@@ -35,7 +43,7 @@ class _PantallaReportesMensualesState extends State<PantallaReportesMensuales> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('No se pudo generar el PDF.')),
+          SnackBar(content: Text(t.pdfError)),
         );
       }
     } finally {
@@ -45,6 +53,8 @@ class _PantallaReportesMensualesState extends State<PantallaReportesMensuales> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context).toString();
     final datos = context.watch<DatosApp>();
     final m = AppColores.of(context);
     final ahora = DateTime.now();
@@ -58,13 +68,12 @@ class _PantallaReportesMensualesState extends State<PantallaReportesMensuales> {
       });
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Reportes mensuales')),
+      appBar: AppBar(title: Text(t.reportesMensuales)),
       body: meses.isEmpty
           ? Center(
               child: Padding(
                 padding: const EdgeInsets.all(32),
-                child: Text(
-                    'Aún no hay meses cerrados para reportar.\nAl terminar el mes actual, aparecerá aquí.',
+                child: Text(t.sinMesesCerrados,
                     textAlign: TextAlign.center,
                     style: TextStyle(color: m.textoSuave)),
               ),
@@ -82,16 +91,17 @@ class _PantallaReportesMensualesState extends State<PantallaReportesMensuales> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(r.etiqueta,
+                              Text(_mesLargo(r, locale),
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: m.texto)),
                               const SizedBox(height: 4),
                               Text(
-                                  'Ingresos: ${pesos(r.ingresos)}  ·  Gastos: ${pesos(r.gastos)}',
+                                  t.ingresosGastos(
+                                      pesos(r.ingresos), pesos(r.gastos)),
                                   style: TextStyle(
                                       fontSize: 12, color: m.textoSuave)),
-                              Text('Ganancia: ${pesos(r.ganancia)}',
+                              Text(t.gananciaTexto(pesos(r.ganancia)),
                                   style: TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w600,
@@ -109,7 +119,7 @@ class _PantallaReportesMensualesState extends State<PantallaReportesMensuales> {
                                     CircularProgressIndicator(strokeWidth: 2))
                             : IconButton.filledTonal(
                                 icon: const Icon(Icons.download_outlined),
-                                tooltip: 'Descargar PDF',
+                                tooltip: t.descargarPdf,
                                 onPressed: () => _descargar(r),
                               ),
                       ],

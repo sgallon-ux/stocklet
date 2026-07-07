@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../datos_app.dart';
 import '../models/insumo.dart';
 import '../tema.dart';
@@ -26,30 +27,29 @@ class _PantallaInventarioState extends State<PantallaInventario> {
   }
 
   void _confirmarEliminar(Insumo insumo) {
+    final t = AppLocalizations.of(context)!;
     final datos = context.read<DatosApp>();
     if (datos.insumoEstaEnUso(insumo)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text(
-                'No puedes eliminar ${insumo.nombre}: lo usa un producto')),
+        SnackBar(content: Text(t.insumoNoEliminarEnUso(insumo.nombre))),
       );
       return;
     }
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Eliminar insumo'),
-        content: Text('¿Seguro que quieres eliminar ${insumo.nombre}?'),
+        title: Text(t.eliminarInsumoTitulo),
+        content: Text(t.eliminarInsumoConfirmacion(insumo.nombre)),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(dialogContext),
-              child: const Text('Cancelar')),
+              child: Text(t.cancelar)),
           TextButton(
             onPressed: () {
               datos.eliminarInsumo(insumo);
               Navigator.pop(dialogContext);
             },
-            child: const Text('Eliminar'),
+            child: Text(t.eliminar),
           ),
         ],
       ),
@@ -58,24 +58,25 @@ class _PantallaInventarioState extends State<PantallaInventario> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         title: buscando
             ? TextField(
                 controller: busquedaCtrl,
                 autofocus: true,
-                decoration: const InputDecoration(
-                  hintText: 'Buscar insumo...',
+                decoration: InputDecoration(
+                  hintText: t.buscarInsumoHint,
                   border: InputBorder.none,
                 ),
                 onChanged: (valor) => setState(() => consulta = valor),
               )
-            : const Text('Inventario'),
+            : Text(t.inventario),
         actions: [
           buscando
               ? IconButton(
                   icon: const Icon(Icons.close),
-                  tooltip: 'Cerrar búsqueda',
+                  tooltip: t.cerrarBusqueda,
                   onPressed: () {
                     setState(() {
                       buscando = false;
@@ -86,7 +87,7 @@ class _PantallaInventarioState extends State<PantallaInventario> {
                 )
               : IconButton(
                   icon: const Icon(Icons.search),
-                  tooltip: 'Buscar',
+                  tooltip: t.buscar,
                   onPressed: () => setState(() => buscando = true),
                 ),
         ],
@@ -95,7 +96,7 @@ class _PantallaInventarioState extends State<PantallaInventario> {
         onPressed: () => Navigator.push(context,
             MaterialPageRoute(builder: (context) => const PantallaAgregarInsumo())),
         icon: const Icon(Icons.add),
-        label: const Text('Insumo'),
+        label: Text(t.insumo),
       ),
       body: Consumer<DatosApp>(
         builder: (context, datos, child) {
@@ -104,7 +105,7 @@ class _PantallaInventarioState extends State<PantallaInventario> {
             return Center(
               child: Padding(
                 padding: const EdgeInsets.all(32),
-                child: Text('Aún no hay insumos.\nAgrega el primero con el botón +',
+                child: Text(t.inventarioVacio,
                     textAlign: TextAlign.center,
                     style: TextStyle(color: m.textoSuave)),
               ),
@@ -119,8 +120,8 @@ class _PantallaInventarioState extends State<PantallaInventario> {
                 a.nombre.toLowerCase().compareTo(b.nombre.toLowerCase()));
 
           if (insumos.isEmpty) {
-            return const Center(
-                child: Text('Ningún insumo coincide con la búsqueda.'));
+            return Center(
+                child: Text(t.inventarioSinCoincidencias));
           }
 
           return ListView(
@@ -162,12 +163,16 @@ class _PantallaInventarioState extends State<PantallaInventario> {
                                       color: m.texto)),
                               const SizedBox(height: 3),
                               Text(
-                                  '${pesos(insumo.costoPorUnidad)} por ${insumo.unidad}',
+                                  t.costoPorUnidadTexto(
+                                      pesos(insumo.costoPorUnidad),
+                                      insumo.unidad),
                                   style: TextStyle(
                                       fontSize: 12,
                                       color: m.textoSuave)),
                               Text(
-                                  'Stock: ${insumo.stockActual.toStringAsFixed(0)} ${insumo.unidad}',
+                                  t.stockTexto(
+                                      insumo.stockActual.toStringAsFixed(0),
+                                      insumo.unidad),
                                   style: TextStyle(
                                       fontSize: 12,
                                       color: m.textoSuave)),
@@ -186,10 +191,11 @@ class _PantallaInventarioState extends State<PantallaInventario> {
                               _confirmarEliminar(insumo);
                             }
                           },
-                          itemBuilder: (context) => const [
-                            PopupMenuItem(value: 'editar', child: Text('Editar')),
+                          itemBuilder: (context) => [
                             PopupMenuItem(
-                                value: 'eliminar', child: Text('Eliminar')),
+                                value: 'editar', child: Text(t.editar)),
+                            PopupMenuItem(
+                                value: 'eliminar', child: Text(t.eliminar)),
                           ],
                         ),
                       ],

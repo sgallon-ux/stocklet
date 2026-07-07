@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:intl/intl.dart';
+import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../datos_app.dart';
 import '../models/resumen_mensual.dart';
 import '../tema.dart';
@@ -12,10 +14,21 @@ import 'reportes_mensuales.dart';
 class PantallaReportes extends StatelessWidget {
   const PantallaReportes({super.key});
 
+  static String _cap(String s) =>
+      s.isEmpty ? s : s[0].toUpperCase() + s.substring(1);
+
+  static String _mesLargo(ResumenMensual r, String locale) =>
+      _cap(DateFormat.yMMMM(locale).format(DateTime(r.anio, r.mes)));
+
+  static String _mesCorto(ResumenMensual r, String locale) =>
+      _cap(DateFormat.yMMM(locale).format(DateTime(r.anio, r.mes)));
+
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context).toString();
     return Scaffold(
-      appBar: AppBar(title: const Text('Análisis y reportes')),
+      appBar: AppBar(title: Text(t.analisisYReportes)),
       body: Consumer<DatosApp>(
         builder: (context, datos, child) {
           final m = AppColores.of(context);
@@ -24,8 +37,7 @@ class PantallaReportes extends StatelessWidget {
             return Center(
               child: Padding(
                 padding: const EdgeInsets.all(32),
-                child: Text(
-                    'Aún no hay datos para analizar.\nRegistra ventas y gastos para ver tus reportes.',
+                child: Text(t.reportesVacio,
                     textAlign: TextAlign.center,
                     style: TextStyle(color: m.textoSuave)),
               ),
@@ -45,15 +57,15 @@ class PantallaReportes extends StatelessWidget {
           return ListView(
             padding: const EdgeInsets.all(16),
             children: [
-              _tarjetaGanancia(m, actual, anterior, crecimiento),
+              _tarjetaGanancia(m, t, locale, actual, anterior, crecimiento),
               const SizedBox(height: 16),
-              _tarjetaGrafica(m, resumen),
+              _tarjetaGrafica(m, t, locale, resumen),
               const SizedBox(height: 16),
               const WidgetTopProductos(),
               const SizedBox(height: 16),
               const WidgetAnalisisVentas(),
               const SizedBox(height: 16),
-              _entradaReportesMensuales(context, m),
+              _entradaReportesMensuales(context, m, t),
             ],
           );
         },
@@ -61,8 +73,8 @@ class PantallaReportes extends StatelessWidget {
     );
   }
 
-  Widget _tarjetaGanancia(MarcaColores m, ResumenMensual actual,
-      ResumenMensual? anterior, double? crecimiento) {
+  Widget _tarjetaGanancia(MarcaColores m, AppLocalizations t, String locale,
+      ResumenMensual actual, ResumenMensual? anterior, double? crecimiento) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -72,10 +84,10 @@ class PantallaReportes extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: Text('Ganancia de ${actual.etiqueta}',
+                  child: Text(t.gananciaDeMes(_mesLargo(actual, locale)),
                       style: TextStyle(fontSize: 13, color: m.textoSuave)),
                 ),
-                _badgeCrecimiento(m, crecimiento),
+                _badgeCrecimiento(m, t, crecimiento),
               ],
             ),
             const SizedBox(height: 6),
@@ -93,7 +105,9 @@ class PantallaReportes extends StatelessWidget {
             ),
             if (anterior != null) ...[
               const SizedBox(height: 4),
-              Text('Mes anterior (${anterior.etiquetaCorta}): ${pesos(anterior.ganancia)}',
+              Text(
+                  t.mesAnterior(
+                      _mesCorto(anterior, locale), pesos(anterior.ganancia)),
                   style: TextStyle(fontSize: 12, color: m.textoSuave)),
             ],
           ],
@@ -102,7 +116,7 @@ class PantallaReportes extends StatelessWidget {
     );
   }
 
-  Widget _badgeCrecimiento(MarcaColores m, double? pct) {
+  Widget _badgeCrecimiento(MarcaColores m, AppLocalizations t, double? pct) {
     if (pct == null) {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -110,7 +124,7 @@ class PantallaReportes extends StatelessWidget {
           color: m.textoSuave.withValues(alpha: 0.12),
           borderRadius: BorderRadius.circular(20),
         ),
-        child: Text('— sin comparación',
+        child: Text(t.sinComparacion,
             style: TextStyle(fontSize: 12, color: m.textoSuave)),
       );
     }
@@ -136,7 +150,8 @@ class PantallaReportes extends StatelessWidget {
     );
   }
 
-  Widget _tarjetaGrafica(MarcaColores m, List<ResumenMensual> resumen) {
+  Widget _tarjetaGrafica(MarcaColores m, AppLocalizations t, String locale,
+      List<ResumenMensual> resumen) {
     final ultimos =
         resumen.length > 6 ? resumen.sublist(resumen.length - 6) : resumen;
 
@@ -153,7 +168,7 @@ class PantallaReportes extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Ganancia por mes',
+            Text(t.gananciaPorMes,
                 style: TextStyle(
                     fontSize: 16, fontWeight: FontWeight.bold, color: m.texto)),
             const SizedBox(height: 16),
@@ -184,7 +199,7 @@ class PantallaReportes extends StatelessWidget {
                           }
                           return Padding(
                             padding: const EdgeInsets.only(top: 6),
-                            child: Text(ultimos[i].etiquetaCorta,
+                            child: Text(_mesCorto(ultimos[i], locale),
                                 style: TextStyle(
                                     fontSize: 11, color: m.textoSuave)),
                           );
@@ -216,7 +231,8 @@ class PantallaReportes extends StatelessWidget {
     );
   }
 
-  Widget _entradaReportesMensuales(BuildContext context, MarcaColores m) {
+  Widget _entradaReportesMensuales(
+      BuildContext context, MarcaColores m, AppLocalizations t) {
     return Card(
       clipBehavior: Clip.antiAlias,
       child: ListTile(
@@ -234,10 +250,9 @@ class PantallaReportes extends StatelessWidget {
           ),
           child: Icon(Icons.description_outlined, color: m.verde),
         ),
-        title: Text('Reportes mensuales',
+        title: Text(t.reportesMensuales,
             style: TextStyle(fontWeight: FontWeight.bold, color: m.texto)),
-        subtitle:
-            const Text('Descarga el extracto en PDF de cada mes cerrado'),
+        subtitle: Text(t.reportesMensualesSub),
         trailing: Icon(Icons.chevron_right, color: m.textoSuave),
       ),
     );

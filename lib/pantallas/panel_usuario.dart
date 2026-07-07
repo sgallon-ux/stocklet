@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../datos_app.dart';
 import '../models/negocio.dart';
 import '../tema.dart';
@@ -55,9 +56,9 @@ class _PantallaPanelUsuarioState extends State<PantallaPanelUsuario> {
     super.dispose();
   }
 
-  void _aviso(String t) {
+  void _aviso(String msg) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(t)));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
   }
 
   String _mime(String? ext) {
@@ -74,17 +75,18 @@ class _PantallaPanelUsuarioState extends State<PantallaPanelUsuario> {
   }
 
   Future<void> _cambiarFoto() async {
+    final t = AppLocalizations.of(context)!;
     final result =
         await FilePicker.pickFiles(type: FileType.image, withData: true);
     if (result == null || !mounted) return;
     final archivo = result.files.first;
     final bytes = archivo.bytes;
     if (bytes == null) {
-      _aviso('No se pudo leer la imagen.');
+      _aviso(t.errorLeerImagen);
       return;
     }
     if (archivo.size > 5 * 1024 * 1024) {
-      _aviso('La imagen supera el límite de 5 MB.');
+      _aviso(t.imagenSupera5);
       return;
     }
     setState(() => subiendoFoto = true);
@@ -92,26 +94,27 @@ class _PantallaPanelUsuarioState extends State<PantallaPanelUsuario> {
       await context
           .read<DatosApp>()
           .guardarFotoPerfil(bytes, _mime(archivo.extension));
-      _aviso('Foto actualizada');
+      _aviso(t.fotoActualizada);
     } catch (e) {
-      _aviso('No se pudo subir la foto.');
+      _aviso(t.errorSubirFoto);
     } finally {
       if (mounted) setState(() => subiendoFoto = false);
     }
   }
 
   Future<void> _cambiarLogo() async {
+    final t = AppLocalizations.of(context)!;
     final result =
         await FilePicker.pickFiles(type: FileType.image, withData: true);
     if (result == null || !mounted) return;
     final archivo = result.files.first;
     final bytes = archivo.bytes;
     if (bytes == null) {
-      _aviso('No se pudo leer la imagen.');
+      _aviso(t.errorLeerImagen);
       return;
     }
     if (archivo.size > 5 * 1024 * 1024) {
-      _aviso('La imagen supera el límite de 5 MB.');
+      _aviso(t.imagenSupera5);
       return;
     }
     setState(() => subiendoLogo = true);
@@ -119,15 +122,16 @@ class _PantallaPanelUsuarioState extends State<PantallaPanelUsuario> {
       await context
           .read<DatosApp>()
           .guardarLogo(bytes, _mime(archivo.extension));
-      _aviso('Logo actualizado');
+      _aviso(t.logoActualizado);
     } catch (e) {
-      _aviso('No se pudo subir el logo. ¿Eres el dueño?');
+      _aviso(t.errorSubirLogo);
     } finally {
       if (mounted) setState(() => subiendoLogo = false);
     }
   }
 
   Future<bool?> _confirmar(String titulo, String mensaje) {
+    final t = AppLocalizations.of(context)!;
     final m = AppColores.of(context);
     return showDialog<bool>(
       context: context,
@@ -137,11 +141,11 @@ class _PantallaPanelUsuarioState extends State<PantallaPanelUsuario> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(dc, false),
-              child: const Text('Cancelar')),
+              child: Text(t.cancelar)),
           TextButton(
             onPressed: () => Navigator.pop(dc, true),
             style: TextButton.styleFrom(foregroundColor: m.rojo),
-            child: const Text('Quitar'),
+            child: Text(t.quitar),
           ),
         ],
       ),
@@ -149,34 +153,37 @@ class _PantallaPanelUsuarioState extends State<PantallaPanelUsuario> {
   }
 
   Future<void> _eliminarFoto() async {
-    final ok = await _confirmar('Quitar foto', '¿Quitar tu foto de perfil?');
+    final t = AppLocalizations.of(context)!;
+    final ok = await _confirmar(t.quitarFoto, t.quitarFotoConfirmacion);
     if (ok != true || !mounted) return;
     setState(() => subiendoFoto = true);
     try {
       await context.read<DatosApp>().eliminarFotoPerfil();
-      _aviso('Foto eliminada');
+      _aviso(t.fotoEliminada);
     } catch (e) {
-      _aviso('No se pudo eliminar la foto.');
+      _aviso(t.errorEliminarFoto);
     } finally {
       if (mounted) setState(() => subiendoFoto = false);
     }
   }
 
   Future<void> _eliminarLogo() async {
-    final ok = await _confirmar('Quitar logo', '¿Quitar el logo de la empresa?');
+    final t = AppLocalizations.of(context)!;
+    final ok = await _confirmar(t.quitarLogo, t.quitarLogoConfirmacion);
     if (ok != true || !mounted) return;
     setState(() => subiendoLogo = true);
     try {
       await context.read<DatosApp>().eliminarLogo();
-      _aviso('Logo eliminado');
+      _aviso(t.logoEliminado);
     } catch (e) {
-      _aviso('No se pudo eliminar el logo.');
+      _aviso(t.errorEliminarLogo);
     } finally {
       if (mounted) setState(() => subiendoLogo = false);
     }
   }
 
   Widget _logoEmpresa(String url, bool esDueno) {
+    final t = AppLocalizations.of(context)!;
     final m = AppColores.of(context);
     return Row(
       children: [
@@ -204,7 +211,7 @@ class _PantallaPanelUsuarioState extends State<PantallaPanelUsuario> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Logo de la empresa',
+              Text(t.logoEmpresa,
                   style:
                       TextStyle(fontWeight: FontWeight.w600, color: m.texto)),
               const SizedBox(height: 4),
@@ -218,18 +225,18 @@ class _PantallaPanelUsuarioState extends State<PantallaPanelUsuario> {
                           child: CircularProgressIndicator(strokeWidth: 2))
                       : const Icon(Icons.upload_outlined, size: 18),
                   label: Text(subiendoLogo
-                      ? 'Subiendo...'
-                      : (url.isEmpty ? 'Subir logo' : 'Cambiar logo')),
+                      ? t.subiendo
+                      : (url.isEmpty ? t.subirLogo : t.cambiarLogo)),
                 ),
                 if (url.isNotEmpty)
                   TextButton.icon(
                     onPressed: subiendoLogo ? null : _eliminarLogo,
                     icon: Icon(Icons.delete_outline, size: 18, color: m.rojo),
                     label:
-                        Text('Quitar logo', style: TextStyle(color: m.rojo)),
+                        Text(t.quitarLogo, style: TextStyle(color: m.rojo)),
                   ),
               ] else
-                Text('Solo el dueño puede cambiarlo',
+                Text(t.soloDuenoCambia,
                     style: TextStyle(fontSize: 12, color: m.textoSuave)),
             ],
           ),
@@ -290,24 +297,26 @@ class _PantallaPanelUsuarioState extends State<PantallaPanelUsuario> {
   }
 
   Future<void> _guardarPerfil() async {
+    final t = AppLocalizations.of(context)!;
     setState(() => guardandoPerfil = true);
     try {
       await context.read<DatosApp>().guardarPerfil(
             nombre: nombreCtrl.text.trim(),
             celular: celularCtrl.text.trim(),
           );
-      _aviso('Perfil guardado');
+      _aviso(t.perfilGuardado);
     } catch (e) {
-      _aviso('No se pudo guardar el perfil.');
+      _aviso(t.errorGuardarPerfil);
     } finally {
       if (mounted) setState(() => guardandoPerfil = false);
     }
   }
 
   Future<void> _guardarEmpresa() async {
+    final t = AppLocalizations.of(context)!;
     final nombre = empNombreCtrl.text.trim();
     if (nombre.isEmpty) {
-      _aviso('El nombre de la empresa no puede quedar vacío.');
+      _aviso(t.nombreEmpresaVacio);
       return;
     }
     setState(() => guardandoEmpresa = true);
@@ -319,9 +328,9 @@ class _PantallaPanelUsuarioState extends State<PantallaPanelUsuario> {
             tel: empTelCtrl.text.trim(),
             ubicacion: empUbicacionCtrl.text.trim(),
           );
-      _aviso('Datos de la empresa guardados');
+      _aviso(t.empresaGuardada);
     } catch (e) {
-      _aviso('No se pudo guardar. ¿Eres el dueño del negocio?');
+      _aviso(t.errorGuardarEmpresa);
     } finally {
       if (mounted) setState(() => guardandoEmpresa = false);
     }
@@ -329,6 +338,7 @@ class _PantallaPanelUsuarioState extends State<PantallaPanelUsuario> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     final datos = context.watch<DatosApp>();
     final m = AppColores.of(context);
     final uid = FirebaseAuth.instance.currentUser?.uid;
@@ -337,7 +347,7 @@ class _PantallaPanelUsuarioState extends State<PantallaPanelUsuario> {
     final esDueno = negocio != null && negocio.duenoUid == uid;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Perfil')),
+      appBar: AppBar(title: Text(t.perfil)),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -346,14 +356,14 @@ class _PantallaPanelUsuarioState extends State<PantallaPanelUsuario> {
               children: [
                 _avatar(datos.perfilFotoUrl),
                 const SizedBox(height: 8),
-                Text('Toca la cámara para cambiar tu foto',
+                Text(t.tocaCamara,
                     style: TextStyle(fontSize: 12, color: m.textoSuave)),
                 if (datos.perfilFotoUrl.isNotEmpty)
                   TextButton.icon(
                     onPressed: subiendoFoto ? null : _eliminarFoto,
                     icon: Icon(Icons.delete_outline, size: 18, color: m.rojo),
                     label:
-                        Text('Quitar foto', style: TextStyle(color: m.rojo)),
+                        Text(t.quitarFoto, style: TextStyle(color: m.rojo)),
                   ),
               ],
             ),
@@ -365,34 +375,34 @@ class _PantallaPanelUsuarioState extends State<PantallaPanelUsuario> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text('Información personal',
+                  Text(t.informacionPersonal,
                       style: TextStyle(
                           fontWeight: FontWeight.bold, color: m.texto)),
                   const SizedBox(height: 16),
                   TextField(
                     controller: nombreCtrl,
                     textCapitalization: TextCapitalization.words,
-                    decoration: const InputDecoration(
-                      labelText: 'Nombre',
-                      prefixIcon: Icon(Icons.person_outline),
+                    decoration: InputDecoration(
+                      labelText: t.campoNombre,
+                      prefixIcon: const Icon(Icons.person_outline),
                     ),
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
                     initialValue: correo,
                     enabled: false,
-                    decoration: const InputDecoration(
-                      labelText: 'Correo (de tu cuenta)',
-                      prefixIcon: Icon(Icons.email_outlined),
+                    decoration: InputDecoration(
+                      labelText: t.correoCuenta,
+                      prefixIcon: const Icon(Icons.email_outlined),
                     ),
                   ),
                   const SizedBox(height: 16),
                   TextField(
                     controller: celularCtrl,
                     keyboardType: TextInputType.phone,
-                    decoration: const InputDecoration(
-                      labelText: 'Celular',
-                      prefixIcon: Icon(Icons.phone_outlined),
+                    decoration: InputDecoration(
+                      labelText: t.celular,
+                      prefixIcon: const Icon(Icons.phone_outlined),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -406,7 +416,7 @@ class _PantallaPanelUsuarioState extends State<PantallaPanelUsuario> {
                                 strokeWidth: 2, color: Colors.white))
                         : const Icon(Icons.save_outlined),
                     label: Text(
-                        guardandoPerfil ? 'Guardando...' : 'Guardar perfil'),
+                        guardandoPerfil ? t.guardando : t.guardarPerfil),
                   ),
                 ],
               ),
@@ -422,12 +432,12 @@ class _PantallaPanelUsuarioState extends State<PantallaPanelUsuario> {
                   Row(
                     children: [
                       Expanded(
-                        child: Text('Datos de la empresa',
+                        child: Text(t.datosEmpresa,
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, color: m.texto)),
                       ),
                       if (!esDueno)
-                        Text('Solo lectura',
+                        Text(t.soloLectura,
                             style:
                                 TextStyle(fontSize: 11, color: m.textoSuave)),
                     ],
@@ -436,9 +446,9 @@ class _PantallaPanelUsuarioState extends State<PantallaPanelUsuario> {
                   _logoEmpresa(negocio?.logoUrl ?? '', esDueno),
                   const SizedBox(height: 16),
                   if (esDueno)
-                    ..._camposEmpresaEditables()
+                    ..._camposEmpresaEditables(t)
                   else
-                    ..._camposEmpresaLectura(negocio),
+                    ..._camposEmpresaLectura(t, negocio),
                 ],
               ),
             ),
@@ -447,7 +457,7 @@ class _PantallaPanelUsuarioState extends State<PantallaPanelUsuario> {
             const SizedBox(height: 8),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4),
-              child: Text('Solo el dueño del negocio puede editar estos datos.',
+              child: Text(t.soloDuenoEdita,
                   style: TextStyle(fontSize: 12, color: m.textoSuave)),
             ),
           ],
@@ -458,56 +468,56 @@ class _PantallaPanelUsuarioState extends State<PantallaPanelUsuario> {
                 MaterialPageRoute(
                     builder: (_) => const PantallaCambiarContrasena())),
             icon: const Icon(Icons.lock_outline),
-            label: const Text('Cambiar contraseña'),
+            label: Text(t.cambiarContrasena),
           ),
         ],
       ),
     );
   }
 
-  List<Widget> _camposEmpresaEditables() {
+  List<Widget> _camposEmpresaEditables(AppLocalizations t) {
     return [
       TextField(
         controller: empNombreCtrl,
         textCapitalization: TextCapitalization.words,
-        decoration: const InputDecoration(
-          labelText: 'Nombre de la empresa',
-          prefixIcon: Icon(Icons.storefront_outlined),
+        decoration: InputDecoration(
+          labelText: t.nombreEmpresa,
+          prefixIcon: const Icon(Icons.storefront_outlined),
         ),
       ),
       const SizedBox(height: 16),
       TextField(
         controller: empNitCtrl,
-        decoration: const InputDecoration(
-          labelText: 'NIT',
-          prefixIcon: Icon(Icons.badge_outlined),
+        decoration: InputDecoration(
+          labelText: t.nit,
+          prefixIcon: const Icon(Icons.badge_outlined),
         ),
       ),
       const SizedBox(height: 16),
       TextField(
         controller: empCorreoCtrl,
         keyboardType: TextInputType.emailAddress,
-        decoration: const InputDecoration(
-          labelText: 'Correo de la empresa',
-          prefixIcon: Icon(Icons.alternate_email),
+        decoration: InputDecoration(
+          labelText: t.correoEmpresa,
+          prefixIcon: const Icon(Icons.alternate_email),
         ),
       ),
       const SizedBox(height: 16),
       TextField(
         controller: empTelCtrl,
         keyboardType: TextInputType.phone,
-        decoration: const InputDecoration(
-          labelText: 'Teléfono',
-          prefixIcon: Icon(Icons.phone_outlined),
+        decoration: InputDecoration(
+          labelText: t.telefono,
+          prefixIcon: const Icon(Icons.phone_outlined),
         ),
       ),
       const SizedBox(height: 16),
       TextField(
         controller: empUbicacionCtrl,
         textCapitalization: TextCapitalization.sentences,
-        decoration: const InputDecoration(
-          labelText: 'Ubicación',
-          prefixIcon: Icon(Icons.location_on_outlined),
+        decoration: InputDecoration(
+          labelText: t.ubicacion,
+          prefixIcon: const Icon(Icons.location_on_outlined),
         ),
       ),
       const SizedBox(height: 16),
@@ -520,12 +530,12 @@ class _PantallaPanelUsuarioState extends State<PantallaPanelUsuario> {
                 child: CircularProgressIndicator(
                     strokeWidth: 2, color: Colors.white))
             : const Icon(Icons.save_outlined),
-        label: Text(guardandoEmpresa ? 'Guardando...' : 'Guardar empresa'),
+        label: Text(guardandoEmpresa ? t.guardando : t.guardarEmpresa),
       ),
     ];
   }
 
-  List<Widget> _camposEmpresaLectura(Negocio? negocio) {
+  List<Widget> _camposEmpresaLectura(AppLocalizations t, Negocio? negocio) {
     final m = AppColores.of(context);
     Widget fila(IconData ic, String label, String valor) => Padding(
           padding: const EdgeInsets.symmetric(vertical: 8),
@@ -547,11 +557,11 @@ class _PantallaPanelUsuarioState extends State<PantallaPanelUsuario> {
         );
 
     return [
-      fila(Icons.storefront_outlined, 'Nombre', negocio?.nombre ?? ''),
-      fila(Icons.badge_outlined, 'NIT', negocio?.nit ?? ''),
-      fila(Icons.alternate_email, 'Correo', negocio?.correo ?? ''),
-      fila(Icons.phone_outlined, 'Teléfono', negocio?.tel ?? ''),
-      fila(Icons.location_on_outlined, 'Ubicación', negocio?.ubicacion ?? ''),
+      fila(Icons.storefront_outlined, t.campoNombre, negocio?.nombre ?? ''),
+      fila(Icons.badge_outlined, t.nit, negocio?.nit ?? ''),
+      fila(Icons.alternate_email, t.campoCorreo, negocio?.correo ?? ''),
+      fila(Icons.phone_outlined, t.telefono, negocio?.tel ?? ''),
+      fila(Icons.location_on_outlined, t.ubicacion, negocio?.ubicacion ?? ''),
     ];
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../tema.dart';
 
 // Devuelve el tipo elegido ('' = sin tipo, o un nombre nuevo/existente),
@@ -36,8 +37,9 @@ class _DialogoTipoState extends State<_DialogoTipo> {
   @override
   Widget build(BuildContext context) {
     final m = AppColores.of(context);
+    final t = AppLocalizations.of(context)!;
     return AlertDialog(
-      title: const Text('Tipo de producto'),
+      title: Text(t.tipoProducto),
       content: SizedBox(
         width: double.maxFinite,
         child: Column(
@@ -49,9 +51,9 @@ class _DialogoTipoState extends State<_DialogoTipo> {
                   child: TextField(
                     controller: nuevoCtrl,
                     textCapitalization: TextCapitalization.sentences,
-                    decoration: const InputDecoration(
-                      hintText: 'Crear tipo de producto, ej: Bebidas',
-                      prefixIcon: Icon(Icons.add),
+                    decoration: InputDecoration(
+                      hintText: t.crearTipoHint,
+                      prefixIcon: const Icon(Icons.add),
                     ),
                     onSubmitted: (_) => _crear(),
                   ),
@@ -65,25 +67,25 @@ class _DialogoTipoState extends State<_DialogoTipo> {
             ListTile(
               dense: true,
               leading: Icon(Icons.block, color: m.textoSuave),
-              title: const Text('Sin tipo'),
+              title: Text(t.sinTipo),
               onTap: () => Navigator.pop(context, ''),
             ),
             Flexible(
               child: widget.tipos.isEmpty
                   ? Padding(
                       padding: const EdgeInsets.all(8),
-                      child: Text('Aún no has creado tipos.',
+                      child: Text(t.sinTipos,
                           style: TextStyle(color: m.textoSuave)),
                     )
                   : ListView(
                       shrinkWrap: true,
-                      children: widget.tipos.map((t) {
+                      children: widget.tipos.map((tp) {
                         return ListTile(
                           dense: true,
                           leading:
                               Icon(Icons.label_outline, color: m.verde),
-                          title: Text(t),
-                          onTap: () => Navigator.pop(context, t),
+                          title: Text(tp),
+                          onTap: () => Navigator.pop(context, tp),
                         );
                       }).toList(),
                     ),
@@ -94,7 +96,7 @@ class _DialogoTipoState extends State<_DialogoTipo> {
       actions: [
         TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancelar')),
+            child: Text(t.cancelar)),
       ],
     );
   }

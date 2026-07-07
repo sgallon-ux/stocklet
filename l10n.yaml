@@ -1,0 +1,6 @@
+# Va en la RAIZ del proyecto (junto a pubspec.yaml)
+arb-dir: lib/l10n
+template-arb-file: app_es.arb
+output-localization-file: app_localizations.dart
+output-class: AppLocalizations
+# El idioma base es el español (plantilla).

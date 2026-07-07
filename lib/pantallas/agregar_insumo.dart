@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../datos_app.dart';
 import '../models/insumo.dart';
 import '../tema.dart';
@@ -28,14 +29,14 @@ class _PantallaAgregarInsumoState extends State<PantallaAgregarInsumo> {
   }
 
   void guardar() {
+    final t = AppLocalizations.of(context)!;
     final nombre = nombreCtrl.text.trim();
     final cantidad = double.tryParse(cantidadCtrl.text) ?? 0;
     final precio = double.tryParse(precioCtrl.text) ?? 0;
 
     if (nombre.isEmpty || cantidad <= 0 || precio <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Completa todos los campos con valores válidos')),
+        SnackBar(content: Text(t.completaCamposValidos)),
       );
       return;
     }
@@ -57,8 +58,9 @@ class _PantallaAgregarInsumoState extends State<PantallaAgregarInsumo> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Agregar insumo')),
+      appBar: AppBar(title: Text(t.agregarInsumoTitulo)),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -71,23 +73,25 @@ class _PantallaAgregarInsumoState extends State<PantallaAgregarInsumo> {
                   TextField(
                     controller: nombreCtrl,
                     textCapitalization: TextCapitalization.sentences,
-                    decoration: const InputDecoration(
-                      labelText: 'Nombre',
-                      hintText: 'Ej: Harina',
-                      prefixIcon: Icon(Icons.category_outlined),
+                    decoration: InputDecoration(
+                      labelText: t.campoNombre,
+                      hintText: t.insumoNombreHint,
+                      prefixIcon: const Icon(Icons.category_outlined),
                     ),
                   ),
                   const SizedBox(height: 16),
                   DropdownButtonFormField<String>(
                     initialValue: unidad,
-                    decoration: const InputDecoration(
-                      labelText: 'Unidad de medida',
-                      prefixIcon: Icon(Icons.straighten),
+                    decoration: InputDecoration(
+                      labelText: t.unidadMedida,
+                      prefixIcon: const Icon(Icons.straighten),
                     ),
-                    items: const [
-                      DropdownMenuItem(value: 'g', child: Text('Gramos (g)')),
-                      DropdownMenuItem(value: 'ml', child: Text('Mililitros (ml)')),
-                      DropdownMenuItem(value: 'unidad', child: Text('Unidades')),
+                    items: [
+                      DropdownMenuItem(value: 'g', child: Text(t.unidadGramos)),
+                      DropdownMenuItem(
+                          value: 'ml', child: Text(t.unidadMililitros)),
+                      DropdownMenuItem(
+                          value: 'unidad', child: Text(t.unidadUnidades)),
                     ],
                     onChanged: (nueva) => setState(() => unidad = nueva!),
                   ),
@@ -95,28 +99,29 @@ class _PantallaAgregarInsumoState extends State<PantallaAgregarInsumo> {
                   TextField(
                     controller: cantidadCtrl,
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'Cantidad comprada',
-                      hintText: 'Ej: 1000',
-                      prefixIcon: Icon(Icons.scale_outlined),
+                    decoration: InputDecoration(
+                      labelText: t.cantidadComprada,
+                      hintText: t.cantidadCompradaHint,
+                      prefixIcon: const Icon(Icons.scale_outlined),
                     ),
                   ),
                   const SizedBox(height: 16),
                   TextField(
                     controller: precioCtrl,
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'Precio total pagado',
-                      prefixIcon: Icon(Icons.attach_money),
+                    decoration: InputDecoration(
+                      labelText: t.precioTotalPagado,
+                      prefixIcon: const Icon(Icons.attach_money),
                     ),
                   ),
                   TextField(
                     controller: minimoCtrl,
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'Stock mínimo (opcional)',
-                      hintText: 'Avisar cuando baje de...',
-                      prefixIcon: Icon(Icons.notifications_active_outlined),
+                    decoration: InputDecoration(
+                      labelText: t.stockMinimoOpcional,
+                      hintText: t.stockMinimoHint,
+                      prefixIcon:
+                          const Icon(Icons.notifications_active_outlined),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -128,13 +133,13 @@ class _PantallaAgregarInsumoState extends State<PantallaAgregarInsumo> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4),
             child: Text(
-              'Con la cantidad y el precio, la app calcula sola el costo por unidad.',
+              t.agregarInsumoAyuda,
               style:
                   TextStyle(fontSize: 12, color: AppColores.of(context).textoSuave),
             ),
           ),
           const SizedBox(height: 16),
-          ElevatedButton(onPressed: guardar, child: const Text('Guardar insumo')),
+          ElevatedButton(onPressed: guardar, child: Text(t.guardarInsumo)),
         ],
       ),
     );

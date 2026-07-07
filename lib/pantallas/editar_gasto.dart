@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../datos_app.dart';
 import '../models/gasto.dart';
+import 'gasto_categoria_l10n.dart';
 
 class PantallaEditarGasto extends StatefulWidget {
   final Gasto gasto;
@@ -32,12 +34,13 @@ class _PantallaEditarGastoState extends State<PantallaEditarGasto> {
   }
 
   void guardar() {
+    final t = AppLocalizations.of(context)!;
     final descripcion = descripcionCtrl.text.trim();
     final monto = double.tryParse(montoCtrl.text) ?? -1;
 
     if (descripcion.isEmpty || monto <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Escribe una descripción y un monto válido')),
+        SnackBar(content: Text(t.gastoDescripcionMonto)),
       );
       return;
     }
@@ -54,8 +57,9 @@ class _PantallaEditarGastoState extends State<PantallaEditarGasto> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Editar gasto')),
+      appBar: AppBar(title: Text(t.editarGastoTitulo)),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -63,25 +67,28 @@ class _PantallaEditarGastoState extends State<PantallaEditarGasto> {
           children: [
             TextField(
               controller: descripcionCtrl,
-              decoration: const InputDecoration(labelText: 'Descripción'),
+              decoration: InputDecoration(labelText: t.descripcion),
             ),
             const SizedBox(height: 16),
             TextField(
               controller: montoCtrl,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(labelText: 'Monto', prefixText: '\$ '),
+              decoration:
+                  InputDecoration(labelText: t.monto, prefixText: '\$ '),
             ),
             const SizedBox(height: 16),
             DropdownButtonFormField<CategoriaGasto>(
               initialValue: categoria,
-              decoration: const InputDecoration(labelText: 'Categoría'),
+              decoration: InputDecoration(labelText: t.categoria),
               items: CategoriaGasto.values.map((c) {
-                return DropdownMenuItem(value: c, child: Text(c.name));
+                return DropdownMenuItem(
+                    value: c, child: Text(nombreCategoria(t, c)));
               }).toList(),
               onChanged: (nueva) => setState(() => categoria = nueva!),
             ),
             const SizedBox(height: 24),
-            ElevatedButton(onPressed: guardar, child: const Text('Guardar cambios')),
+            ElevatedButton(
+                onPressed: guardar, child: Text(t.guardarCambios)),
           ],
         ),
       ),

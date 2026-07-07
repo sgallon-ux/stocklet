@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../datos_app.dart';
 import '../tema.dart';
 
@@ -8,14 +9,15 @@ class PantallaNotificacionesConfig extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     final datos = context.watch<DatosApp>();
     final m = AppColores.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Notificaciones')),
+      appBar: AppBar(title: Text(t.notificaciones)),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          Text('Elige qué avisos quieres recibir dentro de la app.',
+          Text(t.notifConfigAyuda,
               style: TextStyle(color: m.textoSuave)),
           const SizedBox(height: 12),
           Card(
@@ -26,8 +28,8 @@ class PantallaNotificacionesConfig extends StatelessWidget {
                   onChanged: (v) => datos.setNotif(pedidos: v),
                   secondary:
                       Icon(Icons.receipt_long_outlined, color: m.verde),
-                  title: const Text('Pedidos próximos'),
-                  subtitle: const Text('Entregas de hoy, mañana o atrasadas'),
+                  title: Text(t.pedidosProximos),
+                  subtitle: Text(t.notifPedidosSub),
                 ),
                 const Divider(height: 1),
                 SwitchListTile(
@@ -35,8 +37,8 @@ class PantallaNotificacionesConfig extends StatelessWidget {
                   onChanged: (v) => datos.setNotif(notas: v),
                   secondary:
                       Icon(Icons.sticky_note_2_outlined, color: m.verde),
-                  title: const Text('Notas nuevas'),
-                  subtitle: const Text('Cuando alguien crea una nota'),
+                  title: Text(t.notasNuevas),
+                  subtitle: Text(t.notifNotasSub),
                 ),
                 const Divider(height: 1),
                 SwitchListTile(
@@ -44,9 +46,8 @@ class PantallaNotificacionesConfig extends StatelessWidget {
                   onChanged: (v) => datos.setNotif(insumos: v),
                   secondary:
                       Icon(Icons.inventory_2_outlined, color: m.verde),
-                  title: const Text('Inventario bajo'),
-                  subtitle:
-                      const Text('Insumos por debajo de su stock mínimo'),
+                  title: Text(t.inventarioBajo),
+                  subtitle: Text(t.notifInsumosSub),
                 ),
               ],
             ),

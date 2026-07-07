@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../../datos_app.dart';
 import '../../tema.dart';
 import '../top_productos.dart';
@@ -11,6 +12,7 @@ class WidgetTopProductos extends StatelessWidget {
   Widget build(BuildContext context) {
     final datos = context.watch<DatosApp>();
     final m = AppColores.of(context);
+    final t = AppLocalizations.of(context)!;
     final ahora = DateTime.now();
     final top = datos.topProductos(ahora.year, ahora.month);
     final primeros = top.take(3).toList();
@@ -24,7 +26,7 @@ class WidgetTopProductos extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: Text('Top productos del mes',
+                  child: Text(t.topProductosMes,
                       style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -35,7 +37,7 @@ class WidgetTopProductos extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                           builder: (_) => const PantallaTopProductos())),
-                  child: const Text('Ver todos'),
+                  child: Text(t.verTodos),
                 ),
               ],
             ),
@@ -43,21 +45,22 @@ class WidgetTopProductos extends StatelessWidget {
             if (primeros.isEmpty)
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8),
-                child: Text('Aún no hay ventas de productos este mes.',
+                child: Text(t.topSinVentasMes,
                     style: TextStyle(color: m.textoSuave)),
               )
             else
               ...primeros
                   .asMap()
                   .entries
-                  .map((e) => _fila(m, e.key + 1, e.value)),
+                  .map((e) => _fila(m, t, e.key + 1, e.value)),
           ],
         ),
       ),
     );
   }
 
-  Widget _fila(MarcaColores m, int puesto, ProductoVendido p) {
+  Widget _fila(MarcaColores m, AppLocalizations t, int puesto,
+      ProductoVendido p) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
@@ -84,7 +87,7 @@ class WidgetTopProductos extends StatelessWidget {
                 style: TextStyle(
                     fontWeight: FontWeight.w600, color: m.texto)),
           ),
-          Text('${p.cantidad} vend.',
+          Text(t.vendidosAbrev(p.cantidad),
               style: TextStyle(fontSize: 13, color: m.textoSuave)),
         ],
       ),

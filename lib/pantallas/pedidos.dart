@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../datos_app.dart';
 import '../models/pedido.dart';
 import '../tema.dart';
@@ -25,31 +26,29 @@ class _PantallaPedidosState extends State<PantallaPedidos> {
   }
 
   void _entregar(BuildContext context, Pedido pedido) {
+    final t = AppLocalizations.of(context)!;
     final datos = context.read<DatosApp>();
     showDialog(
       context: context,
       builder: (dc) => AlertDialog(
-        title: const Text('Entregar pedido'),
-        content: Text(
-          'Al marcar este pedido como entregado, su valor de ${pesos(pedido.precio)} '
-          'se registrará como un ingreso y aparecerá en tu historial de ventas.',
-        ),
+        title: Text(t.entregarPedido),
+        content: Text(t.entregarPedidoTexto(pesos(pedido.precio))),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(dc),
-              child: const Text('Cancelar')),
+              child: Text(t.cancelar)),
           ElevatedButton(
             onPressed: () {
               final negativos = datos.marcarPedidoEntregado(pedido);
               Navigator.pop(dc);
               final msg = negativos.isEmpty
-                  ? 'Pedido entregado y registrado en ingresos'
-                  : 'Entregado. Stock en negativo: ${negativos.join(', ')}';
+                  ? t.pedidoEntregadoOk
+                  : t.pedidoEntregadoNegativo(negativos.join(', '));
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(msg)),
               );
             },
-            child: const Text('Entregar'),
+            child: Text(t.entregar),
           ),
         ],
       ),
@@ -57,28 +56,28 @@ class _PantallaPedidosState extends State<PantallaPedidos> {
   }
 
   void _eliminar(BuildContext context, Pedido pedido) {
+    final t = AppLocalizations.of(context)!;
     final datos = context.read<DatosApp>();
     final entregado = pedido.entregado;
     showDialog(
       context: context,
       builder: (dc) => AlertDialog(
-        title: const Text('Eliminar pedido'),
+        title: Text(t.eliminarPedidoTitulo),
         content: Text(
           entregado
-              ? 'Este pedido ya fue entregado. Su ingreso ya quedó registrado '
-                  'como una venta y NO se modificará al eliminarlo.'
-              : '¿Seguro que quieres eliminar el pedido de ${pedido.cliente.nombre}?',
+              ? t.eliminarPedidoEntregado
+              : t.eliminarPedidoConfirmacion(pedido.cliente.nombre),
         ),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(dc),
-              child: const Text('Cancelar')),
+              child: Text(t.cancelar)),
           TextButton(
             onPressed: () {
               datos.eliminarPedido(pedido);
               Navigator.pop(dc);
             },
-            child: const Text('Eliminar'),
+            child: Text(t.eliminar),
           ),
         ],
       ),
@@ -86,13 +85,14 @@ class _PantallaPedidosState extends State<PantallaPedidos> {
   }
 
   void _archivar(BuildContext context, Pedido pedido) {
+    final t = AppLocalizations.of(context)!;
     final datos = context.read<DatosApp>();
     datos.archivarPedido(pedido);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: const Text('Pedido archivado'),
+        content: Text(t.pedidoArchivado),
         action: SnackBarAction(
-          label: 'Deshacer',
+          label: t.deshacer,
           onPressed: () => datos.desarchivarPedido(pedido),
         ),
       ),
@@ -106,13 +106,14 @@ class _PantallaPedidosState extends State<PantallaPedidos> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Pedidos')),
+      appBar: AppBar(title: Text(t.pedidos)),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => Navigator.push(context,
             MaterialPageRoute(builder: (_) => const PantallaCrearPedido())),
         icon: const Icon(Icons.add),
-        label: const Text('Pedido'),
+        label: Text(t.pedidoFab),
       ),
       body: Consumer<DatosApp>(
         builder: (context, datos, child) {
@@ -121,7 +122,7 @@ class _PantallaPedidosState extends State<PantallaPedidos> {
             return Center(
               child: Padding(
                 padding: const EdgeInsets.all(32),
-                child: Text('Aún no hay pedidos.\nCrea el primero con el botón +',
+                child: Text(t.pedidosVacio,
                     textAlign: TextAlign.center,
                     style: TextStyle(color: m.textoSuave)),
               ),
@@ -142,15 +143,15 @@ class _PantallaPedidosState extends State<PantallaPedidos> {
           return ListView(
             padding: const EdgeInsets.all(16),
             children: [
-              _encabezado(m, 'Pendientes', pendientes.length),
+              _encabezado(m, t.pendientes, pendientes.length),
               if (pendientes.isEmpty)
-                _vacio(m, 'No tienes pedidos pendientes.')
+                _vacio(m, t.sinPedidosPendientes)
               else
                 ...pendientes.map((p) => _tarjeta(context, p, 'pendiente')),
               const SizedBox(height: 16),
-              _encabezado(m, 'Entregados', entregados.length),
+              _encabezado(m, t.entregados, entregados.length),
               if (entregados.isEmpty)
-                _vacio(m, 'Aún no has entregado pedidos.')
+                _vacio(m, t.sinEntregados)
               else
                 ...entregados.map((p) => _tarjeta(context, p, 'entregado')),
               if (archivados.isNotEmpty) ...[
@@ -161,8 +162,8 @@ class _PantallaPedidosState extends State<PantallaPedidos> {
                   icon: Icon(
                       verArchivados ? Icons.expand_less : Icons.expand_more),
                   label: Text(verArchivados
-                      ? 'Ocultar archivados'
-                      : 'Ver archivados (${archivados.length})'),
+                      ? t.ocultarArchivados
+                      : t.verArchivadosBtn(archivados.length)),
                 ),
                 if (verArchivados)
                   ...archivados.map((p) => _tarjeta(context, p, 'archivado')),
@@ -194,21 +195,22 @@ class _PantallaPedidosState extends State<PantallaPedidos> {
 
   Widget _tarjeta(BuildContext context, Pedido pedido, String tipo) {
     final m = AppColores.of(context);
+    final t = AppLocalizations.of(context)!;
     String urg = '';
     Color urgColor = m.textoSuave;
     if (tipo == 'pendiente') {
       final d = _diasHasta(pedido.fechaEntrega);
       if (d < 0) {
-        urg = 'Atrasado';
+        urg = t.pedidoAtrasado;
         urgColor = m.rojo;
       } else if (d == 0) {
-        urg = 'Hoy';
+        urg = t.hoy;
         urgColor = const Color(0xFFE08600);
       } else if (d == 1) {
-        urg = 'Mañana';
+        urg = t.manana;
         urgColor = const Color(0xFFE08600);
       } else {
-        urg = 'En $d días';
+        urg = t.enDias(d);
         urgColor = m.textoSuave;
       }
     }
@@ -217,12 +219,12 @@ class _PantallaPedidosState extends State<PantallaPedidos> {
     final icono = tipo == 'pendiente' ? Icons.schedule : Icons.check_circle;
 
     final menu = <PopupMenuEntry<String>>[
-      const PopupMenuItem(value: 'editar', child: Text('Editar')),
+      PopupMenuItem(value: 'editar', child: Text(t.editar)),
       if (tipo == 'entregado')
-        const PopupMenuItem(value: 'archivar', child: Text('Archivar')),
+        PopupMenuItem(value: 'archivar', child: Text(t.archivar)),
       if (tipo == 'archivado')
-        const PopupMenuItem(value: 'desarchivar', child: Text('Desarchivar')),
-      const PopupMenuItem(value: 'eliminar', child: Text('Eliminar')),
+        PopupMenuItem(value: 'desarchivar', child: Text(t.desarchivar)),
+      PopupMenuItem(value: 'eliminar', child: Text(t.eliminar)),
     ];
 
     return Card(
@@ -300,13 +302,13 @@ class _PantallaPedidosState extends State<PantallaPedidos> {
                           fontWeight: FontWeight.bold,
                           color: urgColor))
                 else if (tipo == 'entregado')
-                  Text('Entregado',
+                  Text(t.entregadoEstado,
                       style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
                           color: m.verde))
                 else
-                  Text('Archivado',
+                  Text(t.archivadoEstado,
                       style: TextStyle(fontSize: 12, color: m.textoSuave)),
               ],
             ),
@@ -317,7 +319,7 @@ class _PantallaPedidosState extends State<PantallaPedidos> {
                 child: ElevatedButton.icon(
                   onPressed: () => _entregar(context, pedido),
                   icon: const Icon(Icons.check, size: 18),
-                  label: const Text('Marcar como entregado'),
+                  label: Text(t.marcarEntregado),
                 ),
               ),
             ],

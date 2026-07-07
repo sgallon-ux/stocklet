@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../tema.dart';
 
 class PantallaRegistro extends StatefulWidget {
@@ -23,12 +24,12 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
   }
 
   void registrar() async {
+    final t = AppLocalizations.of(context)!;
     final correo = correoCtrl.text.trim();
     final password = passwordCtrl.text;
     if (correo.isEmpty || password.length < 6) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Escribe un correo y una contraseña de mínimo 6 caracteres')),
+        SnackBar(content: Text(t.registroCompletaCampos)),
       );
       return;
     }
@@ -40,10 +41,10 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
       );
       if (mounted) Navigator.pop(context); // la compuerta lleva al onboarding
     } on FirebaseAuthException catch (e) {
-      String msg = 'No se pudo crear la cuenta';
-      if (e.code == 'email-already-in-use') msg = 'Ese correo ya tiene cuenta';
-      if (e.code == 'invalid-email') msg = 'El correo no es válido';
-      if (e.code == 'weak-password') msg = 'La contraseña es muy débil';
+      String msg = t.registroErrorGeneral;
+      if (e.code == 'email-already-in-use') msg = t.registroErrorEnUso;
+      if (e.code == 'invalid-email') msg = t.errorCorreoInvalido;
+      if (e.code == 'weak-password') msg = t.registroErrorDebil;
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
       }
@@ -55,6 +56,7 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
   @override
   Widget build(BuildContext context) {
     final m = AppColores.of(context);
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -80,7 +82,7 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    'Crea tu cuenta',
+                    t.crearCuenta,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         fontSize: 26,
@@ -89,7 +91,7 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    'Regístrate para empezar con tu negocio',
+                    t.registroSubtitulo,
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 14, color: m.textoSuave),
                   ),
@@ -105,9 +107,9 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
                           TextField(
                             controller: correoCtrl,
                             keyboardType: TextInputType.emailAddress,
-                            decoration: const InputDecoration(
-                              labelText: 'Correo',
-                              prefixIcon: Icon(Icons.mail_outline),
+                            decoration: InputDecoration(
+                              labelText: t.campoCorreo,
+                              prefixIcon: const Icon(Icons.mail_outline),
                             ),
                           ),
                           const SizedBox(height: 16),
@@ -115,8 +117,8 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
                             controller: passwordCtrl,
                             obscureText: !verPassword,
                             decoration: InputDecoration(
-                              labelText: 'Contraseña',
-                              helperText: 'Mínimo 6 caracteres',
+                              labelText: t.campoContrasena,
+                              helperText: t.registroMinimo,
                               prefixIcon: const Icon(Icons.lock_outline),
                               suffixIcon: IconButton(
                                 icon: Icon(verPassword
@@ -136,7 +138,7 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
                                     width: 20,
                                     child: CircularProgressIndicator(
                                         strokeWidth: 2, color: Colors.white))
-                                : const Text('Crear cuenta'),
+                                : Text(t.registroBoton),
                           ),
                         ],
                       ),
@@ -148,11 +150,11 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('¿Ya tienes cuenta?',
+                      Text(t.registroYaTienes,
                           style: TextStyle(color: m.textoSuave)),
                       TextButton(
                         onPressed: () => Navigator.pop(context),
-                        child: const Text('Inicia sesión'),
+                        child: Text(t.iniciaSesion),
                       ),
                     ],
                   ),

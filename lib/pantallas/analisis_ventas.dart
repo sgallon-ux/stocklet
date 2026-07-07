@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
+import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../datos_app.dart';
 import '../tema.dart';
 import '../formato.dart';
@@ -7,27 +9,32 @@ import '../formato.dart';
 class PantallaAnalisisVentas extends StatelessWidget {
   const PantallaAnalisisVentas({super.key});
 
-  static const _dias = [
-    'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'
-  ];
-  static const _nombresMes = [
-    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
-  ];
+  static String _cap(String s) =>
+      s.isEmpty ? s : s[0].toUpperCase() + s.substring(1);
+
+  // Nombre del día de la semana (1=Lun..7=Dom) localizado.
+  static String _diaNombre(int weekday, String locale) =>
+      _cap(DateFormat.EEEE(locale).format(DateTime(2024, 1, weekday)));
 
   @override
   Widget build(BuildContext context) {
     final datos = context.watch<DatosApp>();
     final m = AppColores.of(context);
-    final a = datos.analisisVentas();
+    final t = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context).toString();
+    // Etiquetas de mes localizadas (ej. "jul. 2026") para "Demanda por mes".
+    final a = datos.analisisVentas(
+      etiquetaMes: (y, mo) =>
+          _cap(DateFormat.yMMM(locale).format(DateTime(y, mo))),
+    );
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Análisis de ventas')),
+      appBar: AppBar(title: Text(t.analisisVentasTitulo)),
       body: a.numVentas == 0
           ? Center(
               child: Padding(
                 padding: const EdgeInsets.all(32),
-                child: Text('Aún no hay ventas para analizar.',
+                child: Text(t.sinVentasAnalizar,
                     textAlign: TextAlign.center,
                     style: TextStyle(color: m.textoSuave)),
               ),
@@ -35,24 +42,24 @@ class PantallaAnalisisVentas extends StatelessWidget {
           : ListView(
               padding: const EdgeInsets.all(16),
               children: [
-                _ticket(m, a),
+                _ticket(m, a, t),
                 const SizedBox(height: 16),
-                _demanda(m, a),
+                _demanda(m, a, t),
                 const SizedBox(height: 16),
-                _diaSemana(m, a),
+                _diaSemana(m, a, t, locale),
                 const SizedBox(height: 16),
-                _fechasPico(m, a),
+                _fechasPico(m, a, t, locale),
               ],
             ),
     );
   }
 
-  Widget _ticket(MarcaColores m, AnalisisVentas a) {
-    Widget bloque(String t, String v) => Expanded(
+  Widget _ticket(MarcaColores m, AnalisisVentas a, AppLocalizations t) {
+    Widget bloque(String label, String v) => Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(t, style: TextStyle(fontSize: 12, color: m.textoSuave)),
+              Text(label, style: TextStyle(fontSize: 12, color: m.textoSuave)),
               const SizedBox(height: 2),
               FittedBox(
                 fit: BoxFit.scaleDown,
@@ -73,15 +80,15 @@ class PantallaAnalisisVentas extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Resumen general',
+            Text(t.resumenGeneral,
                 style: TextStyle(
                     fontSize: 16, fontWeight: FontWeight.bold, color: m.texto)),
             const SizedBox(height: 12),
             Row(
               children: [
-                bloque('Ticket promedio', pesos(a.ticketPromedio)),
-                bloque('Nº de ventas', '${a.numVentas}'),
-                bloque('Total vendido', pesos(a.totalVendido)),
+                bloque(t.ticketPromedio, pesos(a.ticketPromedio)),
+                bloque(t.numVentasLabel, '${a.numVentas}'),
+                bloque(t.totalVendido, pesos(a.totalVendido)),
               ],
             ),
           ],
@@ -90,7 +97,7 @@ class PantallaAnalisisVentas extends StatelessWidget {
     );
   }
 
-  Widget _demanda(MarcaColores m, AnalisisVentas a) {
+  Widget _demanda(MarcaColores m, AnalisisVentas a, AppLocalizations t) {
     final ordenados = [...a.porMes]..sort((x, y) => y.value.compareTo(x.value));
     final mejor = ordenados.first;
     final peor = ordenados.last;
@@ -102,11 +109,11 @@ class PantallaAnalisisVentas extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Demanda por mes',
+            Text(t.demandaPorMes,
                 style: TextStyle(
                     fontSize: 16, fontWeight: FontWeight.bold, color: m.texto)),
             const SizedBox(height: 4),
-            Text('Más fuerte: ${mejor.key} · Más flojo: ${peor.key}',
+            Text(t.demandaFuerteFlojo(mejor.key, peor.key),
                 style: TextStyle(fontSize: 12, color: m.textoSuave)),
             const SizedBox(height: 12),
             ...a.porMes.map((e) {
@@ -147,7 +154,8 @@ class PantallaAnalisisVentas extends StatelessWidget {
     );
   }
 
-  Widget _diaSemana(MarcaColores m, AnalisisVentas a) {
+  Widget _diaSemana(
+      MarcaColores m, AnalisisVentas a, AppLocalizations t, String locale) {
     final maxV = a.porDiaSemana
         .map((e) => e.value)
         .fold<double>(0, (mx, v) => v > mx ? v : mx);
@@ -160,14 +168,15 @@ class PantallaAnalisisVentas extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Ventas por día de la semana',
+            Text(t.ventasPorDia,
                 style: TextStyle(
                     fontSize: 16, fontWeight: FontWeight.bold, color: m.texto)),
             const SizedBox(height: 4),
             Text(
                 mejor.first.value > 0
-                    ? 'Tu mejor día es el ${_dias[mejor.first.key - 1].toLowerCase()}'
-                    : 'Sin datos suficientes',
+                    ? t.mejorDia(_diaNombre(mejor.first.key, locale)
+                        .toLowerCase())
+                    : t.sinDatosSuficientes,
                 style: TextStyle(fontSize: 12, color: m.textoSuave)),
             const SizedBox(height: 12),
             ...a.porDiaSemana.map((e) {
@@ -178,8 +187,8 @@ class PantallaAnalisisVentas extends StatelessWidget {
                 child: Row(
                   children: [
                     SizedBox(
-                        width: 70,
-                        child: Text(_dias[e.key - 1],
+                        width: 80,
+                        child: Text(_diaNombre(e.key, locale),
                             style:
                                 TextStyle(fontSize: 12, color: m.textoSuave))),
                     Expanded(
@@ -208,18 +217,19 @@ class PantallaAnalisisVentas extends StatelessWidget {
     );
   }
 
-  Widget _fechasPico(MarcaColores m, AnalisisVentas a) {
+  Widget _fechasPico(
+      MarcaColores m, AnalisisVentas a, AppLocalizations t, String locale) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Fechas pico',
+            Text(t.fechasPico,
                 style: TextStyle(
                     fontSize: 16, fontWeight: FontWeight.bold, color: m.texto)),
             const SizedBox(height: 4),
-            Text('Tus días con más ventas (ahí están tus fechas especiales)',
+            Text(t.fechasPicoAyuda,
                 style: TextStyle(fontSize: 12, color: m.textoSuave)),
             const SizedBox(height: 12),
             ...a.fechasPico.asMap().entries.map((e) {
@@ -247,7 +257,7 @@ class PantallaAnalisisVentas extends StatelessWidget {
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                          '${fecha.day} de ${_nombresMes[fecha.month - 1]} ${fecha.year}',
+                          DateFormat.yMMMMd(locale).format(fecha),
                           style: TextStyle(
                               fontWeight: FontWeight.w600, color: m.texto)),
                     ),

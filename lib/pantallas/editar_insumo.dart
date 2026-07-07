@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../datos_app.dart';
 import '../models/insumo.dart';
 
@@ -40,15 +41,14 @@ class _PantallaEditarInsumoState extends State<PantallaEditarInsumo> {
   }
 
   void guardar() {
+    final t = AppLocalizations.of(context)!;
     final nombre = nombreCtrl.text.trim();
     final costo = double.tryParse(costoCtrl.text) ?? -1;
     final stock = double.tryParse(stockCtrl.text) ?? -1;
 
     if (nombre.isEmpty || costo < 0 || stock < 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content:
-                Text('Revisa los campos: valores válidos, sin negativos')),
+        SnackBar(content: Text(t.revisaCamposNegativos)),
       );
       return;
     }
@@ -69,8 +69,9 @@ class _PantallaEditarInsumoState extends State<PantallaEditarInsumo> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Editar insumo')),
+      appBar: AppBar(title: Text(t.editarInsumoTitulo)),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -83,22 +84,24 @@ class _PantallaEditarInsumoState extends State<PantallaEditarInsumo> {
                   TextField(
                     controller: nombreCtrl,
                     textCapitalization: TextCapitalization.sentences,
-                    decoration: const InputDecoration(
-                      labelText: 'Nombre',
-                      prefixIcon: Icon(Icons.category_outlined),
+                    decoration: InputDecoration(
+                      labelText: t.campoNombre,
+                      prefixIcon: const Icon(Icons.category_outlined),
                     ),
                   ),
                   const SizedBox(height: 16),
                   DropdownButtonFormField<String>(
                     initialValue: unidad,
-                    decoration: const InputDecoration(
-                      labelText: 'Unidad de medida',
-                      prefixIcon: Icon(Icons.straighten),
+                    decoration: InputDecoration(
+                      labelText: t.unidadMedida,
+                      prefixIcon: const Icon(Icons.straighten),
                     ),
-                    items: const [
-                      DropdownMenuItem(value: 'g', child: Text('Gramos (g)')),
-                      DropdownMenuItem(value: 'ml', child: Text('Mililitros (ml)')),
-                      DropdownMenuItem(value: 'unidad', child: Text('Unidades')),
+                    items: [
+                      DropdownMenuItem(value: 'g', child: Text(t.unidadGramos)),
+                      DropdownMenuItem(
+                          value: 'ml', child: Text(t.unidadMililitros)),
+                      DropdownMenuItem(
+                          value: 'unidad', child: Text(t.unidadUnidades)),
                     ],
                     onChanged: (nueva) => setState(() => unidad = nueva!),
                   ),
@@ -106,28 +109,29 @@ class _PantallaEditarInsumoState extends State<PantallaEditarInsumo> {
                   TextField(
                     controller: costoCtrl,
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'Costo por unidad',
-                      prefixIcon: Icon(Icons.attach_money),
+                    decoration: InputDecoration(
+                      labelText: t.costoPorUnidadLabel,
+                      prefixIcon: const Icon(Icons.attach_money),
                     ),
                   ),
                   const SizedBox(height: 16),
                   TextField(
                     controller: stockCtrl,
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'Stock actual',
-                      prefixIcon: Icon(Icons.inventory_2_outlined),
+                    decoration: InputDecoration(
+                      labelText: t.stockActualLabel,
+                      prefixIcon: const Icon(Icons.inventory_2_outlined),
                     ),
                   ),
                   const SizedBox(height: 16),
                   TextField(
                     controller: minimoCtrl,
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'Stock mínimo (opcional)',
-                      hintText: 'Avisar cuando baje de...',
-                      prefixIcon: Icon(Icons.notifications_active_outlined),
+                    decoration: InputDecoration(
+                      labelText: t.stockMinimoOpcional,
+                      hintText: t.stockMinimoHint,
+                      prefixIcon:
+                          const Icon(Icons.notifications_active_outlined),
                     ),
                   ),
                 ],
@@ -136,7 +140,7 @@ class _PantallaEditarInsumoState extends State<PantallaEditarInsumo> {
           ),
           const SizedBox(height: 16),
           ElevatedButton(
-              onPressed: guardar, child: const Text('Guardar cambios')),
+              onPressed: guardar, child: Text(t.guardarCambios)),
         ],
       ),
     );

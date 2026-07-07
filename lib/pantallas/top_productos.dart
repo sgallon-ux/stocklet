@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
+import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../datos_app.dart';
 import '../tema.dart';
 import '../formato.dart';
@@ -14,18 +16,18 @@ class PantallaTopProductos extends StatefulWidget {
 class _PantallaTopProductosState extends State<PantallaTopProductos> {
   DateTime? _mes;
 
-  static const _nombresMes = [
-    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
-  ];
-
-  String _label(DateTime fecha) =>
-      '${_nombresMes[fecha.month - 1]} ${fecha.year}';
+  // Mes localizado (ej. "Julio 2026").
+  String _label(BuildContext context, DateTime fecha) {
+    final locale = Localizations.localeOf(context).toString();
+    final texto = DateFormat.yMMMM(locale).format(fecha);
+    return texto.isEmpty ? texto : texto[0].toUpperCase() + texto.substring(1);
+  }
 
   @override
   Widget build(BuildContext context) {
     final datos = context.watch<DatosApp>();
     final m = AppColores.of(context);
+    final t = AppLocalizations.of(context)!;
     final meses = datos.mesesConVentasDeProductos();
 
     DateTime? sel = _mes;
@@ -40,12 +42,12 @@ class _PantallaTopProductosState extends State<PantallaTopProductos> {
         : datos.topProductos(sel.year, sel.month);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Top de productos')),
+      appBar: AppBar(title: Text(t.topProductosTitulo)),
       body: meses.isEmpty
           ? Center(
               child: Padding(
                 padding: const EdgeInsets.all(32),
-                child: Text('Aún no hay ventas de productos registradas.',
+                child: Text(t.sinVentasProductos,
                     textAlign: TextAlign.center,
                     style: TextStyle(color: m.textoSuave)),
               ),
@@ -55,7 +57,7 @@ class _PantallaTopProductosState extends State<PantallaTopProductos> {
               children: [
                 Row(
                   children: [
-                    Text('Mes:', style: TextStyle(color: m.textoSuave)),
+                    Text(t.mesLabel, style: TextStyle(color: m.textoSuave)),
                     const SizedBox(width: 12),
                     Expanded(
                       child: DropdownButton<DateTime>(
@@ -64,7 +66,8 @@ class _PantallaTopProductosState extends State<PantallaTopProductos> {
                         borderRadius: BorderRadius.circular(12),
                         items: meses
                             .map((mes) => DropdownMenuItem(
-                                value: mes, child: Text(_label(mes))))
+                                value: mes,
+                                child: Text(_label(context, mes))))
                             .toList(),
                         onChanged: (v) => setState(() => _mes = v),
                       ),
@@ -75,7 +78,7 @@ class _PantallaTopProductosState extends State<PantallaTopProductos> {
                 if (top.isEmpty)
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16),
-                    child: Text('No hubo ventas de productos en este mes.',
+                    child: Text(t.sinVentasProductosMes,
                         style: TextStyle(color: m.textoSuave)),
                   )
                 else
@@ -100,7 +103,7 @@ class _PantallaTopProductosState extends State<PantallaTopProductos> {
                         title: Text(p.nombre,
                             style:
                                 const TextStyle(fontWeight: FontWeight.w600)),
-                        subtitle: Text('Total: ${pesos(p.total)}'),
+                        subtitle: Text(t.totalTexto(pesos(p.total))),
                         trailing: Text('${p.cantidad}',
                             style: TextStyle(
                                 fontSize: 18,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../tema.dart';
 import 'inventario.dart';
 import 'productos.dart';
@@ -39,21 +40,22 @@ class CrearHub extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Crear y gestionar')),
+      appBar: AppBar(title: Text(t.crearHubTitulo)),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          _item(context, Icons.inventory_2_outlined, 'Inventario',
-              'Insumos, costos y stock', const PantallaInventario()),
-          _item(context, Icons.shopping_bag_outlined, 'Productos',
-              'Crea y administra tus productos', const PantallaProductos()),
-          _item(context, Icons.receipt_long_outlined, 'Pedidos',
-              'Encargos de clientes', const PantallaPedidos()),
-          _item(context, Icons.menu_book_outlined, 'Recetas',
-              'Guías de preparación paso a paso', const PantallaRecetas()),
-          _item(context, Icons.picture_as_pdf_outlined, 'Catálogo',
-              'Tus catálogos en PDF', const PantallaCatalogo()),
+          _item(context, Icons.inventory_2_outlined, t.inventario,
+              t.inventarioSub, const PantallaInventario()),
+          _item(context, Icons.shopping_bag_outlined, t.productos,
+              t.productosSub, const PantallaProductos()),
+          _item(context, Icons.receipt_long_outlined, t.pedidos,
+              t.pedidosSub, const PantallaPedidos()),
+          _item(context, Icons.menu_book_outlined, t.recetas,
+              t.recetasSub, const PantallaRecetas()),
+          _item(context, Icons.picture_as_pdf_outlined, t.catalogo,
+              t.catalogoSub, const PantallaCatalogo()),
         ],
       ),
     );

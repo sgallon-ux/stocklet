@@ -79,6 +79,8 @@ class DatosApp extends ChangeNotifier {
   bool notifInsumos = true;
   String acentoId = 'verde';
   String modoTemaId = 'claro'; // 'claro' | 'oscuro' | 'auto'
+  // Idioma elegido por el usuario. null = seguir el idioma del dispositivo.
+  String? idiomaId;
 
   List<Insumo> insumos = [];
   List<Producto> productos = [];
@@ -206,6 +208,7 @@ Future<void> _cargarNegocioId(String uid) async {
     notifInsumos = prefs.getBool('notifInsumos') ?? true;
     acentoId = prefs.getString('acentoId') ?? 'verde';
     modoTemaId = prefs.getString('modoTemaId') ?? 'claro';
+    idiomaId = prefs.getString('idiomaId'); // null si nunca se ha elegido
     notifyListeners();
   }
 
@@ -237,6 +240,19 @@ Future<void> _cargarNegocioId(String uid) async {
     modoTemaId = id;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('modoTemaId', id);
+    notifyListeners();
+  }
+
+  // Cambia el idioma de la app. Pasa null para volver al idioma del
+  // dispositivo. Se guarda como preferencia GLOBAL (no depende del negocio).
+  Future<void> setIdioma(String? id) async {
+    idiomaId = id;
+    final prefs = await SharedPreferences.getInstance();
+    if (id == null) {
+      await prefs.remove('idiomaId');
+    } else {
+      await prefs.setString('idiomaId', id);
+    }
     notifyListeners();
   }
 
@@ -740,7 +756,11 @@ Future<void> _cargarNegocioId(String uid) async {
   }
 
   // --- Análisis de todas las ventas (productos, manuales y pedidos) ---
-  AnalisisVentas analisisVentas() {
+  // [etiquetaMes] permite a la UI inyectar el nombre del mes localizado
+  // (ej. con intl). Si no se pasa, usa las abreviaturas en español por defecto.
+  AnalisisVentas analisisVentas({
+    String Function(int year, int month)? etiquetaMes,
+  }) {
     if (ventas.isEmpty) {
       return AnalisisVentas(
         numVentas: 0,
@@ -761,8 +781,9 @@ Future<void> _cargarNegocioId(String uid) async {
     for (final v in ventas) {
       total += v.total;
 
-      final claveMes =
-          '${_mesesCorto[v.fecha.month - 1]} ${v.fecha.year}';
+      final claveMes = etiquetaMes != null
+          ? etiquetaMes(v.fecha.year, v.fecha.month)
+          : '${_mesesCorto[v.fecha.month - 1]} ${v.fecha.year}';
       porMesMapa[claveMes] = (porMesMapa[claveMes] ?? 0) + v.total;
       ordenMes[claveMes] = DateTime(v.fecha.year, v.fecha.month, 1);
 
@@ -814,7 +835,11 @@ Future<void> _cargarNegocioId(String uid) async {
     return lista;
   }
 
-  List<PuntoTendencia> tendenciaGanancia(RangoTendencia rango) {
+  // [etiquetaMesCorto] permite inyectar la abreviatura de mes localizada.
+  List<PuntoTendencia> tendenciaGanancia(
+    RangoTendencia rango, {
+    String Function(int year, int month)? etiquetaMesCorto,
+  }) {
     final ahora = DateTime.now();
 
     // Ganancia en el intervalo [ini, fin)  (fin es exclusivo)
@@ -845,7 +870,10 @@ Future<void> _cargarNegocioId(String uid) async {
       for (int i = n - 1; i >= 0; i--) {
         final ini = DateTime(ahora.year, ahora.month - i, 1);
         final fin = DateTime(ahora.year, ahora.month - i + 1, 1);
-        puntos.add(PuntoTendencia(_mesesCorto[ini.month - 1], gananciaEntre(ini, fin)));
+        final etq = etiquetaMesCorto != null
+            ? etiquetaMesCorto(ini.year, ini.month)
+            : _mesesCorto[ini.month - 1];
+        puntos.add(PuntoTendencia(etq, gananciaEntre(ini, fin)));
       }
     }
     return puntos;

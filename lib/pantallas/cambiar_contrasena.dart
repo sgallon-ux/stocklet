@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../tema.dart';
 
 class PantallaCambiarContrasena extends StatefulWidget {
@@ -25,33 +26,34 @@ class _PantallaCambiarContrasenaState extends State<PantallaCambiarContrasena> {
     super.dispose();
   }
 
-  void _aviso(String t) {
+  void _aviso(String msg) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(t)));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
   }
 
   Future<void> _cambiar() async {
+    final t = AppLocalizations.of(context)!;
     final actual = actualCtrl.text;
     final nueva = nuevaCtrl.text;
     final confirmar = confirmarCtrl.text;
 
     if (actual.isEmpty || nueva.isEmpty || confirmar.isEmpty) {
-      _aviso('Completa todos los campos.');
+      _aviso(t.completaCampos);
       return;
     }
     if (nueva.length < 6) {
-      _aviso('La nueva contraseña debe tener al menos 6 caracteres.');
+      _aviso(t.passwordMin6);
       return;
     }
     if (nueva != confirmar) {
-      _aviso('La nueva contraseña y su confirmación no coinciden.');
+      _aviso(t.passwordNoCoincide);
       return;
     }
 
     final user = FirebaseAuth.instance.currentUser;
     final email = user?.email;
     if (user == null || email == null) {
-      _aviso('No hay una sesión válida.');
+      _aviso(t.sinSesionValida);
       return;
     }
 
@@ -62,30 +64,30 @@ class _PantallaCambiarContrasenaState extends State<PantallaCambiarContrasena> {
       await user.reauthenticateWithCredential(cred);
       await user.updatePassword(nueva);
       if (!mounted) return;
-      _aviso('Contraseña actualizada');
+      _aviso(t.passwordActualizada);
       Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
       String msg;
       switch (e.code) {
         case 'wrong-password':
         case 'invalid-credential':
-          msg = 'La contraseña actual es incorrecta.';
+          msg = t.passwordActualIncorrecta;
           break;
         case 'weak-password':
-          msg = 'La nueva contraseña es muy débil.';
+          msg = t.passwordDebil;
           break;
         case 'requires-recent-login':
-          msg = 'Por seguridad, vuelve a iniciar sesión e intenta de nuevo.';
+          msg = t.requiereReloginPassword;
           break;
         case 'too-many-requests':
-          msg = 'Demasiados intentos. Espera un momento e inténtalo de nuevo.';
+          msg = t.demasiadosIntentos;
           break;
         default:
-          msg = 'No se pudo cambiar la contraseña. Intenta de nuevo.';
+          msg = t.errorCambiarPassword;
       }
       _aviso(msg);
     } catch (e) {
-      _aviso('No se pudo cambiar la contraseña. Intenta de nuevo.');
+      _aviso(t.errorCambiarPassword);
     } finally {
       if (mounted) setState(() => procesando = false);
     }
@@ -109,8 +111,9 @@ class _PantallaCambiarContrasenaState extends State<PantallaCambiarContrasena> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Cambiar contraseña')),
+      appBar: AppBar(title: Text(t.cambiarContrasena)),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -120,14 +123,13 @@ class _PantallaCambiarContrasenaState extends State<PantallaCambiarContrasena> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  _campo(actualCtrl, 'Contraseña actual', verActual,
+                  _campo(actualCtrl, t.passwordActual, verActual,
                       () => setState(() => verActual = !verActual)),
                   const SizedBox(height: 16),
-                  _campo(nuevaCtrl, 'Nueva contraseña', verNueva,
+                  _campo(nuevaCtrl, t.passwordNueva, verNueva,
                       () => setState(() => verNueva = !verNueva)),
                   const SizedBox(height: 16),
-                  _campo(confirmarCtrl, 'Confirmar nueva contraseña',
-                      verConfirmar,
+                  _campo(confirmarCtrl, t.passwordConfirmar, verConfirmar,
                       () => setState(() => verConfirmar = !verConfirmar)),
                 ],
               ),
@@ -136,8 +138,7 @@ class _PantallaCambiarContrasenaState extends State<PantallaCambiarContrasena> {
           const SizedBox(height: 8),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4),
-            child: Text(
-                'La nueva contraseña debe tener al menos 6 caracteres.',
+            child: Text(t.passwordMin6,
                 style: TextStyle(
                     fontSize: 12, color: AppColores.of(context).textoSuave)),
           ),
@@ -151,7 +152,7 @@ class _PantallaCambiarContrasenaState extends State<PantallaCambiarContrasena> {
                     child: CircularProgressIndicator(
                         strokeWidth: 2, color: Colors.white))
                 : const Icon(Icons.lock_reset),
-            label: Text(procesando ? 'Guardando...' : 'Cambiar contraseña'),
+            label: Text(procesando ? t.guardando : t.cambiarContrasena),
           ),
         ],
       ),

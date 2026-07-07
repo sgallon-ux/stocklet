@@ -1,23 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../datos_app.dart';
 import '../tema.dart';
 
 class PantallaApariencia extends StatelessWidget {
   const PantallaApariencia({super.key});
 
+  // Nombre localizado del color de acento por su id.
+  static String _nombreAcento(AppLocalizations t, String id) {
+    switch (id) {
+      case 'verde':
+        return t.acentoVerde;
+      case 'azul':
+        return t.acentoAzul;
+      case 'turquesa':
+        return t.acentoTurquesa;
+      case 'morado':
+        return t.acentoMorado;
+      case 'naranja':
+        return t.acentoNaranja;
+      case 'rosa':
+        return t.acentoRosa;
+      default:
+        return id;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     final datos = context.watch<DatosApp>();
     final m = AppColores.of(context);
     final acento = colorDeAcento(datos.acentoId);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Apariencia')),
+      appBar: AppBar(title: Text(t.apariencia)),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          Text('Modo',
+          Text(t.modo,
               style:
                   TextStyle(fontWeight: FontWeight.bold, color: m.texto)),
           const SizedBox(height: 8),
@@ -27,20 +49,19 @@ class PantallaApariencia extends StatelessWidget {
               child: Column(
                 children: [
                   _modo(datos, m, acento, 'claro',
-                      Icons.light_mode_outlined, 'Claro'),
+                      Icons.light_mode_outlined, t.modoClaro),
                   Divider(height: 1, color: m.borde),
                   _modo(datos, m, acento, 'oscuro',
-                      Icons.dark_mode_outlined, 'Oscuro'),
+                      Icons.dark_mode_outlined, t.modoOscuro),
                   Divider(height: 1, color: m.borde),
                   _modo(datos, m, acento, 'auto',
-                      Icons.brightness_auto_outlined,
-                      'Automático (según el sistema)'),
+                      Icons.brightness_auto_outlined, t.modoAuto),
                 ],
               ),
             ),
           ),
           const SizedBox(height: 24),
-          Text('Color de acento',
+          Text(t.colorAcento,
               style:
                   TextStyle(fontWeight: FontWeight.bold, color: m.texto)),
           const SizedBox(height: 12),
@@ -74,7 +95,7 @@ class PantallaApariencia extends StatelessWidget {
                               : null,
                         ),
                         const SizedBox(height: 6),
-                        Text(a.nombre,
+                        Text(_nombreAcento(t, a.id),
                             style: TextStyle(
                                 fontSize: 12,
                                 color: sel ? m.texto : m.textoSuave,
@@ -89,8 +110,7 @@ class PantallaApariencia extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          Text(
-              'El modo oscuro se está terminando de aplicar en todas las pantallas.',
+          Text(t.aparienciaNota,
               style: TextStyle(fontSize: 12, color: m.textoSuave)),
         ],
       ),

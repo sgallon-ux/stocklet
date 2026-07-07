@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
+import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../../datos_app.dart';
 import '../../tema.dart';
 import '../../formato.dart';
@@ -8,24 +10,31 @@ import '../analisis_ventas.dart';
 class WidgetAnalisisVentas extends StatelessWidget {
   const WidgetAnalisisVentas({super.key});
 
-  static const _dias = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+  static String _cap(String s) =>
+      s.isEmpty ? s : s[0].toUpperCase() + s.substring(1);
+
+  // Día de la semana abreviado (1=Lun..7=Dom) localizado.
+  static String _diaCorto(int weekday, String locale) =>
+      _cap(DateFormat.E(locale).format(DateTime(2024, 1, weekday)));
 
   @override
   Widget build(BuildContext context) {
     final datos = context.watch<DatosApp>();
     final m = AppColores.of(context);
+    final t = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context).toString();
     final a = datos.analisisVentas();
 
     String resumen;
     if (a.numVentas == 0) {
-      resumen = 'Aún no hay ventas para analizar.';
+      resumen = t.sinVentasAnalizar;
     } else {
       final mejorDia = [...a.porDiaSemana]
         ..sort((x, y) => y.value.compareTo(x.value));
-      final nombreDia =
-          mejorDia.first.value > 0 ? _dias[mejorDia.first.key - 1] : '—';
-      resumen =
-          'Ticket promedio ${pesos(a.ticketPromedio)} · Mejor día: $nombreDia';
+      final nombreDia = mejorDia.first.value > 0
+          ? _diaCorto(mejorDia.first.key, locale)
+          : '—';
+      resumen = t.resumenAnalisisCorto(pesos(a.ticketPromedio), nombreDia);
     }
 
     return Card(
@@ -37,7 +46,7 @@ class WidgetAnalisisVentas extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: Text('Análisis de ventas',
+                  child: Text(t.analisisVentasTitulo,
                       style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -48,7 +57,7 @@ class WidgetAnalisisVentas extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                           builder: (_) => const PantallaAnalisisVentas())),
-                  child: const Text('Ver más'),
+                  child: Text(t.verMas),
                 ),
               ],
             ),
