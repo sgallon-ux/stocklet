@@ -1428,4 +1428,120 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get seguridad => 'Sécurité';
+
+  @override
+  String get notas => 'Notes';
+
+  @override
+  String get buscadorHint => 'Rechercher dans votre entreprise...';
+
+  @override
+  String get buscadorInicio =>
+      'Recherchez produits, fournitures, commandes, recettes, notes et catalogues.';
+
+  @override
+  String buscadorSinResultados(String q) {
+    return 'Aucun résultat pour «$q»';
+  }
+
+  @override
+  String get miembrosInvitaciones => 'Membres et invitations';
+
+  @override
+  String get miembrosInvitacionesSub =>
+      'Invitez votre équipe et gérez les rôles';
+
+  @override
+  String get invitacionesTitulo => 'Invitations';
+
+  @override
+  String get generarInvitacion => 'Générer une invitation';
+
+  @override
+  String get miembrosTitulo => 'Membres';
+
+  @override
+  String get rolDueno => 'Propriétaire';
+
+  @override
+  String get rolSocio => 'Associé';
+
+  @override
+  String get rolEmpleado => 'Employé';
+
+  @override
+  String get elegirRolInvitacion => 'Quel rôle aura la personne ?';
+
+  @override
+  String get invitacionCreada => 'Invitation créée';
+
+  @override
+  String get codigoInvitacion => 'Code d\'invitation';
+
+  @override
+  String get copiar => 'Copier';
+
+  @override
+  String get copiado => 'Copié';
+
+  @override
+  String get compartirCodigoAyuda =>
+      'Partagez ce code. La personne l\'utilise lors de son inscription pour rejoindre votre entreprise.';
+
+  @override
+  String get revocar => 'Révoquer';
+
+  @override
+  String get invitacionPendiente => 'En attente';
+
+  @override
+  String get invitacionUsada => 'Utilisé';
+
+  @override
+  String get sinInvitaciones => 'Vous n\'avez généré aucune invitation.';
+
+  @override
+  String get sinMiembros => 'Il n\'y a pas encore d\'autres membres.';
+
+  @override
+  String get cambiarRolTitulo => 'Changer de rôle';
+
+  @override
+  String get quitarDelNegocio => 'Retirer de l\'entreprise';
+
+  @override
+  String quitarMiembroConfirmacion(String nombre) {
+    return 'Retirer $nombre de l\'entreprise ?';
+  }
+
+  @override
+  String get unirseCodigo => 'Rejoindre avec un code';
+
+  @override
+  String get unirseCodigoTitulo => 'Rejoindre une entreprise';
+
+  @override
+  String get unirseCodigoAyuda =>
+      'Saisissez le code d\'invitation que le propriétaire vous a partagé.';
+
+  @override
+  String get unirme => 'Rejoindre';
+
+  @override
+  String get codigoVacio => 'Saisissez le code.';
+
+  @override
+  String get codigoNoExiste => 'Le code n\'existe pas.';
+
+  @override
+  String get codigoUsado => 'Ce code a déjà été utilisé.';
+
+  @override
+  String get codigoInvalido => 'Le code n\'est pas valide.';
+
+  @override
+  String get unirseError => 'Impossible de rejoindre. Réessayez.';
+
+  @override
+  String get sinNombre => '(sans nom)';
 }

@@ -40,12 +40,16 @@ class PantallaProductos extends StatelessWidget {
     final t = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(title: Text(t.productos)),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => Navigator.push(context,
-            MaterialPageRoute(builder: (_) => const PantallaCrearProducto())),
-        icon: const Icon(Icons.add),
-        label: Text(t.nuevo),
-      ),
+      floatingActionButton: context.watch<DatosApp>().puedeGestionarCatalogo
+          ? FloatingActionButton.extended(
+              onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => const PantallaCrearProducto())),
+              icon: const Icon(Icons.add),
+              label: Text(t.nuevo),
+            )
+          : null,
       body: Consumer<DatosApp>(
         builder: (context, datos, child) {
           final m = AppColores.of(context);
@@ -117,25 +121,26 @@ class PantallaProductos extends StatelessWidget {
                             ],
                           ),
                         ),
-                        PopupMenuButton<String>(
-                          onSelected: (op) {
-                            if (op == 'editar') {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) =>
-                                          PantallaEditarProducto(producto: p)));
-                            } else if (op == 'eliminar') {
-                              _confirmarEliminar(context, p);
-                            }
-                          },
-                          itemBuilder: (_) => [
-                            PopupMenuItem(
-                                value: 'editar', child: Text(t.editar)),
-                            PopupMenuItem(
-                                value: 'eliminar', child: Text(t.eliminar)),
-                          ],
-                        ),
+                        if (datos.puedeGestionarCatalogo)
+                          PopupMenuButton<String>(
+                            onSelected: (op) {
+                              if (op == 'editar') {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (_) => PantallaEditarProducto(
+                                            producto: p)));
+                              } else if (op == 'eliminar') {
+                                _confirmarEliminar(context, p);
+                              }
+                            },
+                            itemBuilder: (_) => [
+                              PopupMenuItem(
+                                  value: 'editar', child: Text(t.editar)),
+                              PopupMenuItem(
+                                  value: 'eliminar', child: Text(t.eliminar)),
+                            ],
+                          ),
                       ],
                     ),
                   ),

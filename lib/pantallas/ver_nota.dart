@@ -64,11 +64,12 @@ class PantallaVerNota extends StatelessWidget {
             onPressed: () => Navigator.push(context,
                 MaterialPageRoute(builder: (_) => PantallaEditorNota(nota: n))),
           ),
-          IconButton(
-            icon: const Icon(Icons.delete_outline),
-            tooltip: t.eliminar,
-            onPressed: () => _confirmarEliminar(context, n),
-          ),
+          if (datos.puedeEliminar)
+            IconButton(
+              icon: const Icon(Icons.delete_outline),
+              tooltip: t.eliminar,
+              onPressed: () => _confirmarEliminar(context, n),
+            ),
         ],
       ),
       body: ListView(

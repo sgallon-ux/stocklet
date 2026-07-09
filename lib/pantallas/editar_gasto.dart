@@ -58,6 +58,7 @@ class _PantallaEditarGastoState extends State<PantallaEditarGasto> {
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
+    final datos = context.watch<DatosApp>();
     return Scaffold(
       appBar: AppBar(title: Text(t.editarGastoTitulo)),
       body: Padding(
@@ -87,8 +88,11 @@ class _PantallaEditarGastoState extends State<PantallaEditarGasto> {
               onChanged: (nueva) => setState(() => categoria = nueva!),
             ),
             const SizedBox(height: 24),
-            ElevatedButton(
-                onPressed: guardar, child: Text(t.guardarCambios)),
+            if (datos.puedeEditarFinanzas)
+              ElevatedButton(
+                  onPressed: guardar, child: Text(t.guardarCambios))
+            else
+              Center(child: Text(t.soloLectura)),
           ],
         ),
       ),

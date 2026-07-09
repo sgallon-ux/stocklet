@@ -1411,4 +1411,119 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get seguridad => 'Seguridad';
+
+  @override
+  String get notas => 'Notas';
+
+  @override
+  String get buscadorHint => 'Buscar en tu negocio...';
+
+  @override
+  String get buscadorInicio =>
+      'Busca productos, insumos, pedidos, recetas, notas y catálogos.';
+
+  @override
+  String buscadorSinResultados(String q) {
+    return 'Sin resultados para «$q»';
+  }
+
+  @override
+  String get miembrosInvitaciones => 'Miembros e invitaciones';
+
+  @override
+  String get miembrosInvitacionesSub => 'Invita a tu equipo y gestiona roles';
+
+  @override
+  String get invitacionesTitulo => 'Invitaciones';
+
+  @override
+  String get generarInvitacion => 'Generar invitación';
+
+  @override
+  String get miembrosTitulo => 'Miembros';
+
+  @override
+  String get rolDueno => 'Dueño';
+
+  @override
+  String get rolSocio => 'Socio';
+
+  @override
+  String get rolEmpleado => 'Empleado';
+
+  @override
+  String get elegirRolInvitacion => '¿Qué rol tendrá la persona?';
+
+  @override
+  String get invitacionCreada => 'Invitación creada';
+
+  @override
+  String get codigoInvitacion => 'Código de invitación';
+
+  @override
+  String get copiar => 'Copiar';
+
+  @override
+  String get copiado => 'Copiado';
+
+  @override
+  String get compartirCodigoAyuda =>
+      'Comparte este código. La persona lo usa al registrarse para unirse a tu negocio.';
+
+  @override
+  String get revocar => 'Revocar';
+
+  @override
+  String get invitacionPendiente => 'Pendiente';
+
+  @override
+  String get invitacionUsada => 'Usada';
+
+  @override
+  String get sinInvitaciones => 'No has generado invitaciones.';
+
+  @override
+  String get sinMiembros => 'Aún no hay otros miembros.';
+
+  @override
+  String get cambiarRolTitulo => 'Cambiar rol';
+
+  @override
+  String get quitarDelNegocio => 'Quitar del negocio';
+
+  @override
+  String quitarMiembroConfirmacion(String nombre) {
+    return '¿Quitar a $nombre del negocio?';
+  }
+
+  @override
+  String get unirseCodigo => 'Unirme con un código';
+
+  @override
+  String get unirseCodigoTitulo => 'Unirse a un negocio';
+
+  @override
+  String get unirseCodigoAyuda =>
+      'Escribe el código de invitación que te compartió el dueño del negocio.';
+
+  @override
+  String get unirme => 'Unirme';
+
+  @override
+  String get codigoVacio => 'Escribe el código.';
+
+  @override
+  String get codigoNoExiste => 'El código no existe.';
+
+  @override
+  String get codigoUsado => 'Ese código ya fue usado.';
+
+  @override
+  String get codigoInvalido => 'El código no es válido.';
+
+  @override
+  String get unirseError => 'No se pudo unir. Intenta de nuevo.';
+
+  @override
+  String get sinNombre => '(sin nombre)';
 }

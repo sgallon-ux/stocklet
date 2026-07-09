@@ -196,6 +196,7 @@ class _PantallaPedidosState extends State<PantallaPedidos> {
   Widget _tarjeta(BuildContext context, Pedido pedido, String tipo) {
     final m = AppColores.of(context);
     final t = AppLocalizations.of(context)!;
+    final datos = context.read<DatosApp>();
     String urg = '';
     Color urgColor = m.textoSuave;
     if (tipo == 'pendiente') {
@@ -224,7 +225,8 @@ class _PantallaPedidosState extends State<PantallaPedidos> {
         PopupMenuItem(value: 'archivar', child: Text(t.archivar)),
       if (tipo == 'archivado')
         PopupMenuItem(value: 'desarchivar', child: Text(t.desarchivar)),
-      PopupMenuItem(value: 'eliminar', child: Text(t.eliminar)),
+      if (datos.puedeEliminar)
+        PopupMenuItem(value: 'eliminar', child: Text(t.eliminar)),
     ];
 
     return Card(

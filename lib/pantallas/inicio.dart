@@ -10,6 +10,7 @@ import 'widgets/widget_pedidos.dart';
 import 'widgets/widget_notas.dart';
 import '../tema.dart';
 import 'notificaciones.dart';
+import 'buscador.dart';
 
 class PantallaInicio extends StatelessWidget {
   const PantallaInicio({super.key});
@@ -85,11 +86,10 @@ class PantallaInicio extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.search),
             tooltip: t.buscar,
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(t.busquedaProximamente)),
-              );
-            },
+            onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => const PantallaBuscador())),
           ),
         ],
       ),

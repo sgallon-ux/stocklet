@@ -6,6 +6,7 @@ import 'package:currency_picker/currency_picker.dart';
 import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../datos_app.dart';
 import '../tema.dart';
+import 'unirse_codigo.dart';
 
 class PantallaCrearNegocio extends StatefulWidget {
   const PantallaCrearNegocio({super.key});
@@ -233,7 +234,16 @@ class _PantallaCrearNegocioState extends State<PantallaCrearNegocio> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 8),
+                  TextButton.icon(
+                    onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => const PantallaUnirseCodigo())),
+                    icon: const Icon(Icons.vpn_key_outlined, size: 18),
+                    label: Text(t.unirseCodigo),
+                  ),
+                  const SizedBox(height: 8),
                   TextButton.icon(
                     onPressed: () => FirebaseAuth.instance.signOut(),
                     icon: const Icon(Icons.logout, size: 18),

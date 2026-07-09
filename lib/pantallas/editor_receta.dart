@@ -72,6 +72,7 @@ class _PantallaEditorRecetaState extends State<PantallaEditorReceta> {
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
+    final datos = context.watch<DatosApp>();
     return Scaffold(
       appBar: AppBar(
           title: Text(esEdicion ? t.editarRecetaTitulo : t.nuevaRecetaTitulo)),
@@ -131,8 +132,11 @@ class _PantallaEditorRecetaState extends State<PantallaEditorReceta> {
             ),
           ),
           const SizedBox(height: 16),
-          ElevatedButton(
-              onPressed: guardar, child: Text(t.guardarReceta)),
+          if (datos.puedeGestionarCatalogo)
+            ElevatedButton(
+                onPressed: guardar, child: Text(t.guardarReceta))
+          else
+            Center(child: Text(t.soloLectura)),
         ],
       ),
     );

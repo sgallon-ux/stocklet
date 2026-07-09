@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:reposteria_app/l10n/app_localizations.dart'; // NUEVO // Generated localizations. Adjusted path to package l10n output.
 import '../datos_app.dart';
 import '../tema.dart';
@@ -8,6 +9,7 @@ import 'panel_usuario.dart';
 import 'ajustes_seguridad.dart';
 import 'notificaciones_config.dart';
 import 'apariencia.dart';
+import 'miembros_invitaciones.dart';
 
 class PantallaAjustes extends StatelessWidget {
   const PantallaAjustes({super.key});
@@ -37,13 +39,16 @@ class PantallaAjustes extends StatelessWidget {
     );
   }
 
-  void _acercaDe(BuildContext context) {
+  Future<void> _acercaDe(BuildContext context) async {
     final m = AppColores.of(context);
     final t = AppLocalizations.of(context)!;
+    // Lee la versión automáticamente desde pubspec (package_info_plus).
+    final info = await PackageInfo.fromPlatform();
+    if (!context.mounted) return;
     showAboutDialog(
       context: context,
       applicationName: 'Dulce Nota',
-      applicationVersion: '1.0.0', // Todo: ajusta a tu versión real
+      applicationVersion: '${info.version} (${info.buildNumber})',
       applicationIcon: Container(
         height: 48,
         width: 48,
@@ -176,6 +181,16 @@ class PantallaAjustes extends StatelessWidget {
                   subtitulo: t.ajustesSeguridadSubtitulo,
                   onTap: () => _ir(context, const PantallaAjustesSeguridad()),
                 ),
+                if (datos.esDueno) ...[
+                  const Divider(height: 1),
+                  _opcion(
+                    context,
+                    icono: Icons.group_outlined,
+                    titulo: t.miembrosInvitaciones,
+                    subtitulo: t.miembrosInvitacionesSub,
+                    onTap: () => _ir(context, const PantallaMiembros()),
+                  ),
+                ],
                 const Divider(height: 1),
                 _opcion(
                   context,

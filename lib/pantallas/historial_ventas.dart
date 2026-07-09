@@ -131,30 +131,34 @@ class _PantallaHistorialVentasState extends State<PantallaHistorialVentas> {
                                   Text(pesos(venta.total),
                                       style: const TextStyle(
                                           fontWeight: FontWeight.bold)),
-                                  PopupMenuButton<String>(
-                                    onSelected: (opcion) {
-                                      if (opcion == 'editar') {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                PantallaEditarVenta(
-                                                    venta: venta),
-                                          ),
-                                        );
-                                      } else if (opcion == 'eliminar') {
-                                        _confirmarEliminar(context, venta);
-                                      }
-                                    },
-                                    itemBuilder: (context) => [
-                                      PopupMenuItem(
-                                          value: 'editar',
-                                          child: Text(t.editar)),
-                                      PopupMenuItem(
-                                          value: 'eliminar',
-                                          child: Text(t.eliminar)),
-                                    ],
-                                  ),
+                                  if (datos.puedeEditarFinanzas ||
+                                      datos.puedeEliminar)
+                                    PopupMenuButton<String>(
+                                      onSelected: (opcion) {
+                                        if (opcion == 'editar') {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  PantallaEditarVenta(
+                                                      venta: venta),
+                                            ),
+                                          );
+                                        } else if (opcion == 'eliminar') {
+                                          _confirmarEliminar(context, venta);
+                                        }
+                                      },
+                                      itemBuilder: (context) => [
+                                        if (datos.puedeEditarFinanzas)
+                                          PopupMenuItem(
+                                              value: 'editar',
+                                              child: Text(t.editar)),
+                                        if (datos.puedeEliminar)
+                                          PopupMenuItem(
+                                              value: 'eliminar',
+                                              child: Text(t.eliminar)),
+                                      ],
+                                    ),
                                 ],
                               ),
                             ),

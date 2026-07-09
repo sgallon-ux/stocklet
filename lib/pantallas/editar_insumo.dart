@@ -70,6 +70,7 @@ class _PantallaEditarInsumoState extends State<PantallaEditarInsumo> {
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
+    final datos = context.watch<DatosApp>();
     return Scaffold(
       appBar: AppBar(title: Text(t.editarInsumoTitulo)),
       body: ListView(
@@ -139,8 +140,11 @@ class _PantallaEditarInsumoState extends State<PantallaEditarInsumo> {
             ),
           ),
           const SizedBox(height: 16),
-          ElevatedButton(
-              onPressed: guardar, child: Text(t.guardarCambios)),
+          if (datos.puedeGestionarCatalogo)
+            ElevatedButton(
+                onPressed: guardar, child: Text(t.guardarCambios))
+          else
+            Center(child: Text(t.soloLectura)),
         ],
       ),
     );

@@ -92,12 +92,16 @@ class _PantallaInventarioState extends State<PantallaInventario> {
                 ),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const PantallaAgregarInsumo())),
-        icon: const Icon(Icons.add),
-        label: Text(t.insumo),
-      ),
+      floatingActionButton: context.watch<DatosApp>().puedeGestionarCatalogo
+          ? FloatingActionButton.extended(
+              onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const PantallaAgregarInsumo())),
+              icon: const Icon(Icons.add),
+              label: Text(t.insumo),
+            )
+          : null,
       body: Consumer<DatosApp>(
         builder: (context, datos, child) {
           final m = AppColores.of(context);
@@ -179,25 +183,26 @@ class _PantallaInventarioState extends State<PantallaInventario> {
                             ],
                           ),
                         ),
-                        PopupMenuButton<String>(
-                          onSelected: (opcion) {
-                            if (opcion == 'editar') {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          PantallaEditarInsumo(insumo: insumo)));
-                            } else if (opcion == 'eliminar') {
-                              _confirmarEliminar(insumo);
-                            }
-                          },
-                          itemBuilder: (context) => [
-                            PopupMenuItem(
-                                value: 'editar', child: Text(t.editar)),
-                            PopupMenuItem(
-                                value: 'eliminar', child: Text(t.eliminar)),
-                          ],
-                        ),
+                        if (datos.puedeGestionarCatalogo)
+                          PopupMenuButton<String>(
+                            onSelected: (opcion) {
+                              if (opcion == 'editar') {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            PantallaEditarInsumo(insumo: insumo)));
+                              } else if (opcion == 'eliminar') {
+                                _confirmarEliminar(insumo);
+                              }
+                            },
+                            itemBuilder: (context) => [
+                              PopupMenuItem(
+                                  value: 'editar', child: Text(t.editar)),
+                              PopupMenuItem(
+                                  value: 'eliminar', child: Text(t.eliminar)),
+                            ],
+                          ),
                       ],
                     ),
                   ),

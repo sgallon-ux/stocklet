@@ -198,8 +198,9 @@ class _PantallaCatalogoState extends State<PantallaCatalogo> {
                     },
                     itemBuilder: (_) => [
                       PopupMenuItem(value: 'abrir', child: Text(t.abrir)),
-                      PopupMenuItem(
-                          value: 'eliminar', child: Text(t.eliminar)),
+                      if (datos.puedeEliminar)
+                        PopupMenuItem(
+                            value: 'eliminar', child: Text(t.eliminar)),
                     ],
                   ),
                 ),

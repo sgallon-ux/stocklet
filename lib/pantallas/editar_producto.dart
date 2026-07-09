@@ -255,9 +255,14 @@ class _PantallaEditarProductoState extends State<PantallaEditarProducto> {
           const SizedBox(height: 20),
           ResumenProducto(costo: costoActual, precio: precio),
           const SizedBox(height: 20),
-          ElevatedButton(
-              onPressed: guardarCambios,
-              child: Text(t.guardarCambios)),
+          if (datos.puedeGestionarCatalogo)
+            ElevatedButton(
+                onPressed: guardarCambios,
+                child: Text(t.guardarCambios))
+          else
+            Center(
+                child: Text(t.soloLectura,
+                    style: TextStyle(color: m.textoSuave))),
         ],
       ),
     );

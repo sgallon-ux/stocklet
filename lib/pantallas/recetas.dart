@@ -14,12 +14,14 @@ class PantallaRecetas extends StatelessWidget {
     final t = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(title: Text(t.recetas)),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => Navigator.push(context,
-            MaterialPageRoute(builder: (_) => const PantallaEditorReceta())),
-        icon: const Icon(Icons.add),
-        label: Text(t.recetaTitulo),
-      ),
+      floatingActionButton: context.watch<DatosApp>().puedeGestionarCatalogo
+          ? FloatingActionButton.extended(
+              onPressed: () => Navigator.push(context,
+                  MaterialPageRoute(builder: (_) => const PantallaEditorReceta())),
+              icon: const Icon(Icons.add),
+              label: Text(t.recetaTitulo),
+            )
+          : null,
       body: Consumer<DatosApp>(
         builder: (context, datos, child) {
           final m = AppColores.of(context);

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -65,6 +66,28 @@ class AnalisisVentas {
   });
 }
 
+// Invitación por código para unirse a un negocio.
+class Invitacion {
+  final String codigo;
+  final String rol; // 'socio' | 'empleado'
+  final String estado; // 'pendiente' | 'usada'
+  final String usadaPor;
+  Invitacion({
+    required this.codigo,
+    required this.rol,
+    required this.estado,
+    required this.usadaPor,
+  });
+}
+
+// Miembro del negocio (para el panel del dueño).
+class MiembroNegocio {
+  final String uid;
+  final String nombre;
+  final String rol; // 'dueno' | 'socio' | 'empleado'
+  MiembroNegocio({required this.uid, required this.nombre, required this.rol});
+}
+
 class DatosApp extends ChangeNotifier {
   final _db = FirebaseFirestore.instance;
   final _storage = FirebaseStorage.instance;
@@ -81,6 +104,9 @@ class DatosApp extends ChangeNotifier {
   String modoTemaId = 'claro'; // 'claro' | 'oscuro' | 'auto'
   // Idioma elegido por el usuario. null = seguir el idioma del dispositivo.
   String? idiomaId;
+  // Rol del usuario actual en el negocio: 'dueno' | 'socio' | 'empleado'.
+  // Por defecto 'empleado' (menos privilegios) hasta cargar el real.
+  String rolUsuario = 'empleado';
 
   List<Insumo> insumos = [];
   List<Producto> productos = [];
@@ -128,6 +154,7 @@ Future<void> _cargarNegocioId(String uid) async {
       perfilNombre = (doc.data()?['nombre'] as String?) ?? '';
       perfilCelular = (doc.data()?['celular'] as String?) ?? '';
       perfilFotoUrl = (doc.data()?['fotoUrl'] as String?) ?? '';
+      rolUsuario = (doc.data()?['rol'] as String?) ?? 'empleado';
     } catch (e) {
       _negocioId = null;
       return;
@@ -181,10 +208,142 @@ Future<void> _cargarNegocioId(String uid) async {
       idioma: idioma,
       duenoUid: uid,
     );
+    rolUsuario = 'dueno';
     configurarMoneda(moneda: moneda, idioma: idioma, pais: pais);
     _escucharTodo();
     estado = EstadoApp.listo;
     notifyListeners();
+  }
+
+  // --- Roles y permisos (capa de UX; la seguridad real va en las reglas) ---
+  String get _uidActual => FirebaseAuth.instance.currentUser?.uid ?? '';
+  // Es dueño si su rol es 'dueno' o si es el creador del negocio (duenoUid).
+  bool get esDueno =>
+      rolUsuario == 'dueno' ||
+      (negocio != null && negocio!.duenoUid == _uidActual);
+  bool get _duenoOSocio => esDueno || rolUsuario == 'socio';
+  // Puede eliminar cualquier registro (dueño o socio).
+  bool get puedeEliminar => _duenoOSocio;
+  // Puede crear/editar el catálogo: productos, insumos y recetas.
+  bool get puedeGestionarCatalogo => _duenoOSocio;
+  // Puede editar el historial de ventas y gastos.
+  bool get puedeEditarFinanzas => _duenoOSocio;
+
+  // --- Invitaciones y miembros (centro de invitaciones por código) ---
+  static String _generarCodigo() {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // sin ambiguos (0/O, 1/I)
+    final r = Random.secure();
+    return List.generate(6, (_) => chars[r.nextInt(chars.length)]).join();
+  }
+
+  // El dueño genera una invitación con un rol ('socio' | 'empleado').
+  Future<String> crearInvitacion(String rol) async {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+    final codigo = _generarCodigo();
+    await _db.collection('invitaciones').doc(codigo).set({
+      'negocioId': _negocioId,
+      'rol': rol,
+      'estado': 'pendiente',
+      'creadoPor': uid,
+      'fecha': FieldValue.serverTimestamp(),
+      'usadaPor': '',
+    });
+    return codigo;
+  }
+
+  Future<List<Invitacion>> cargarInvitaciones() async {
+    if (_negocioId == null) return [];
+    final snap = await _db
+        .collection('invitaciones')
+        .where('negocioId', isEqualTo: _negocioId)
+        .get();
+    final lista = snap.docs
+        .map((d) => Invitacion(
+              codigo: d.id,
+              rol: (d.data()['rol'] as String?) ?? '',
+              estado: (d.data()['estado'] as String?) ?? '',
+              usadaPor: (d.data()['usadaPor'] as String?) ?? '',
+            ))
+        .toList();
+    // Pendientes primero.
+    lista.sort((a, b) => a.estado.compareTo(b.estado));
+    return lista;
+  }
+
+  Future<void> revocarInvitacion(String codigo) async {
+    await _db.collection('invitaciones').doc(codigo).delete();
+  }
+
+  Future<List<MiembroNegocio>> cargarMiembros() async {
+    if (_negocioId == null) return [];
+    final snap = await _db
+        .collection('usuarios')
+        .where('negocioId', isEqualTo: _negocioId)
+        .get();
+    return snap.docs
+        .map((d) => MiembroNegocio(
+              uid: d.id,
+              nombre: (d.data()['nombre'] as String?) ?? '',
+              rol: (d.data()['rol'] as String?) ?? 'empleado',
+            ))
+        .toList();
+  }
+
+  Future<void> cambiarRolMiembro(String uid, String nuevoRol) async {
+    await _db
+        .collection('usuarios')
+        .doc(uid)
+        .set({'rol': nuevoRol}, SetOptions(merge: true));
+  }
+
+  Future<void> quitarMiembro(String uid) async {
+    await _db.collection('usuarios').doc(uid).delete();
+  }
+
+  // El invitado se une con un código. Devuelve null si todo bien, o una clave
+  // de error: 'sesion' | 'noExiste' | 'usada' | 'invalida' | 'error'.
+  Future<String?> unirsePorCodigo(String codigo) async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) return 'sesion';
+    try {
+      final ref = _db.collection('invitaciones').doc(codigo.trim().toUpperCase());
+      final snap = await ref.get();
+      if (!snap.exists) return 'noExiste';
+      final data = snap.data()!;
+      if (data['estado'] != 'pendiente') return 'usada';
+      final negId = data['negocioId'] as String?;
+      final rol = data['rol'] as String?;
+      if (negId == null || rol == null || rol == 'dueno') return 'invalida';
+
+      // 1) Reclamar el código.
+      await ref.update({'estado': 'usada', 'usadaPor': uid});
+      // 2) Crear el enlace usuario -> negocio.
+      await _db.collection('usuarios').doc(uid).set({
+        'negocioId': negId,
+        'rol': rol,
+        'invitacionCodigo': ref.id,
+      }, SetOptions(merge: true));
+
+      // 3) Entrar al negocio.
+      _negocioId = negId;
+      rolUsuario = rol;
+      final negDoc = await _db.collection('negocios').doc(negId).get();
+      if (negDoc.exists) {
+        negocio = Negocio.fromMap(negDoc.id, negDoc.data()!);
+        configurarMoneda(
+          moneda: negocio!.moneda,
+          idioma: negocio!.idioma,
+          pais: negocio!.pais,
+        );
+      }
+      _escucharTodo();
+      await _cargarUltimaRevision();
+      estado = EstadoApp.listo;
+      notifyListeners();
+      return null;
+    } catch (e) {
+      return 'error';
+    }
   }
 
   // Guarda los datos personales del usuario (en usuarios/{uid})
@@ -955,6 +1114,7 @@ Future<void> _cargarNegocioId(String uid) async {
     perfilNombre = '';
     perfilCelular = '';
     perfilFotoUrl = '';
+    rolUsuario = 'empleado';
     _productosRaw = [];
     notifyListeners();
   }

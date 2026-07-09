@@ -53,19 +53,21 @@ class PantallaVerReceta extends StatelessWidget {
       appBar: AppBar(
         title: Text(t.recetaTitulo),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.edit_outlined),
-            tooltip: t.editar,
-            onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (_) => PantallaEditorReceta(receta: r))),
-          ),
-          IconButton(
-            icon: const Icon(Icons.delete_outline),
-            tooltip: t.eliminar,
-            onPressed: () => _confirmarEliminar(context, r),
-          ),
+          if (datos.puedeGestionarCatalogo)
+            IconButton(
+              icon: const Icon(Icons.edit_outlined),
+              tooltip: t.editar,
+              onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => PantallaEditorReceta(receta: r))),
+            ),
+          if (datos.puedeEliminar)
+            IconButton(
+              icon: const Icon(Icons.delete_outline),
+              tooltip: t.eliminar,
+              onPressed: () => _confirmarEliminar(context, r),
+            ),
         ],
       ),
       body: ListView(

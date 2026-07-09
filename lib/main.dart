@@ -55,8 +55,8 @@ class MiApp extends StatelessWidget {
       // NUEVO: idiomas soportados. Para agregar otro en el futuro solo
       // creas su .arb (ej. app_de.arb) y añades aquí su Locale.
       supportedLocales: const [
-        Locale('es'),
         Locale('en'),
+        Locale('es'),
         Locale('pt'),
         Locale('fr'),
       ],

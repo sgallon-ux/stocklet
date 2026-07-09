@@ -59,6 +59,7 @@ class _PantallaEditarVentaState extends State<PantallaEditarVenta> {
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
+    final datos = context.watch<DatosApp>();
     return Scaffold(
       appBar: AppBar(title: Text(t.editarVentaTitulo)),
       body: Padding(
@@ -84,8 +85,11 @@ class _PantallaEditarVentaState extends State<PantallaEditarVenta> {
                   labelText: t.precioUnitario, prefixText: '\$ '),
             ),
             const SizedBox(height: 24),
-            ElevatedButton(
-                onPressed: guardar, child: Text(t.guardarCambios)),
+            if (datos.puedeEditarFinanzas)
+              ElevatedButton(
+                  onPressed: guardar, child: Text(t.guardarCambios))
+            else
+              Center(child: Text(t.soloLectura)),
           ],
         ),
       ),

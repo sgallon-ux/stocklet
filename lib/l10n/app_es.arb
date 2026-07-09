@@ -653,5 +653,49 @@
 
   "preferenciasNegocio": "Preferencias del negocio",
   "ajustesSeguridadCaption": "El idioma de la aplicación se puede cambiar aquí y se aplica a toda la app. País y moneda no se pueden cambiar por ahora.",
-  "seguridad": "Seguridad"
+  "seguridad": "Seguridad",
+
+  "notas": "Notas",
+  "buscadorHint": "Buscar en tu negocio...",
+  "buscadorInicio": "Busca productos, insumos, pedidos, recetas, notas y catálogos.",
+  "buscadorSinResultados": "Sin resultados para «{q}»",
+  "@buscadorSinResultados": {
+    "placeholders": { "q": { "type": "String" } }
+  },
+
+  "miembrosInvitaciones": "Miembros e invitaciones",
+  "miembrosInvitacionesSub": "Invita a tu equipo y gestiona roles",
+  "invitacionesTitulo": "Invitaciones",
+  "generarInvitacion": "Generar invitación",
+  "miembrosTitulo": "Miembros",
+  "rolDueno": "Dueño",
+  "rolSocio": "Socio",
+  "rolEmpleado": "Empleado",
+  "elegirRolInvitacion": "¿Qué rol tendrá la persona?",
+  "invitacionCreada": "Invitación creada",
+  "codigoInvitacion": "Código de invitación",
+  "copiar": "Copiar",
+  "copiado": "Copiado",
+  "compartirCodigoAyuda": "Comparte este código. La persona lo usa al registrarse para unirse a tu negocio.",
+  "revocar": "Revocar",
+  "invitacionPendiente": "Pendiente",
+  "invitacionUsada": "Usada",
+  "sinInvitaciones": "No has generado invitaciones.",
+  "sinMiembros": "Aún no hay otros miembros.",
+  "cambiarRolTitulo": "Cambiar rol",
+  "quitarDelNegocio": "Quitar del negocio",
+  "quitarMiembroConfirmacion": "¿Quitar a {nombre} del negocio?",
+  "@quitarMiembroConfirmacion": {
+    "placeholders": { "nombre": { "type": "String" } }
+  },
+  "unirseCodigo": "Unirme con un código",
+  "unirseCodigoTitulo": "Unirse a un negocio",
+  "unirseCodigoAyuda": "Escribe el código de invitación que te compartió el dueño del negocio.",
+  "unirme": "Unirme",
+  "codigoVacio": "Escribe el código.",
+  "codigoNoExiste": "El código no existe.",
+  "codigoUsado": "Ese código ya fue usado.",
+  "codigoInvalido": "El código no es válido.",
+  "unirseError": "No se pudo unir. Intenta de nuevo.",
+  "sinNombre": "(sin nombre)"
 }

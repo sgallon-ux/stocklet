@@ -136,30 +136,34 @@ class _PantallaHistorialGastosState extends State<PantallaHistorialGastos> {
                                     style: const TextStyle(
                                         fontWeight: FontWeight.bold),
                                   ),
-                                  PopupMenuButton<String>(
-                                    onSelected: (opcion) {
-                                      if (opcion == 'editar') {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                PantallaEditarGasto(
-                                                    gasto: gasto),
-                                          ),
-                                        );
-                                      } else if (opcion == 'eliminar') {
-                                        _confirmarEliminar(context, gasto);
-                                      }
-                                    },
-                                    itemBuilder: (context) => [
-                                      PopupMenuItem(
-                                          value: 'editar',
-                                          child: Text(t.editar)),
-                                      PopupMenuItem(
-                                          value: 'eliminar',
-                                          child: Text(t.eliminar)),
-                                    ],
-                                  ),
+                                  if (datos.puedeEditarFinanzas ||
+                                      datos.puedeEliminar)
+                                    PopupMenuButton<String>(
+                                      onSelected: (opcion) {
+                                        if (opcion == 'editar') {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  PantallaEditarGasto(
+                                                      gasto: gasto),
+                                            ),
+                                          );
+                                        } else if (opcion == 'eliminar') {
+                                          _confirmarEliminar(context, gasto);
+                                        }
+                                      },
+                                      itemBuilder: (context) => [
+                                        if (datos.puedeEditarFinanzas)
+                                          PopupMenuItem(
+                                              value: 'editar',
+                                              child: Text(t.editar)),
+                                        if (datos.puedeEliminar)
+                                          PopupMenuItem(
+                                              value: 'eliminar',
+                                              child: Text(t.eliminar)),
+                                      ],
+                                    ),
                                 ],
                               ),
                             ),

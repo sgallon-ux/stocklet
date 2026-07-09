@@ -2657,6 +2657,222 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Seguridad'**
   String get seguridad;
+
+  /// No description provided for @notas.
+  ///
+  /// In es, this message translates to:
+  /// **'Notas'**
+  String get notas;
+
+  /// No description provided for @buscadorHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Buscar en tu negocio...'**
+  String get buscadorHint;
+
+  /// No description provided for @buscadorInicio.
+  ///
+  /// In es, this message translates to:
+  /// **'Busca productos, insumos, pedidos, recetas, notas y catálogos.'**
+  String get buscadorInicio;
+
+  /// No description provided for @buscadorSinResultados.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin resultados para «{q}»'**
+  String buscadorSinResultados(String q);
+
+  /// No description provided for @miembrosInvitaciones.
+  ///
+  /// In es, this message translates to:
+  /// **'Miembros e invitaciones'**
+  String get miembrosInvitaciones;
+
+  /// No description provided for @miembrosInvitacionesSub.
+  ///
+  /// In es, this message translates to:
+  /// **'Invita a tu equipo y gestiona roles'**
+  String get miembrosInvitacionesSub;
+
+  /// No description provided for @invitacionesTitulo.
+  ///
+  /// In es, this message translates to:
+  /// **'Invitaciones'**
+  String get invitacionesTitulo;
+
+  /// No description provided for @generarInvitacion.
+  ///
+  /// In es, this message translates to:
+  /// **'Generar invitación'**
+  String get generarInvitacion;
+
+  /// No description provided for @miembrosTitulo.
+  ///
+  /// In es, this message translates to:
+  /// **'Miembros'**
+  String get miembrosTitulo;
+
+  /// No description provided for @rolDueno.
+  ///
+  /// In es, this message translates to:
+  /// **'Dueño'**
+  String get rolDueno;
+
+  /// No description provided for @rolSocio.
+  ///
+  /// In es, this message translates to:
+  /// **'Socio'**
+  String get rolSocio;
+
+  /// No description provided for @rolEmpleado.
+  ///
+  /// In es, this message translates to:
+  /// **'Empleado'**
+  String get rolEmpleado;
+
+  /// No description provided for @elegirRolInvitacion.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Qué rol tendrá la persona?'**
+  String get elegirRolInvitacion;
+
+  /// No description provided for @invitacionCreada.
+  ///
+  /// In es, this message translates to:
+  /// **'Invitación creada'**
+  String get invitacionCreada;
+
+  /// No description provided for @codigoInvitacion.
+  ///
+  /// In es, this message translates to:
+  /// **'Código de invitación'**
+  String get codigoInvitacion;
+
+  /// No description provided for @copiar.
+  ///
+  /// In es, this message translates to:
+  /// **'Copiar'**
+  String get copiar;
+
+  /// No description provided for @copiado.
+  ///
+  /// In es, this message translates to:
+  /// **'Copiado'**
+  String get copiado;
+
+  /// No description provided for @compartirCodigoAyuda.
+  ///
+  /// In es, this message translates to:
+  /// **'Comparte este código. La persona lo usa al registrarse para unirse a tu negocio.'**
+  String get compartirCodigoAyuda;
+
+  /// No description provided for @revocar.
+  ///
+  /// In es, this message translates to:
+  /// **'Revocar'**
+  String get revocar;
+
+  /// No description provided for @invitacionPendiente.
+  ///
+  /// In es, this message translates to:
+  /// **'Pendiente'**
+  String get invitacionPendiente;
+
+  /// No description provided for @invitacionUsada.
+  ///
+  /// In es, this message translates to:
+  /// **'Usada'**
+  String get invitacionUsada;
+
+  /// No description provided for @sinInvitaciones.
+  ///
+  /// In es, this message translates to:
+  /// **'No has generado invitaciones.'**
+  String get sinInvitaciones;
+
+  /// No description provided for @sinMiembros.
+  ///
+  /// In es, this message translates to:
+  /// **'Aún no hay otros miembros.'**
+  String get sinMiembros;
+
+  /// No description provided for @cambiarRolTitulo.
+  ///
+  /// In es, this message translates to:
+  /// **'Cambiar rol'**
+  String get cambiarRolTitulo;
+
+  /// No description provided for @quitarDelNegocio.
+  ///
+  /// In es, this message translates to:
+  /// **'Quitar del negocio'**
+  String get quitarDelNegocio;
+
+  /// No description provided for @quitarMiembroConfirmacion.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Quitar a {nombre} del negocio?'**
+  String quitarMiembroConfirmacion(String nombre);
+
+  /// No description provided for @unirseCodigo.
+  ///
+  /// In es, this message translates to:
+  /// **'Unirme con un código'**
+  String get unirseCodigo;
+
+  /// No description provided for @unirseCodigoTitulo.
+  ///
+  /// In es, this message translates to:
+  /// **'Unirse a un negocio'**
+  String get unirseCodigoTitulo;
+
+  /// No description provided for @unirseCodigoAyuda.
+  ///
+  /// In es, this message translates to:
+  /// **'Escribe el código de invitación que te compartió el dueño del negocio.'**
+  String get unirseCodigoAyuda;
+
+  /// No description provided for @unirme.
+  ///
+  /// In es, this message translates to:
+  /// **'Unirme'**
+  String get unirme;
+
+  /// No description provided for @codigoVacio.
+  ///
+  /// In es, this message translates to:
+  /// **'Escribe el código.'**
+  String get codigoVacio;
+
+  /// No description provided for @codigoNoExiste.
+  ///
+  /// In es, this message translates to:
+  /// **'El código no existe.'**
+  String get codigoNoExiste;
+
+  /// No description provided for @codigoUsado.
+  ///
+  /// In es, this message translates to:
+  /// **'Ese código ya fue usado.'**
+  String get codigoUsado;
+
+  /// No description provided for @codigoInvalido.
+  ///
+  /// In es, this message translates to:
+  /// **'El código no es válido.'**
+  String get codigoInvalido;
+
+  /// No description provided for @unirseError.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo unir. Intenta de nuevo.'**
+  String get unirseError;
+
+  /// No description provided for @sinNombre.
+  ///
+  /// In es, this message translates to:
+  /// **'(sin nombre)'**
+  String get sinNombre;
 }
 
 class _AppLocalizationsDelegate
