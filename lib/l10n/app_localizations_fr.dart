@@ -1547,4 +1547,49 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get ver => 'Voir';
+
+  @override
+  String get olvidasteContrasena => 'Mot de passe oublié ?';
+
+  @override
+  String get recuperarContrasenaTitulo => 'Réinitialiser le mot de passe';
+
+  @override
+  String get recuperarContrasenaAyuda =>
+      'Nous vous enverrons un e-mail pour réinitialiser votre mot de passe.';
+
+  @override
+  String get enviar => 'Envoyer';
+
+  @override
+  String get correoVacio => 'Saisissez votre e-mail.';
+
+  @override
+  String get correoRecuperacionEnviado =>
+      'Si un compte existe pour cet e-mail, nous avons envoyé un lien pour le réinitialiser.';
+
+  @override
+  String get eliminarCuenta => 'Supprimer le compte';
+
+  @override
+  String get eliminarCuentaAdvertencia =>
+      'Cela supprimera votre compte et votre accès à cette entreprise. Irréversible.';
+
+  @override
+  String get eliminarCuentaAdvertenciaDueno =>
+      'En tant que propriétaire, cela supprimera TOUTE l\'entreprise et ses données (produits, ventes, dépenses, commandes...) et dissociera les autres membres. Cette action est IRRÉVERSIBLE.';
+
+  @override
+  String get continuar => 'Continuer';
+
+  @override
+  String get eliminarCuentaConfirmar => 'Oui, supprimer';
+
+  @override
+  String get ingresaContrasenaEliminar =>
+      'Saisissez votre mot de passe pour confirmer.';
+
+  @override
+  String get errorEliminarCuenta =>
+      'Impossible de supprimer le compte. Réessayez.';
 }

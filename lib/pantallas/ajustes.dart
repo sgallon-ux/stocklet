@@ -47,7 +47,7 @@ class PantallaAjustes extends StatelessWidget {
     if (!context.mounted) return;
     showAboutDialog(
       context: context,
-      applicationName: 'Dulce Nota',
+      applicationName: 'Stocklet',
       applicationVersion: '${info.version} (${info.buildNumber})',
       applicationIcon: Container(
         height: 48,

@@ -1529,4 +1529,49 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get ver => 'Ver';
+
+  @override
+  String get olvidasteContrasena => '¿Olvidaste tu contraseña?';
+
+  @override
+  String get recuperarContrasenaTitulo => 'Recuperar contraseña';
+
+  @override
+  String get recuperarContrasenaAyuda =>
+      'Te enviaremos un correo para restablecer tu contraseña.';
+
+  @override
+  String get enviar => 'Enviar';
+
+  @override
+  String get correoVacio => 'Escribe tu correo.';
+
+  @override
+  String get correoRecuperacionEnviado =>
+      'Si existe una cuenta con ese correo, te enviamos un enlace para restablecerla.';
+
+  @override
+  String get eliminarCuenta => 'Eliminar cuenta';
+
+  @override
+  String get eliminarCuentaAdvertencia =>
+      'Esto eliminará tu cuenta y tu acceso a este negocio. No se puede deshacer.';
+
+  @override
+  String get eliminarCuentaAdvertenciaDueno =>
+      'Como dueño, esto eliminará TODO el negocio y sus datos (productos, ventas, gastos, pedidos...) y desvinculará a los demás miembros. Esta acción NO se puede deshacer.';
+
+  @override
+  String get continuar => 'Continuar';
+
+  @override
+  String get eliminarCuentaConfirmar => 'Sí, eliminar';
+
+  @override
+  String get ingresaContrasenaEliminar =>
+      'Ingresa tu contraseña para confirmar.';
+
+  @override
+  String get errorEliminarCuenta =>
+      'No se pudo eliminar la cuenta. Intenta de nuevo.';
 }

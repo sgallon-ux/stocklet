@@ -513,5 +513,20 @@
   "codigoInvalido": "O código não é válido.",
   "unirseError": "Não foi possível entrar. Tente novamente.",
   "sinNombre": "(sem nome)",
-  "ver": "Ver"
+  "ver": "Ver",
+
+  "olvidasteContrasena": "Esqueceu sua senha?",
+  "recuperarContrasenaTitulo": "Redefinir senha",
+  "recuperarContrasenaAyuda": "Enviaremos um e-mail para redefinir sua senha.",
+  "enviar": "Enviar",
+  "correoVacio": "Digite seu e-mail.",
+  "correoRecuperacionEnviado": "Se existir uma conta com esse e-mail, enviamos um link para redefini-la.",
+
+  "eliminarCuenta": "Excluir conta",
+  "eliminarCuentaAdvertencia": "Isto excluirá sua conta e seu acesso a este negócio. Não pode ser desfeito.",
+  "eliminarCuentaAdvertenciaDueno": "Como dono, isto excluirá TODO o negócio e seus dados (produtos, vendas, despesas, pedidos...) e desvinculará os demais membros. Esta ação NÃO pode ser desfeita.",
+  "continuar": "Continuar",
+  "eliminarCuentaConfirmar": "Sim, excluir",
+  "ingresaContrasenaEliminar": "Digite sua senha para confirmar.",
+  "errorEliminarCuenta": "Não foi possível excluir a conta. Tente novamente."
 }

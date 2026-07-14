@@ -86,6 +86,63 @@ class _PantallaLoginState extends State<PantallaLogin> {
     }
   }
 
+  Future<void> _recuperar() async {
+    final t = AppLocalizations.of(context)!;
+    final ctrl = TextEditingController(text: correoCtrl.text.trim());
+    final enviar = await showDialog<bool>(
+      context: context,
+      builder: (dc) => AlertDialog(
+        title: Text(t.recuperarContrasenaTitulo),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(t.recuperarContrasenaAyuda),
+            const SizedBox(height: 12),
+            TextField(
+              controller: ctrl,
+              keyboardType: TextInputType.emailAddress,
+              decoration: InputDecoration(
+                labelText: t.campoCorreo,
+                prefixIcon: const Icon(Icons.mail_outline),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(dc, false),
+              child: Text(t.cancelar)),
+          ElevatedButton(
+              onPressed: () => Navigator.pop(dc, true),
+              child: Text(t.enviar)),
+        ],
+      ),
+    );
+    final correo = ctrl.text.trim();
+    ctrl.dispose();
+    if (enviar != true || !mounted) return;
+    if (correo.isEmpty) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(t.correoVacio)));
+      return;
+    }
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: correo);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'invalid-email' && mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(t.errorCorreoInvalido)));
+        return;
+      }
+      // Otros casos (p. ej. user-not-found): por seguridad no revelamos si el
+      // correo existe; mostramos el mensaje genérico de abajo.
+    } catch (_) {}
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(t.correoRecuperacionEnviado)));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final m = AppColores.of(context);
@@ -178,6 +235,13 @@ class _PantallaLoginState extends State<PantallaLogin> {
                                     child: CircularProgressIndicator(
                                         strokeWidth: 2, color: Colors.white))
                                 : Text(t.iniciarSesion),
+                          ),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: TextButton(
+                              onPressed: _recuperar,
+                              child: Text(t.olvidasteContrasena),
+                            ),
                           ),
                         ],
                       ),

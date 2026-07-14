@@ -513,5 +513,20 @@
   "codigoInvalido": "The code is not valid.",
   "unirseError": "Could not join. Try again.",
   "sinNombre": "(no name)",
-  "ver": "View"
+  "ver": "View",
+
+  "olvidasteContrasena": "Forgot your password?",
+  "recuperarContrasenaTitulo": "Reset password",
+  "recuperarContrasenaAyuda": "We'll send you an email to reset your password.",
+  "enviar": "Send",
+  "correoVacio": "Enter your email.",
+  "correoRecuperacionEnviado": "If an account exists for that email, we sent a link to reset it.",
+
+  "eliminarCuenta": "Delete account",
+  "eliminarCuentaAdvertencia": "This will delete your account and your access to this business. It can't be undone.",
+  "eliminarCuentaAdvertenciaDueno": "As the owner, this will delete the ENTIRE business and its data (products, sales, expenses, orders...) and unlink the other members. This action CANNOT be undone.",
+  "continuar": "Continue",
+  "eliminarCuentaConfirmar": "Yes, delete",
+  "ingresaContrasenaEliminar": "Enter your password to confirm.",
+  "errorEliminarCuenta": "Could not delete the account. Try again."
 }

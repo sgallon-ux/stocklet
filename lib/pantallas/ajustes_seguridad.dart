@@ -92,6 +92,91 @@ class PantallaAjustesSeguridad extends StatelessWidget {
     );
   }
 
+  Future<void> _eliminarCuenta(BuildContext context) async {
+    final t = AppLocalizations.of(context)!;
+    final m = AppColores.of(context);
+    final datos = context.read<DatosApp>();
+
+    // 1) Advertencia (más fuerte si es dueño: borra todo el negocio).
+    final seguir = await showDialog<bool>(
+      context: context,
+      builder: (dc) => AlertDialog(
+        title: Text(t.eliminarCuenta),
+        content: Text(datos.esDueno
+            ? t.eliminarCuentaAdvertenciaDueno
+            : t.eliminarCuentaAdvertencia),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(dc, false),
+              child: Text(t.cancelar)),
+          TextButton(
+            onPressed: () => Navigator.pop(dc, true),
+            style: TextButton.styleFrom(foregroundColor: m.rojo),
+            child: Text(t.continuar),
+          ),
+        ],
+      ),
+    );
+    if (seguir != true || !context.mounted) return;
+
+    // 2) Reautenticación: pedir la contraseña.
+    final passCtrl = TextEditingController();
+    final confirmar = await showDialog<bool>(
+      context: context,
+      builder: (dc) => AlertDialog(
+        title: Text(t.eliminarCuenta),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(t.ingresaContrasenaEliminar),
+            const SizedBox(height: 12),
+            TextField(
+              controller: passCtrl,
+              obscureText: true,
+              decoration: InputDecoration(
+                labelText: t.campoContrasena,
+                prefixIcon: const Icon(Icons.lock_outline),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(dc, false),
+              child: Text(t.cancelar)),
+          TextButton(
+            onPressed: () => Navigator.pop(dc, true),
+            style: TextButton.styleFrom(foregroundColor: m.rojo),
+            child: Text(t.eliminarCuentaConfirmar),
+          ),
+        ],
+      ),
+    );
+    final password = passCtrl.text;
+    passCtrl.dispose();
+    if (confirmar != true || !context.mounted) return;
+
+    // 3) Ejecutar con indicador de carga.
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const Center(child: CircularProgressIndicator()),
+    );
+    final error = await datos.eliminarCuenta(password);
+    if (!context.mounted) return;
+    Navigator.pop(context); // cierra el indicador de carga
+    if (error == null) {
+      // Éxito: la sesión ya se cerró; volvemos al inicio (login).
+      Navigator.of(context).popUntil((r) => r.isFirst);
+      return;
+    }
+    final msg = error == 'password'
+        ? t.passwordActualIncorrecta
+        : t.errorEliminarCuenta;
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(msg)));
+  }
+
   @override
   Widget build(BuildContext context) {
     final m = AppColores.of(context);
@@ -166,25 +251,48 @@ class PantallaAjustesSeguridad extends StatelessWidget {
           const SizedBox(height: 8),
           Card(
             clipBehavior: Clip.antiAlias,
-            child: ListTile(
-              onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (_) => const PantallaCambiarContrasena())),
-              leading: Container(
-                height: 40,
-                width: 40,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: m.verde.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(10),
+            child: Column(
+              children: [
+                ListTile(
+                  onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => const PantallaCambiarContrasena())),
+                  leading: Container(
+                    height: 40,
+                    width: 40,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: m.verde.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Icon(Icons.lock_outline, color: m.verde, size: 20),
+                  ),
+                  title: Text(t.cambiarContrasena,
+                      style: TextStyle(
+                          fontWeight: FontWeight.w600, color: m.texto)),
+                  trailing: Icon(Icons.chevron_right, color: m.textoSuave),
                 ),
-                child: Icon(Icons.lock_outline, color: m.verde, size: 20),
-              ),
-              title: Text(t.cambiarContrasena,
-                  style:
-                      TextStyle(fontWeight: FontWeight.w600, color: m.texto)),
-              trailing: Icon(Icons.chevron_right, color: m.textoSuave),
+                const Divider(height: 1),
+                ListTile(
+                  onTap: () => _eliminarCuenta(context),
+                  leading: Container(
+                    height: 40,
+                    width: 40,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: m.rojo.withValues(alpha: 0.10),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child:
+                        Icon(Icons.delete_forever_outlined, color: m.rojo, size: 20),
+                  ),
+                  title: Text(t.eliminarCuenta,
+                      style: TextStyle(
+                          fontWeight: FontWeight.w600, color: m.rojo)),
+                  trailing: Icon(Icons.chevron_right, color: m.textoSuave),
+                ),
+              ],
             ),
           ),
         ],

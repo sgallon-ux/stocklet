@@ -1,4 +1,4 @@
-// Cloud Functions para notificaciones push de Dulce Nota.
+// Cloud Functions para notificaciones push de Stocklet.
 // Envían push cuando: (1) un miembro crea una nota, (2) un insumo baja del
 // mínimo, (3) recordatorio diario de pedidos por entregar (hoy o atrasados).
 // Cada usuario recibe el texto en SU idioma (guardado en usuarios/{uid}.idioma).
@@ -8,6 +8,7 @@
 const {onDocumentCreated, onDocumentUpdated} =
     require('firebase-functions/v2/firestore');
 const {onSchedule} = require('firebase-functions/v2/scheduler');
+const {onCall, HttpsError} = require('firebase-functions/v2/https');
 const admin = require('firebase-admin');
 
 admin.initializeApp();
@@ -148,3 +149,62 @@ exports.recordatorioPedidos = onSchedule(
         }));
       }
     });
+
+// (4) Eliminar cuenta (requisito de las tiendas). El cliente ya reautenticó
+// antes de llamar. Si el usuario es DUEÑO, se borra TODO el negocio y se
+// desvincula a los demás miembros. Si es socio/empleado, solo se borra su
+// propia cuenta. Al final se elimina el usuario de Firebase Auth.
+exports.eliminarCuenta = onCall(async (request) => {
+  const uid = request.auth && request.auth.uid;
+  if (!uid) {
+    throw new HttpsError('unauthenticated', 'Debes iniciar sesión.');
+  }
+  const db = admin.firestore();
+  const bucket = admin.storage().bucket();
+
+  const miDoc = await db.collection('usuarios').doc(uid).get();
+  const negocioId = miDoc.exists ? miDoc.get('negocioId') : null;
+  const rol = miDoc.exists ? miDoc.get('rol') : null;
+
+  if (negocioId && rol === 'dueno') {
+    // --- DUEÑO: borrar todo el negocio ---
+    // 1) Todos los miembros del negocio (incluido el dueño).
+    const miembros = await db.collection('usuarios')
+        .where('negocioId', '==', negocioId).get();
+    const batch = db.batch();
+    miembros.forEach((d) => batch.delete(d.ref));
+    // 2) Invitaciones pendientes de ese negocio.
+    const invitaciones = await db.collection('invitaciones')
+        .where('negocioId', '==', negocioId).get();
+    invitaciones.forEach((d) => batch.delete(d.ref));
+    await batch.commit();
+    // 3) Todo el árbol del negocio (subcolecciones incluidas).
+    await db.recursiveDelete(db.collection('negocios').doc(negocioId));
+    // 4) Archivos del negocio en Storage.
+    try {
+      await bucket.deleteFiles({prefix: `negocios/${negocioId}/`});
+    } catch (e) {
+      console.error('Error borrando storage del negocio', e);
+    }
+  } else if (miDoc.exists) {
+    // --- Socio / empleado: borrar solo su cuenta ---
+    await miDoc.ref.delete();
+  }
+
+  // Archivos personales del usuario en Storage.
+  try {
+    await bucket.deleteFiles({prefix: `usuarios/${uid}/`});
+  } catch (e) {
+    console.error('Error borrando storage del usuario', e);
+  }
+
+  // Finalmente, eliminar el usuario de Firebase Auth.
+  try {
+    await admin.auth().deleteUser(uid);
+  } catch (e) {
+    console.error('Error borrando el usuario de Auth', e);
+    throw new HttpsError('internal', 'No se pudo eliminar la cuenta.');
+  }
+
+  return {ok: true};
+});

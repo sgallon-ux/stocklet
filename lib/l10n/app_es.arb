@@ -698,5 +698,20 @@
   "codigoInvalido": "El código no es válido.",
   "unirseError": "No se pudo unir. Intenta de nuevo.",
   "sinNombre": "(sin nombre)",
-  "ver": "Ver"
+  "ver": "Ver",
+
+  "olvidasteContrasena": "¿Olvidaste tu contraseña?",
+  "recuperarContrasenaTitulo": "Recuperar contraseña",
+  "recuperarContrasenaAyuda": "Te enviaremos un correo para restablecer tu contraseña.",
+  "enviar": "Enviar",
+  "correoVacio": "Escribe tu correo.",
+  "correoRecuperacionEnviado": "Si existe una cuenta con ese correo, te enviamos un enlace para restablecerla.",
+
+  "eliminarCuenta": "Eliminar cuenta",
+  "eliminarCuentaAdvertencia": "Esto eliminará tu cuenta y tu acceso a este negocio. No se puede deshacer.",
+  "eliminarCuentaAdvertenciaDueno": "Como dueño, esto eliminará TODO el negocio y sus datos (productos, ventas, gastos, pedidos...) y desvinculará a los demás miembros. Esta acción NO se puede deshacer.",
+  "continuar": "Continuar",
+  "eliminarCuentaConfirmar": "Sí, eliminar",
+  "ingresaContrasenaEliminar": "Ingresa tu contraseña para confirmar.",
+  "errorEliminarCuenta": "No se pudo eliminar la cuenta. Intenta de nuevo."
 }

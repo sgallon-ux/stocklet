@@ -1,6 +1,6 @@
 {
   "name": "functions",
-  "description": "Cloud Functions de Dulce Nota (notificaciones push)",
+  "description": "Cloud Functions de Stocklet (notificaciones push)",
   "main": "index.js",
   "engines": {
     "node": "20"

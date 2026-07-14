@@ -19,6 +19,7 @@ import 'models/item_pedido.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'models/catalogo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'servicios/push_service.dart';
 
 enum EstadoApp { cargando, sinSesion, sinNegocio, listo }
@@ -442,6 +443,34 @@ Future<void> _cargarNegocioId(String uid) async {
           .update({'idioma': _idiomaEfectivo});
     } catch (_) {
       // El doc puede no existir todavía; se guarda al entrar a un negocio.
+    }
+  }
+
+  // Reautentica con la contraseña y elimina la cuenta y sus datos (mediante la
+  // Cloud Function eliminarCuenta). Si es dueño, borra Todo el negocio.
+  // Devuelve null si todo bien, o 'password' | 'error'.
+  Future<String?> eliminarCuenta(String password) async {
+    final user = FirebaseAuth.instance.currentUser;
+    final email = user?.email;
+    if (user == null || email == null) return 'error';
+    try {
+      final cred =
+          EmailAuthProvider.credential(email: email, password: password);
+      await user.reauthenticateWithCredential(cred);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'wrong-password' || e.code == 'invalid-credential') {
+        return 'password';
+      }
+      return 'error';
+    } catch (_) {
+      return 'error';
+    }
+    try {
+      await FirebaseFunctions.instance.httpsCallable('eliminarCuenta').call();
+      await FirebaseAuth.instance.signOut();
+      return null;
+    } catch (_) {
+      return 'error';
     }
   }
 

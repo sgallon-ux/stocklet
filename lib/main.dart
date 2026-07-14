@@ -1,7 +1,10 @@
+import 'dart:ui' show PlatformDispatcher;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'firebase_options.dart';
 import 'datos_app.dart';
 import 'compuerta.dart';
@@ -15,11 +18,22 @@ import 'package:reposteria_app/l10n/app_localizations.dart'; // NUEVO
 @pragma('vm:entry-point')
 Future<void> _fcmBackgroundHandler(RemoteMessage message) async {}
 
+// Instancia global de Analytics (usada por el observador de navegación).
+final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // Crashlytics: captura errores de Flutter y errores asíncronos no atrapados.
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+  PlatformDispatcher.instance.onError = (error, stack) {
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    return true;
+  };
+
   FirebaseMessaging.onBackgroundMessage(_fcmBackgroundHandler);
   await PushService.instance.init();
   runApp(
@@ -47,9 +61,11 @@ class MiApp extends StatelessWidget {
     };
 
     return MaterialApp(
-      title: 'Contabilidad',
+      title: 'Stocklet',
       navigatorKey: navigatorKey,
       scaffoldMessengerKey: scaffoldMessengerKey,
+      // Analytics: registra automáticamente las pantallas visitadas.
+      navigatorObservers: [FirebaseAnalyticsObserver(analytics: analytics)],
       theme: temaApp(acento: acento),
       darkTheme: temaOscuro(acento: acento),
       themeMode: modo,

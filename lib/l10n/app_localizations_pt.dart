@@ -1521,4 +1521,48 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get ver => 'Ver';
+
+  @override
+  String get olvidasteContrasena => 'Esqueceu sua senha?';
+
+  @override
+  String get recuperarContrasenaTitulo => 'Redefinir senha';
+
+  @override
+  String get recuperarContrasenaAyuda =>
+      'Enviaremos um e-mail para redefinir sua senha.';
+
+  @override
+  String get enviar => 'Enviar';
+
+  @override
+  String get correoVacio => 'Digite seu e-mail.';
+
+  @override
+  String get correoRecuperacionEnviado =>
+      'Se existir uma conta com esse e-mail, enviamos um link para redefini-la.';
+
+  @override
+  String get eliminarCuenta => 'Excluir conta';
+
+  @override
+  String get eliminarCuentaAdvertencia =>
+      'Isto excluirá sua conta e seu acesso a este negócio. Não pode ser desfeito.';
+
+  @override
+  String get eliminarCuentaAdvertenciaDueno =>
+      'Como dono, isto excluirá TODO o negócio e seus dados (produtos, vendas, despesas, pedidos...) e desvinculará os demais membros. Esta ação NÃO pode ser desfeita.';
+
+  @override
+  String get continuar => 'Continuar';
+
+  @override
+  String get eliminarCuentaConfirmar => 'Sim, excluir';
+
+  @override
+  String get ingresaContrasenaEliminar => 'Digite sua senha para confirmar.';
+
+  @override
+  String get errorEliminarCuenta =>
+      'Não foi possível excluir a conta. Tente novamente.';
 }

@@ -2879,6 +2879,84 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Ver'**
   String get ver;
+
+  /// No description provided for @olvidasteContrasena.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Olvidaste tu contraseña?'**
+  String get olvidasteContrasena;
+
+  /// No description provided for @recuperarContrasenaTitulo.
+  ///
+  /// In es, this message translates to:
+  /// **'Recuperar contraseña'**
+  String get recuperarContrasenaTitulo;
+
+  /// No description provided for @recuperarContrasenaAyuda.
+  ///
+  /// In es, this message translates to:
+  /// **'Te enviaremos un correo para restablecer tu contraseña.'**
+  String get recuperarContrasenaAyuda;
+
+  /// No description provided for @enviar.
+  ///
+  /// In es, this message translates to:
+  /// **'Enviar'**
+  String get enviar;
+
+  /// No description provided for @correoVacio.
+  ///
+  /// In es, this message translates to:
+  /// **'Escribe tu correo.'**
+  String get correoVacio;
+
+  /// No description provided for @correoRecuperacionEnviado.
+  ///
+  /// In es, this message translates to:
+  /// **'Si existe una cuenta con ese correo, te enviamos un enlace para restablecerla.'**
+  String get correoRecuperacionEnviado;
+
+  /// No description provided for @eliminarCuenta.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar cuenta'**
+  String get eliminarCuenta;
+
+  /// No description provided for @eliminarCuentaAdvertencia.
+  ///
+  /// In es, this message translates to:
+  /// **'Esto eliminará tu cuenta y tu acceso a este negocio. No se puede deshacer.'**
+  String get eliminarCuentaAdvertencia;
+
+  /// No description provided for @eliminarCuentaAdvertenciaDueno.
+  ///
+  /// In es, this message translates to:
+  /// **'Como dueño, esto eliminará TODO el negocio y sus datos (productos, ventas, gastos, pedidos...) y desvinculará a los demás miembros. Esta acción NO se puede deshacer.'**
+  String get eliminarCuentaAdvertenciaDueno;
+
+  /// No description provided for @continuar.
+  ///
+  /// In es, this message translates to:
+  /// **'Continuar'**
+  String get continuar;
+
+  /// No description provided for @eliminarCuentaConfirmar.
+  ///
+  /// In es, this message translates to:
+  /// **'Sí, eliminar'**
+  String get eliminarCuentaConfirmar;
+
+  /// No description provided for @ingresaContrasenaEliminar.
+  ///
+  /// In es, this message translates to:
+  /// **'Ingresa tu contraseña para confirmar.'**
+  String get ingresaContrasenaEliminar;
+
+  /// No description provided for @errorEliminarCuenta.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo eliminar la cuenta. Intenta de nuevo.'**
+  String get errorEliminarCuenta;
 }
 
 class _AppLocalizationsDelegate

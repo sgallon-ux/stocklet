@@ -1521,4 +1521,47 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ver => 'View';
+
+  @override
+  String get olvidasteContrasena => 'Forgot your password?';
+
+  @override
+  String get recuperarContrasenaTitulo => 'Reset password';
+
+  @override
+  String get recuperarContrasenaAyuda =>
+      'We\'ll send you an email to reset your password.';
+
+  @override
+  String get enviar => 'Send';
+
+  @override
+  String get correoVacio => 'Enter your email.';
+
+  @override
+  String get correoRecuperacionEnviado =>
+      'If an account exists for that email, we sent a link to reset it.';
+
+  @override
+  String get eliminarCuenta => 'Delete account';
+
+  @override
+  String get eliminarCuentaAdvertencia =>
+      'This will delete your account and your access to this business. It can\'t be undone.';
+
+  @override
+  String get eliminarCuentaAdvertenciaDueno =>
+      'As the owner, this will delete the ENTIRE business and its data (products, sales, expenses, orders...) and unlink the other members. This action CANNOT be undone.';
+
+  @override
+  String get continuar => 'Continue';
+
+  @override
+  String get eliminarCuentaConfirmar => 'Yes, delete';
+
+  @override
+  String get ingresaContrasenaEliminar => 'Enter your password to confirm.';
+
+  @override
+  String get errorEliminarCuenta => 'Could not delete the account. Try again.';
 }

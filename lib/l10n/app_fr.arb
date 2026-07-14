@@ -513,5 +513,20 @@
   "codigoInvalido": "Le code n'est pas valide.",
   "unirseError": "Impossible de rejoindre. Réessayez.",
   "sinNombre": "(sans nom)",
-  "ver": "Voir"
+  "ver": "Voir",
+
+  "olvidasteContrasena": "Mot de passe oublié ?",
+  "recuperarContrasenaTitulo": "Réinitialiser le mot de passe",
+  "recuperarContrasenaAyuda": "Nous vous enverrons un e-mail pour réinitialiser votre mot de passe.",
+  "enviar": "Envoyer",
+  "correoVacio": "Saisissez votre e-mail.",
+  "correoRecuperacionEnviado": "Si un compte existe pour cet e-mail, nous avons envoyé un lien pour le réinitialiser.",
+
+  "eliminarCuenta": "Supprimer le compte",
+  "eliminarCuentaAdvertencia": "Cela supprimera votre compte et votre accès à cette entreprise. Irréversible.",
+  "eliminarCuentaAdvertenciaDueno": "En tant que propriétaire, cela supprimera TOUTE l'entreprise et ses données (produits, ventes, dépenses, commandes...) et dissociera les autres membres. Cette action est IRRÉVERSIBLE.",
+  "continuar": "Continuer",
+  "eliminarCuentaConfirmar": "Oui, supprimer",
+  "ingresaContrasenaEliminar": "Saisissez votre mot de passe pour confirmer.",
+  "errorEliminarCuenta": "Impossible de supprimer le compte. Réessayez."
 }
