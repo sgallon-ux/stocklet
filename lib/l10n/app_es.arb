@@ -697,5 +697,6 @@
   "codigoUsado": "Ese código ya fue usado.",
   "codigoInvalido": "El código no es válido.",
   "unirseError": "No se pudo unir. Intenta de nuevo.",
-  "sinNombre": "(sin nombre)"
+  "sinNombre": "(sin nombre)",
+  "ver": "Ver"
 }

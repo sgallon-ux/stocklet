@@ -1,19 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'firebase_options.dart';
 import 'datos_app.dart';
 import 'compuerta.dart';
 import 'tema.dart';
+import 'servicios/push_service.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:reposteria_app/l10n/app_localizations.dart'; // NUEVO
+
+// Manejador de push en segundo plano (obligatorio, debe ser de nivel superior).
+@pragma('vm:entry-point')
+Future<void> _fcmBackgroundHandler(RemoteMessage message) async {}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  FirebaseMessaging.onBackgroundMessage(_fcmBackgroundHandler);
+  await PushService.instance.init();
   runApp(
     ChangeNotifierProvider(
       create: (_) => DatosApp(),
@@ -40,6 +48,8 @@ class MiApp extends StatelessWidget {
 
     return MaterialApp(
       title: 'Contabilidad',
+      navigatorKey: navigatorKey,
+      scaffoldMessengerKey: scaffoldMessengerKey,
       theme: temaApp(acento: acento),
       darkTheme: temaOscuro(acento: acento),
       themeMode: modo,

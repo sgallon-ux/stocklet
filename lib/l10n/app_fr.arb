@@ -512,5 +512,6 @@
   "codigoUsado": "Ce code a déjà été utilisé.",
   "codigoInvalido": "Le code n'est pas valide.",
   "unirseError": "Impossible de rejoindre. Réessayez.",
-  "sinNombre": "(sans nom)"
+  "sinNombre": "(sans nom)",
+  "ver": "Voir"
 }

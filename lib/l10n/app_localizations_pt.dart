@@ -1518,4 +1518,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get sinNombre => '(sem nome)';
+
+  @override
+  String get ver => 'Ver';
 }

@@ -1544,4 +1544,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get sinNombre => '(sans nom)';
+
+  @override
+  String get ver => 'Voir';
 }

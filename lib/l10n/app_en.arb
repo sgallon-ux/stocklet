@@ -512,5 +512,6 @@
   "codigoUsado": "That code has already been used.",
   "codigoInvalido": "The code is not valid.",
   "unirseError": "Could not join. Try again.",
-  "sinNombre": "(no name)"
+  "sinNombre": "(no name)",
+  "ver": "View"
 }

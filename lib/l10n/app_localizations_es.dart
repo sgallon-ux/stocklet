@@ -1526,4 +1526,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get sinNombre => '(sin nombre)';
+
+  @override
+  String get ver => 'Ver';
 }

@@ -512,5 +512,6 @@
   "codigoUsado": "Esse código já foi usado.",
   "codigoInvalido": "O código não é válido.",
   "unirseError": "Não foi possível entrar. Tente novamente.",
-  "sinNombre": "(sem nome)"
+  "sinNombre": "(sem nome)",
+  "ver": "Ver"
 }

@@ -1518,4 +1518,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sinNombre => '(no name)';
+
+  @override
+  String get ver => 'View';
 }

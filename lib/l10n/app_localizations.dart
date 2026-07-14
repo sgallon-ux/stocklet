@@ -2873,6 +2873,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'(sin nombre)'**
   String get sinNombre;
+
+  /// No description provided for @ver.
+  ///
+  /// In es, this message translates to:
+  /// **'Ver'**
+  String get ver;
 }
 
 class _AppLocalizationsDelegate

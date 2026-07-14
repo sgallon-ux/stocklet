@@ -19,6 +19,7 @@ import 'models/item_pedido.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'models/catalogo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'servicios/push_service.dart';
 
 enum EstadoApp { cargando, sinSesion, sinNegocio, listo }
 
@@ -132,6 +133,8 @@ class DatosApp extends ChangeNotifier {
           _escucharTodo();
           await _cargarUltimaRevision();
           estado = EstadoApp.listo;
+          PushService.instance.guardarToken(usuario.uid);
+          guardarIdiomaUsuario();
         } else {
           estado = EstadoApp.sinNegocio;
         }
@@ -212,6 +215,8 @@ Future<void> _cargarNegocioId(String uid) async {
     configurarMoneda(moneda: moneda, idioma: idioma, pais: pais);
     _escucharTodo();
     estado = EstadoApp.listo;
+    PushService.instance.guardarToken(uid);
+    guardarIdiomaUsuario();
     notifyListeners();
   }
 
@@ -339,6 +344,8 @@ Future<void> _cargarNegocioId(String uid) async {
       _escucharTodo();
       await _cargarUltimaRevision();
       estado = EstadoApp.listo;
+      PushService.instance.guardarToken(uid);
+      guardarIdiomaUsuario();
       notifyListeners();
       return null;
     } catch (e) {
@@ -412,7 +419,30 @@ Future<void> _cargarNegocioId(String uid) async {
     } else {
       await prefs.setString('idiomaId', id);
     }
+    guardarIdiomaUsuario();
     notifyListeners();
+  }
+
+  // Idioma efectivo (el elegido, o el del dispositivo), acotado a los soportados.
+  String get _idiomaEfectivo {
+    final code = idiomaId ?? PlatformDispatcher.instance.locale.languageCode;
+    const soportados = {'es', 'en', 'pt', 'fr'};
+    return soportados.contains(code) ? code : 'en';
+  }
+
+  // Guarda el idioma del usuario en Firestore para localizar las notificaciones
+  // push (el servidor no conoce la preferencia guardada en el dispositivo).
+  Future<void> guardarIdiomaUsuario() async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) return;
+    try {
+      await _db
+          .collection('usuarios')
+          .doc(uid)
+          .update({'idioma': _idiomaEfectivo});
+    } catch (_) {
+      // El doc puede no existir todavía; se guarda al entrar a un negocio.
+    }
   }
 
   // --- Avisos en-app (respetan los interruptores) ---

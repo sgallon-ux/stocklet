@@ -25,36 +25,61 @@ class _PantallaIngresarVentaState extends State<PantallaIngresarVenta> {
     super.dispose();
   }
 
-  void _venderProducto(Producto producto) {
+  Future<void> _venderProducto(Producto producto) async {
     final t = AppLocalizations.of(context)!;
-    showDialog(
+    final cantCtrl = TextEditingController(text: '1');
+    await showDialog<void>(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Text(t.confirmarVenta),
-        content: Text(
-          t.confirmarVentaProducto(
-              producto.nombre, pesos(producto.precioVenta)),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: Text(t.cancelar),
-          ),
-          TextButton(
-            onPressed: () {
-              context.read<DatosApp>().registrarVenta(producto, 1);
-              Navigator.pop(dialogContext);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                    content:
-                        Text(t.ventaProductoRegistrada(producto.nombre))),
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: Text(producto.nombre),
+          content: StatefulBuilder(
+            builder: (ctx, setLocal) {
+              final cant = int.tryParse(cantCtrl.text) ?? 0;
+              final total = producto.precioVenta * (cant > 0 ? cant : 0);
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  TextField(
+                    controller: cantCtrl,
+                    autofocus: true,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(labelText: t.cantidad),
+                    onChanged: (_) => setLocal(() {}),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(t.totalTexto(pesos(total)),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 16)),
+                ],
               );
             },
-            child: Text(t.vender),
           ),
-        ],
-      ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: Text(t.cancelar),
+            ),
+            TextButton(
+              onPressed: () {
+                final cant = int.tryParse(cantCtrl.text) ?? 0;
+                final cantidad = cant > 0 ? cant : 1;
+                context.read<DatosApp>().registrarVenta(producto, cantidad);
+                Navigator.pop(dialogContext);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                      content:
+                          Text(t.ventaProductoRegistrada(producto.nombre))),
+                );
+              },
+              child: Text(t.vender),
+            ),
+          ],
+        );
+      },
     );
+    cantCtrl.dispose();
   }
 
   void _venderManual() {
