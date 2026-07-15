@@ -8,6 +8,7 @@ import '../tema.dart';
 import '../formato.dart';
 import 'editar_gasto.dart';
 import 'gasto_categoria_l10n.dart';
+import '../servicios/gate_pro.dart';
 
 class PantallaHistorialGastos extends StatefulWidget {
   const PantallaHistorialGastos({super.key});
@@ -73,7 +74,11 @@ class _PantallaHistorialGastosState extends State<PantallaHistorialGastos> {
           for (final g in datos.gastos) {
             set.add(DateTime(g.fecha.year, g.fecha.month));
           }
-          final meses = set.toList()..sort((a, b) => b.compareTo(a));
+          final todosMeses = set.toList()..sort((a, b) => b.compareTo(a));
+          // Gratis = últimos 3 meses de historial; el resto requiere Pro.
+          final hayMasHistorial = !datos.esPro && todosMeses.length > 3;
+          final meses =
+              datos.esPro ? todosMeses : todosMeses.take(3).toList();
 
           final sel = _mes ?? actual;
           final selValido = meses.contains(sel) ? sel : meses.first;
@@ -109,6 +114,25 @@ class _PantallaHistorialGastosState extends State<PantallaHistorialGastos> {
                   ],
                 ),
               ),
+              if (hayMasHistorial)
+                InkWell(
+                  onTap: () => exigirPro(context),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
+                    child: Row(
+                      children: [
+                        Icon(Icons.lock_outline,
+                            size: 16, color: m.textoSuave),
+                        const SizedBox(width: 6),
+                        Expanded(
+                          child: Text(t.historialCompletoPro,
+                              style: TextStyle(
+                                  fontSize: 12, color: m.textoSuave)),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               Expanded(
                 child: lista.isEmpty
                     ? Center(

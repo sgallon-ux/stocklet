@@ -10,6 +10,7 @@ import 'datos_app.dart';
 import 'compuerta.dart';
 import 'tema.dart';
 import 'servicios/push_service.dart';
+import 'servicios/suscripcion_service.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:reposteria_app/l10n/app_localizations.dart'; // NUEVO
@@ -36,6 +37,7 @@ void main() async {
 
   FirebaseMessaging.onBackgroundMessage(_fcmBackgroundHandler);
   await PushService.instance.init();
+  await SuscripcionService.instance.init();
   runApp(
     ChangeNotifierProvider(
       create: (_) => DatosApp(),

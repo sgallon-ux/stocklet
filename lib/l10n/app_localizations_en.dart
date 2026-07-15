@@ -1564,4 +1564,71 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorEliminarCuenta => 'Could not delete the account. Try again.';
+
+  @override
+  String get cargandoNegocio => 'Loading your business';
+
+  @override
+  String get historialCompletoPro => 'See full history with Pro';
+
+  @override
+  String get paywallTitulo => 'Unlock all of Stocklet';
+
+  @override
+  String get paywallSubtitulo => 'Grow with your team and the full toolkit';
+
+  @override
+  String get proEquipo => 'Team with roles';
+
+  @override
+  String get proEquipoDesc => 'Invite partners and employees';
+
+  @override
+  String get proHistorial => 'Full history';
+
+  @override
+  String get proHistorialDesc => 'No date limit';
+
+  @override
+  String get proReportes => 'Reports and analytics';
+
+  @override
+  String get proReportesDesc => 'Best day, top products, PDF';
+
+  @override
+  String get proCatalogos => 'Unlimited PDF catalogs';
+
+  @override
+  String get proNegocios => 'Multiple businesses';
+
+  @override
+  String get proExportar => 'Export your data';
+
+  @override
+  String get planMensual => 'Monthly plan';
+
+  @override
+  String get planAnual => 'Annual plan';
+
+  @override
+  String get dosMesesGratis => '~2 months free';
+
+  @override
+  String get porMes => 'per month';
+
+  @override
+  String get porAnioDescuento => 'per year · ~2 months free';
+
+  @override
+  String get restaurarCompras => 'Restore purchases';
+
+  @override
+  String get pagosPronto =>
+      'Payments will be enabled when the app is published.';
+
+  @override
+  String get yaEresPro => 'You\'re Pro now! Thank you.';
+
+  @override
+  String get errorCompra => 'The purchase could not be completed.';
 }

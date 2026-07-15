@@ -2931,7 +2931,7 @@ abstract class AppLocalizations {
   /// No description provided for @eliminarCuentaAdvertenciaDueno.
   ///
   /// In es, this message translates to:
-  /// **'Como dueño, esto eliminará TODO el negocio y sus datos (productos, ventas, gastos, pedidos...) y desvinculará a los demás miembros. Esta acción NO se puede deshacer.'**
+  /// **'Como dueño, esto eliminará todo el negocio y sus datos (productos, ventas, gastos, pedidos...) y desvinculará a los demás miembros. Esta acción no se puede deshacer.'**
   String get eliminarCuentaAdvertenciaDueno;
 
   /// No description provided for @continuar.
@@ -2957,6 +2957,138 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'No se pudo eliminar la cuenta. Intenta de nuevo.'**
   String get errorEliminarCuenta;
+
+  /// No description provided for @cargandoNegocio.
+  ///
+  /// In es, this message translates to:
+  /// **'Cargando tu negocio'**
+  String get cargandoNegocio;
+
+  /// No description provided for @historialCompletoPro.
+  ///
+  /// In es, this message translates to:
+  /// **'Ver todo el historial con Pro'**
+  String get historialCompletoPro;
+
+  /// No description provided for @paywallTitulo.
+  ///
+  /// In es, this message translates to:
+  /// **'Desbloquea todo Stocklet'**
+  String get paywallTitulo;
+
+  /// No description provided for @paywallSubtitulo.
+  ///
+  /// In es, this message translates to:
+  /// **'Crece con tu equipo y las herramientas completas'**
+  String get paywallSubtitulo;
+
+  /// No description provided for @proEquipo.
+  ///
+  /// In es, this message translates to:
+  /// **'Equipo con roles'**
+  String get proEquipo;
+
+  /// No description provided for @proEquipoDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Invita socios y empleados'**
+  String get proEquipoDesc;
+
+  /// No description provided for @proHistorial.
+  ///
+  /// In es, this message translates to:
+  /// **'Historial completo'**
+  String get proHistorial;
+
+  /// No description provided for @proHistorialDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin límite de fechas'**
+  String get proHistorialDesc;
+
+  /// No description provided for @proReportes.
+  ///
+  /// In es, this message translates to:
+  /// **'Reportes y análisis'**
+  String get proReportes;
+
+  /// No description provided for @proReportesDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Mejor día, top productos, PDF'**
+  String get proReportesDesc;
+
+  /// No description provided for @proCatalogos.
+  ///
+  /// In es, this message translates to:
+  /// **'Catálogos PDF ilimitados'**
+  String get proCatalogos;
+
+  /// No description provided for @proNegocios.
+  ///
+  /// In es, this message translates to:
+  /// **'Varios negocios'**
+  String get proNegocios;
+
+  /// No description provided for @proExportar.
+  ///
+  /// In es, this message translates to:
+  /// **'Exportar tus datos'**
+  String get proExportar;
+
+  /// No description provided for @planMensual.
+  ///
+  /// In es, this message translates to:
+  /// **'Plan mensual'**
+  String get planMensual;
+
+  /// No description provided for @planAnual.
+  ///
+  /// In es, this message translates to:
+  /// **'Plan anual'**
+  String get planAnual;
+
+  /// No description provided for @dosMesesGratis.
+  ///
+  /// In es, this message translates to:
+  /// **'~2 meses gratis'**
+  String get dosMesesGratis;
+
+  /// No description provided for @porMes.
+  ///
+  /// In es, this message translates to:
+  /// **'por mes'**
+  String get porMes;
+
+  /// No description provided for @porAnioDescuento.
+  ///
+  /// In es, this message translates to:
+  /// **'por año · ~2 meses gratis'**
+  String get porAnioDescuento;
+
+  /// No description provided for @restaurarCompras.
+  ///
+  /// In es, this message translates to:
+  /// **'Restaurar compras'**
+  String get restaurarCompras;
+
+  /// No description provided for @pagosPronto.
+  ///
+  /// In es, this message translates to:
+  /// **'Los pagos se activarán al publicar la app.'**
+  String get pagosPronto;
+
+  /// No description provided for @yaEresPro.
+  ///
+  /// In es, this message translates to:
+  /// **'¡Ya eres Pro! Gracias.'**
+  String get yaEresPro;
+
+  /// No description provided for @errorCompra.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo completar la compra.'**
+  String get errorCompra;
 }
 
 class _AppLocalizationsDelegate

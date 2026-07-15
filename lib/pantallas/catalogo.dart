@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:file_picker/file_picker.dart';
+import 'package:file_selector/file_selector.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../datos_app.dart';
 import '../models/catalogo.dart';
 import '../tema.dart';
+import '../servicios/gate_pro.dart';
 
 class PantallaCatalogo extends StatefulWidget {
   const PantallaCatalogo({super.key});
@@ -55,14 +56,18 @@ class _PantallaCatalogoState extends State<PantallaCatalogo> {
 
   Future<void> _subir() async {
     final t = AppLocalizations.of(context)!;
-    final result = await FilePicker.pickFiles(
-      type: FileType.any, // iPhone a veces no deja elegir si se filtra a 'pdf'
-      withData: true,
-    );
-    if (result == null || !mounted) return;
-    final archivo = result.files.first;
-    final bytes = archivo.bytes;
-    if (bytes == null) {
+    final datos = context.read<DatosApp>();
+    // Gratis = 1 catálogo. Para subir más, se requiere Pro.
+    if (!datos.esPro && datos.catalogos.isNotEmpty) {
+      await exigirPro(context);
+      return;
+    }
+    // Se aceptan todos los archivos y luego se valida .pdf manualmente
+    // (en iOS filtrar por 'pdf' a veces bloquea la selección).
+    final archivo = await openFile();
+    if (archivo == null || !mounted) return;
+    final bytes = await archivo.readAsBytes();
+    if (bytes.isEmpty) {
       _aviso(t.errorLeerArchivo);
       return;
     }
@@ -70,7 +75,7 @@ class _PantallaCatalogoState extends State<PantallaCatalogo> {
       _aviso(t.soloPdf);
       return;
     }
-    if (archivo.size > 15 * 1024 * 1024) {
+    if (bytes.length > 15 * 1024 * 1024) {
       _aviso(t.archivoSupera15);
       return;
     }

@@ -1592,4 +1592,72 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get errorEliminarCuenta =>
       'Impossible de supprimer le compte. Réessayez.';
+
+  @override
+  String get cargandoNegocio => 'Chargement de votre entreprise';
+
+  @override
+  String get historialCompletoPro => 'Voir tout l\'historique avec Pro';
+
+  @override
+  String get paywallTitulo => 'Débloquez tout Stocklet';
+
+  @override
+  String get paywallSubtitulo =>
+      'Développez-vous avec votre équipe et tous les outils';
+
+  @override
+  String get proEquipo => 'Équipe avec rôles';
+
+  @override
+  String get proEquipoDesc => 'Invitez associés et employés';
+
+  @override
+  String get proHistorial => 'Historique complet';
+
+  @override
+  String get proHistorialDesc => 'Sans limite de dates';
+
+  @override
+  String get proReportes => 'Rapports et analyses';
+
+  @override
+  String get proReportesDesc => 'Meilleur jour, top produits, PDF';
+
+  @override
+  String get proCatalogos => 'Catalogues PDF illimités';
+
+  @override
+  String get proNegocios => 'Plusieurs entreprises';
+
+  @override
+  String get proExportar => 'Exporter vos données';
+
+  @override
+  String get planMensual => 'Forfait mensuel';
+
+  @override
+  String get planAnual => 'Forfait annuel';
+
+  @override
+  String get dosMesesGratis => '~2 mois gratuits';
+
+  @override
+  String get porMes => 'par mois';
+
+  @override
+  String get porAnioDescuento => 'par an · ~2 mois gratuits';
+
+  @override
+  String get restaurarCompras => 'Restaurer les achats';
+
+  @override
+  String get pagosPronto =>
+      'Les paiements seront activés à la publication de l\'app.';
+
+  @override
+  String get yaEresPro => 'Vous êtes Pro ! Merci.';
+
+  @override
+  String get errorCompra => 'L\'achat n\'a pas pu être effectué.';
 }

@@ -1559,7 +1559,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get eliminarCuentaAdvertenciaDueno =>
-      'Como dueño, esto eliminará TODO el negocio y sus datos (productos, ventas, gastos, pedidos...) y desvinculará a los demás miembros. Esta acción NO se puede deshacer.';
+      'Como dueño, esto eliminará todo el negocio y sus datos (productos, ventas, gastos, pedidos...) y desvinculará a los demás miembros. Esta acción no se puede deshacer.';
 
   @override
   String get continuar => 'Continuar';
@@ -1574,4 +1574,71 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get errorEliminarCuenta =>
       'No se pudo eliminar la cuenta. Intenta de nuevo.';
+
+  @override
+  String get cargandoNegocio => 'Cargando tu negocio';
+
+  @override
+  String get historialCompletoPro => 'Ver todo el historial con Pro';
+
+  @override
+  String get paywallTitulo => 'Desbloquea todo Stocklet';
+
+  @override
+  String get paywallSubtitulo =>
+      'Crece con tu equipo y las herramientas completas';
+
+  @override
+  String get proEquipo => 'Equipo con roles';
+
+  @override
+  String get proEquipoDesc => 'Invita socios y empleados';
+
+  @override
+  String get proHistorial => 'Historial completo';
+
+  @override
+  String get proHistorialDesc => 'Sin límite de fechas';
+
+  @override
+  String get proReportes => 'Reportes y análisis';
+
+  @override
+  String get proReportesDesc => 'Mejor día, top productos, PDF';
+
+  @override
+  String get proCatalogos => 'Catálogos PDF ilimitados';
+
+  @override
+  String get proNegocios => 'Varios negocios';
+
+  @override
+  String get proExportar => 'Exportar tus datos';
+
+  @override
+  String get planMensual => 'Plan mensual';
+
+  @override
+  String get planAnual => 'Plan anual';
+
+  @override
+  String get dosMesesGratis => '~2 meses gratis';
+
+  @override
+  String get porMes => 'por mes';
+
+  @override
+  String get porAnioDescuento => 'por año · ~2 meses gratis';
+
+  @override
+  String get restaurarCompras => 'Restaurar compras';
+
+  @override
+  String get pagosPronto => 'Los pagos se activarán al publicar la app.';
+
+  @override
+  String get yaEresPro => '¡Ya eres Pro! Gracias.';
+
+  @override
+  String get errorCompra => 'No se pudo completar la compra.';
 }

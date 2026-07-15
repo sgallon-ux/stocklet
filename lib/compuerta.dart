@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reposteria_app/l10n/app_localizations.dart';
 import 'datos_app.dart';
+import 'tema.dart';
 import 'pantallas/login.dart';
 import 'pantallas/crear_negocio.dart';
 import 'pantallas/principal.dart';
@@ -13,7 +15,7 @@ class Compuerta extends StatelessWidget {
     final estado = context.watch<DatosApp>().estado;
     switch (estado) {
       case EstadoApp.cargando:
-        return const Scaffold(body: Center(child: CircularProgressIndicator()));
+        return const _PantallaCargando();
       case EstadoApp.sinSesion:
         return const PantallaLogin();
       case EstadoApp.sinNegocio:
@@ -21,5 +23,56 @@ class Compuerta extends StatelessWidget {
       case EstadoApp.listo:
         return const PantallaPrincipal();
     }
+  }
+}
+
+// Pantalla de carga: el ícono de Stocklet como fondo tenue a pantalla completa,
+// con el ícono nítido, el mensaje "Cargando tu negocio" y un indicador.
+class _PantallaCargando extends StatelessWidget {
+  const _PantallaCargando();
+
+  @override
+  Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+    final m = AppColores.of(context);
+    return Scaffold(
+      body: Stack(
+        children: [
+          // Ícono de fondo a pantalla completa, muy tenue.
+          Positioned.fill(
+            child: Opacity(
+              opacity: 0.08,
+              child: Image.asset(
+                'assets/icon/stocklet_icon.png',
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          // Contenido central.
+          Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(26),
+                  child: Image.asset(
+                    'assets/icon/stocklet_icon.png',
+                    height: 108,
+                    width: 108,
+                  ),
+                ),
+                const SizedBox(height: 28),
+                Text(
+                  t.cargandoNegocio,
+                  style: TextStyle(fontSize: 16, color: m.textoSuave),
+                ),
+                const SizedBox(height: 22),
+                const CircularProgressIndicator(),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

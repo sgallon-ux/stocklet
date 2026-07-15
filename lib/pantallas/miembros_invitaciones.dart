@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../datos_app.dart';
 import '../tema.dart';
+import '../servicios/gate_pro.dart';
 
 class PantallaMiembros extends StatefulWidget {
   const PantallaMiembros({super.key});
@@ -48,6 +49,8 @@ class _PantallaMiembrosState extends State<PantallaMiembros> {
   }
 
   Future<void> _generar() async {
+    // Función Pro: invitar equipo. Si no es Pro, abre el paywall.
+    if (!await exigirPro(context) || !mounted) return;
     final t = AppLocalizations.of(context)!;
     final datos = context.read<DatosApp>();
     final rol = await showDialog<String>(

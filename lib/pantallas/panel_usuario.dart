@@ -5,7 +5,7 @@ import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../datos_app.dart';
 import '../models/negocio.dart';
 import '../tema.dart';
-import 'package:file_picker/file_picker.dart';
+import 'package:image_picker/image_picker.dart';
 import 'cambiar_contrasena.dart';
 
 class PantallaPanelUsuario extends StatefulWidget {
@@ -74,26 +74,29 @@ class _PantallaPanelUsuarioState extends State<PantallaPanelUsuario> {
     }
   }
 
+  String _ext(String nombre) {
+    final i = nombre.lastIndexOf('.');
+    return i >= 0 ? nombre.substring(i + 1) : '';
+  }
+
   Future<void> _cambiarFoto() async {
     final t = AppLocalizations.of(context)!;
-    final result =
-        await FilePicker.pickFiles(type: FileType.image, withData: true);
-    if (result == null || !mounted) return;
-    final archivo = result.files.first;
-    final bytes = archivo.bytes;
-    if (bytes == null) {
+    final datos = context.read<DatosApp>();
+    final archivo =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (archivo == null || !mounted) return;
+    final bytes = await archivo.readAsBytes();
+    if (bytes.isEmpty) {
       _aviso(t.errorLeerImagen);
       return;
     }
-    if (archivo.size > 5 * 1024 * 1024) {
+    if (bytes.length > 5 * 1024 * 1024) {
       _aviso(t.imagenSupera5);
       return;
     }
     setState(() => subiendoFoto = true);
     try {
-      await context
-          .read<DatosApp>()
-          .guardarFotoPerfil(bytes, _mime(archivo.extension));
+      await datos.guardarFotoPerfil(bytes, _mime(_ext(archivo.name)));
       _aviso(t.fotoActualizada);
     } catch (e) {
       _aviso(t.errorSubirFoto);
@@ -104,24 +107,22 @@ class _PantallaPanelUsuarioState extends State<PantallaPanelUsuario> {
 
   Future<void> _cambiarLogo() async {
     final t = AppLocalizations.of(context)!;
-    final result =
-        await FilePicker.pickFiles(type: FileType.image, withData: true);
-    if (result == null || !mounted) return;
-    final archivo = result.files.first;
-    final bytes = archivo.bytes;
-    if (bytes == null) {
+    final datos = context.read<DatosApp>();
+    final archivo =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (archivo == null || !mounted) return;
+    final bytes = await archivo.readAsBytes();
+    if (bytes.isEmpty) {
       _aviso(t.errorLeerImagen);
       return;
     }
-    if (archivo.size > 5 * 1024 * 1024) {
+    if (bytes.length > 5 * 1024 * 1024) {
       _aviso(t.imagenSupera5);
       return;
     }
     setState(() => subiendoLogo = true);
     try {
-      await context
-          .read<DatosApp>()
-          .guardarLogo(bytes, _mime(archivo.extension));
+      await datos.guardarLogo(bytes, _mime(_ext(archivo.name)));
       _aviso(t.logoActualizado);
     } catch (e) {
       _aviso(t.errorSubirLogo);

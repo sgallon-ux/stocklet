@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reposteria_app/l10n/app_localizations.dart';
+import '../../servicios/gate_pro.dart';
 import '../../datos_app.dart';
 import '../../tema.dart';
 import '../top_productos.dart';
@@ -33,10 +34,14 @@ class WidgetTopProductos extends StatelessWidget {
                           color: m.texto)),
                 ),
                 TextButton(
-                  onPressed: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (_) => const PantallaTopProductos())),
+                  onPressed: () async {
+                    if (await exigirPro(context) && context.mounted) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => const PantallaTopProductos()));
+                    }
+                  },
                   child: Text(t.verTodos),
                 ),
               ],

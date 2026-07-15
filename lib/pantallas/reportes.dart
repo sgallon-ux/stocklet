@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 import 'package:reposteria_app/l10n/app_localizations.dart';
+import '../servicios/gate_pro.dart';
 import '../datos_app.dart';
 import '../models/resumen_mensual.dart';
 import '../tema.dart';
@@ -236,10 +237,14 @@ class PantallaReportes extends StatelessWidget {
     return Card(
       clipBehavior: Clip.antiAlias,
       child: ListTile(
-        onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (_) => const PantallaReportesMensuales())),
+        onTap: () async {
+          if (await exigirPro(context) && context.mounted) {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => const PantallaReportesMensuales()));
+          }
+        },
         leading: Container(
           height: 44,
           width: 44,

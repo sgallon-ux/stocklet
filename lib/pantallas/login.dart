@@ -158,15 +158,13 @@ class _PantallaLoginState extends State<PantallaLogin> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Container(
-                    height: 72,
-                    width: 72,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: m.verde.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(20),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(22),
+                    child: Image.asset(
+                      'assets/icon/stocklet_icon.png',
+                      height: 88,
+                      width: 88,
                     ),
-                    child: Icon(Icons.storefront, color: m.verde, size: 38),
                   ),
                   const SizedBox(height: 20),
                   Text(

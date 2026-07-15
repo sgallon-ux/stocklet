@@ -21,6 +21,7 @@ import 'models/catalogo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'servicios/push_service.dart';
+import 'servicios/suscripcion_service.dart';
 
 enum EstadoApp { cargando, sinSesion, sinNegocio, listo }
 
@@ -125,6 +126,8 @@ class DatosApp extends ChangeNotifier {
 
   DatosApp() {
     _cargarPrefsNotif();
+    // Cuando cambia el estado Pro (RevenueCat), refresca la UI.
+    SuscripcionService.instance.esPro.addListener(notifyListeners);
     FirebaseAuth.instance.authStateChanges().listen((usuario) async {
       if (usuario != null) {
         estado = EstadoApp.cargando;
@@ -149,6 +152,10 @@ class DatosApp extends ChangeNotifier {
       }
     });
   }
+
+  /// `true` si el usuario tiene Pro (o si la monetización está inactiva).
+  /// Refleja el estado de RevenueCat vía [SuscripcionService].
+  bool get esPro => SuscripcionService.instance.esPro.value;
 
 Future<void> _cargarNegocioId(String uid) async {
     // 1) ¿A qué negocio pertenezco? Esto define si entras o no.
