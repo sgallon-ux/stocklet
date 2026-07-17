@@ -4,6 +4,7 @@ import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../datos_app.dart';
 import '../models/insumo.dart';
 import '../tema.dart';
+import '../formato.dart';
 
 class PantallaAgregarInsumo extends StatefulWidget {
   const PantallaAgregarInsumo({super.key});
@@ -31,8 +32,8 @@ class _PantallaAgregarInsumoState extends State<PantallaAgregarInsumo> {
   void guardar() {
     final t = AppLocalizations.of(context)!;
     final nombre = nombreCtrl.text.trim();
-    final cantidad = double.tryParse(cantidadCtrl.text) ?? 0;
-    final precio = double.tryParse(precioCtrl.text) ?? 0;
+    final cantidad = parseCantidad(cantidadCtrl.text);
+    final precio = parseCantidad(precioCtrl.text);
 
     if (nombre.isEmpty || cantidad <= 0 || precio <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -43,7 +44,7 @@ class _PantallaAgregarInsumoState extends State<PantallaAgregarInsumo> {
 
     final costoPorUnidad = precio / cantidad; // la app hace la cuenta
 
-    final minimo = double.tryParse(minimoCtrl.text) ?? 0;
+    final minimo = parseCantidad(minimoCtrl.text);
 
     context.read<DatosApp>().agregarInsumo(Insumo(
           nombre: nombre,
@@ -98,7 +99,9 @@ class _PantallaAgregarInsumoState extends State<PantallaAgregarInsumo> {
                   const SizedBox(height: 16),
                   TextField(
                     controller: cantidadCtrl,
-                    keyboardType: TextInputType.number,
+                    keyboardType:
+                        const TextInputType.numberWithOptions(decimal: true),
+                    inputFormatters: [Decimal2Formatter()],
                     decoration: InputDecoration(
                       labelText: t.cantidadComprada,
                       hintText: t.cantidadCompradaHint,
@@ -108,7 +111,9 @@ class _PantallaAgregarInsumoState extends State<PantallaAgregarInsumo> {
                   const SizedBox(height: 16),
                   TextField(
                     controller: precioCtrl,
-                    keyboardType: TextInputType.number,
+                    keyboardType:
+                        const TextInputType.numberWithOptions(decimal: true),
+                    inputFormatters: [Decimal2Formatter()],
                     decoration: InputDecoration(
                       labelText: t.precioTotalPagado,
                       prefixIcon: const Icon(Icons.attach_money),
@@ -116,7 +121,9 @@ class _PantallaAgregarInsumoState extends State<PantallaAgregarInsumo> {
                   ),
                   TextField(
                     controller: minimoCtrl,
-                    keyboardType: TextInputType.number,
+                    keyboardType:
+                        const TextInputType.numberWithOptions(decimal: true),
+                    inputFormatters: [Decimal2Formatter()],
                     decoration: InputDecoration(
                       labelText: t.stockMinimoOpcional,
                       hintText: t.stockMinimoHint,

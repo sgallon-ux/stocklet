@@ -1318,7 +1318,7 @@ abstract class AppLocalizations {
   ///
   /// In es, this message translates to:
   /// **'{fecha}  ·  Cant: {cantidad}'**
-  String ventaSubtitulo(String fecha, int cantidad);
+  String ventaSubtitulo(String fecha, String cantidad);
 
   /// No description provided for @analisisVentasTitulo.
   ///
@@ -2014,7 +2014,7 @@ abstract class AppLocalizations {
   ///
   /// In es, this message translates to:
   /// **'{cantidad} vend.'**
-  String vendidosAbrev(int cantidad);
+  String vendidosAbrev(String cantidad);
 
   /// No description provided for @resumenAnalisisCorto.
   ///
@@ -3089,6 +3089,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'No se pudo completar la compra.'**
   String get errorCompra;
+
+  /// No description provided for @productosEligeFiltro.
+  ///
+  /// In es, this message translates to:
+  /// **'Elige un tipo o busca un producto.'**
+  String get productosEligeFiltro;
 }
 
 class _AppLocalizationsDelegate

@@ -147,7 +147,7 @@ class _PantallaHistorialVentasState extends State<PantallaHistorialVentas> {
                             child: ListTile(
                               title: Text(venta.descripcion),
                               subtitle: Text(
-                                t.ventaSubtitulo(fechaStr, venta.cantidad),
+                                t.ventaSubtitulo(fechaStr, cantidadStr(venta.cantidad)),
                               ),
                               trailing: Row(
                                 mainAxisSize: MainAxisSize.min,

@@ -550,5 +550,6 @@
   "restaurarCompras": "Restaurar compras",
   "pagosPronto": "Os pagamentos serão ativados ao publicar o app.",
   "yaEresPro": "Agora você é Pro! Obrigado.",
-  "errorCompra": "Não foi possível concluir a compra."
+  "errorCompra": "Não foi possível concluir a compra.",
+  "productosEligeFiltro": "Escolha um tipo ou busque um produto."
 }

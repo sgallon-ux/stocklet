@@ -35,7 +35,7 @@ class _PantallaIngresarVentaState extends State<PantallaIngresarVenta> {
           title: Text(producto.nombre),
           content: StatefulBuilder(
             builder: (ctx, setLocal) {
-              final cant = int.tryParse(cantCtrl.text) ?? 0;
+              final cant = parseCantidad(cantCtrl.text);
               final total = producto.precioVenta * (cant > 0 ? cant : 0);
               return Column(
                 mainAxisSize: MainAxisSize.min,
@@ -44,7 +44,9 @@ class _PantallaIngresarVentaState extends State<PantallaIngresarVenta> {
                   TextField(
                     controller: cantCtrl,
                     autofocus: true,
-                    keyboardType: TextInputType.number,
+                    keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true),
+                    inputFormatters: [Decimal2Formatter()],
                     decoration: InputDecoration(labelText: t.cantidad),
                     onChanged: (_) => setLocal(() {}),
                   ),
@@ -63,8 +65,8 @@ class _PantallaIngresarVentaState extends State<PantallaIngresarVenta> {
             ),
             TextButton(
               onPressed: () {
-                final cant = int.tryParse(cantCtrl.text) ?? 0;
-                final cantidad = cant > 0 ? cant : 1;
+                final cant = parseCantidad(cantCtrl.text);
+                final cantidad = cant > 0 ? cant : 1.0;
                 context.read<DatosApp>().registrarVenta(producto, cantidad);
                 Navigator.pop(dialogContext);
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -85,7 +87,7 @@ class _PantallaIngresarVentaState extends State<PantallaIngresarVenta> {
   void _venderManual() {
     final t = AppLocalizations.of(context)!;
     final descripcion = descripcionCtrl.text.trim();
-    final valor = double.tryParse(valorCtrl.text) ?? 0;
+    final valor = parseCantidad(valorCtrl.text);
     if (descripcion.isEmpty || valor <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(t.ventaDescripcionValor)),
@@ -166,7 +168,9 @@ class _PantallaIngresarVentaState extends State<PantallaIngresarVenta> {
                       const SizedBox(height: 12),
                       TextField(
                         controller: valorCtrl,
-                        keyboardType: TextInputType.number,
+                        keyboardType:
+                            const TextInputType.numberWithOptions(decimal: true),
+                        inputFormatters: [Decimal2Formatter()],
                         decoration: InputDecoration(
                           labelText: t.valor,
                           prefixIcon: const Icon(Icons.attach_money),

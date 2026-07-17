@@ -104,7 +104,7 @@ class _PantallaTopProductosState extends State<PantallaTopProductos> {
                             style:
                                 const TextStyle(fontWeight: FontWeight.w600)),
                         subtitle: Text(t.totalTexto(pesos(p.total))),
-                        trailing: Text('${p.cantidad}',
+                        trailing: Text(cantidadStr(p.cantidad),
                             style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,

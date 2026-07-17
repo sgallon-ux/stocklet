@@ -118,7 +118,7 @@ class _PantallaInventarioState extends State<PantallaInventario> {
 
           final insumos = datos.insumos
               .where((i) =>
-                  i.nombre.toLowerCase().contains(consulta.toLowerCase()))
+                  sinTildes(i.nombre).contains(sinTildes(consulta)))
               .toList()
             ..sort((a, b) =>
                 a.nombre.toLowerCase().compareTo(b.nombre.toLowerCase()));
@@ -175,7 +175,7 @@ class _PantallaInventarioState extends State<PantallaInventario> {
                                       color: m.textoSuave)),
                               Text(
                                   t.stockTexto(
-                                      insumo.stockActual.toStringAsFixed(0),
+                                      cantidadStr(insumo.stockActual),
                                       insumo.unidad),
                                   style: TextStyle(
                                       fontSize: 12,

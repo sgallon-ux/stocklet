@@ -30,7 +30,7 @@ class _PantallaEditarPedidoState extends State<PantallaEditarPedido> {
     clienteNombreCtrl = TextEditingController(text: p.cliente.nombre);
     clienteTelefonoCtrl = TextEditingController(text: p.cliente.telefono);
     otroValorCtrl = TextEditingController(
-        text: p.otroValor > 0 ? p.otroValor.toStringAsFixed(0) : '');
+        text: p.otroValor > 0 ? cantidadStr(p.otroValor) : '');
     fechaEntrega = p.fechaEntrega;
     items = p.items
         .map((i) => ItemPedido(
@@ -60,17 +60,19 @@ class _PantallaEditarPedidoState extends State<PantallaEditarPedido> {
     if (sel != null) setState(() => fechaEntrega = sel);
   }
 
-  Future<int?> _pedirCantidad() async {
+  Future<double?> _pedirCantidad() async {
     final t = AppLocalizations.of(context)!;
     final ctrl = TextEditingController(text: '1');
-    final r = await showDialog<int>(
+    final r = await showDialog<double>(
       context: context,
       builder: (dc) => AlertDialog(
         title: Text(t.cantidad),
         content: TextField(
           controller: ctrl,
           autofocus: true,
-          keyboardType: TextInputType.number,
+          keyboardType:
+              const TextInputType.numberWithOptions(decimal: true),
+          inputFormatters: [Decimal2Formatter()],
           decoration: InputDecoration(labelText: t.cantidad),
         ),
         actions: [
@@ -79,8 +81,8 @@ class _PantallaEditarPedidoState extends State<PantallaEditarPedido> {
               child: Text(t.cancelar)),
           ElevatedButton(
             onPressed: () {
-              final n = int.tryParse(ctrl.text) ?? 0;
-              Navigator.pop(dc, n > 0 ? n : 1);
+              final n = parseCantidad(ctrl.text);
+              Navigator.pop(dc, n > 0 ? n : 1.0);
             },
             child: Text(t.agregar),
           ),
@@ -137,18 +139,24 @@ class _PantallaEditarPedidoState extends State<PantallaEditarPedido> {
               const SizedBox(height: 8),
               TextField(
                   controller: precioCtrl,
-                  keyboardType: TextInputType.number,
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
+                  inputFormatters: [Decimal2Formatter()],
                   decoration: InputDecoration(labelText: t.precioUnitario)),
               const SizedBox(height: 8),
               TextField(
                   controller: costoCtrl,
-                  keyboardType: TextInputType.number,
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
+                  inputFormatters: [Decimal2Formatter()],
                   decoration:
                       InputDecoration(labelText: t.costoUnitarioOpcional)),
               const SizedBox(height: 8),
               TextField(
                   controller: cantCtrl,
-                  keyboardType: TextInputType.number,
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
+                  inputFormatters: [Decimal2Formatter()],
                   decoration: InputDecoration(labelText: t.cantidad)),
             ],
           ),
@@ -160,9 +168,9 @@ class _PantallaEditarPedidoState extends State<PantallaEditarPedido> {
           ElevatedButton(
             onPressed: () {
               final nombre = nombreCtrl.text.trim();
-              final precio = double.tryParse(precioCtrl.text) ?? 0;
-              final costo = double.tryParse(costoCtrl.text) ?? 0;
-              final cant = int.tryParse(cantCtrl.text) ?? 0;
+              final precio = parseCantidad(precioCtrl.text);
+              final costo = parseCantidad(costoCtrl.text);
+              final cant = parseCantidad(cantCtrl.text);
               if (nombre.isEmpty || precio <= 0 || cant <= 0) return;
               Navigator.pop(
                   dc,
@@ -188,7 +196,7 @@ class _PantallaEditarPedidoState extends State<PantallaEditarPedido> {
     final t = AppLocalizations.of(context)!;
     final nombre = clienteNombreCtrl.text.trim();
     final telefono = clienteTelefonoCtrl.text.trim();
-    final otro = double.tryParse(otroValorCtrl.text) ?? 0;
+    final otro = parseCantidad(otroValorCtrl.text);
     final precioItems = items.fold<double>(0, (s, i) => s + i.precioTotal);
     final precioTotal = precioItems + otro;
     final costoTotal = items.fold<double>(0, (s, i) => s + i.costoTotal);
@@ -200,7 +208,8 @@ class _PantallaEditarPedidoState extends State<PantallaEditarPedido> {
       return;
     }
 
-    final partes = items.map((i) => '${i.cantidad}x ${i.nombre}').toList();
+    final partes =
+        items.map((i) => '${cantidadStr(i.cantidad)}x ${i.nombre}').toList();
     if (otro > 0) partes.add(t.otroValorItem);
     final descripcion = partes.isEmpty ? t.pedidoFallback : partes.join(', ');
 
@@ -223,7 +232,7 @@ class _PantallaEditarPedidoState extends State<PantallaEditarPedido> {
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
     final m = AppColores.of(context);
-    final otro = double.tryParse(otroValorCtrl.text) ?? 0;
+    final otro = parseCantidad(otroValorCtrl.text);
     final precioItems = items.fold<double>(0, (s, i) => s + i.precioTotal);
     final precioTotal = precioItems + otro;
     final costoTotal = items.fold<double>(0, (s, i) => s + i.costoTotal);
@@ -309,7 +318,7 @@ class _PantallaEditarPedidoState extends State<PantallaEditarPedido> {
               return Card(
                 child: ListTile(
                   dense: true,
-                  title: Text('${it.cantidad}x ${it.nombre}',
+                  title: Text('${cantidadStr(it.cantidad)}x ${it.nombre}',
                       style: const TextStyle(fontWeight: FontWeight.w600)),
                   subtitle: Text(pesos(it.precioTotal)),
                   trailing: IconButton(
@@ -322,7 +331,9 @@ class _PantallaEditarPedidoState extends State<PantallaEditarPedido> {
           const SizedBox(height: 16),
           TextField(
             controller: otroValorCtrl,
-            keyboardType: TextInputType.number,
+            keyboardType:
+                const TextInputType.numberWithOptions(decimal: true),
+            inputFormatters: [Decimal2Formatter()],
             onChanged: (_) => setState(() {}),
             decoration: InputDecoration(
               labelText: t.otroValorLabel,

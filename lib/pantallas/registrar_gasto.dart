@@ -44,7 +44,7 @@ class _PantallaRegistrarGastoState extends State<PantallaRegistrarGasto> {
   void _guardarNormal() {
     final t = AppLocalizations.of(context)!;
     final descripcion = descripcionCtrl.text.trim();
-    final monto = double.tryParse(montoCtrl.text) ?? 0;
+    final monto = parseCantidad(montoCtrl.text);
     if (descripcion.isEmpty || monto <= 0) {
       _aviso(t.gastoDescripcionMonto);
       return;
@@ -101,7 +101,9 @@ class _PantallaRegistrarGastoState extends State<PantallaRegistrarGasto> {
           children: [
             TextField(
               controller: cantidadCtrl,
-              keyboardType: TextInputType.number,
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
+              inputFormatters: [Decimal2Formatter()],
               autofocus: true,
               decoration: InputDecoration(
                   labelText: t.cantidadCompradaUnidad(insumo.unidad)),
@@ -109,7 +111,9 @@ class _PantallaRegistrarGastoState extends State<PantallaRegistrarGasto> {
             const SizedBox(height: 8),
             TextField(
               controller: totalCtrl,
-              keyboardType: TextInputType.number,
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
+              inputFormatters: [Decimal2Formatter()],
               decoration: InputDecoration(
                   labelText: t.totalPagado, prefixText: '\$ '),
             ),
@@ -125,8 +129,8 @@ class _PantallaRegistrarGastoState extends State<PantallaRegistrarGasto> {
         ],
       ),
     );
-    final cantidad = double.tryParse(cantidadCtrl.text) ?? 0;
-    final total = double.tryParse(totalCtrl.text) ?? 0;
+    final cantidad = parseCantidad(cantidadCtrl.text);
+    final total = parseCantidad(totalCtrl.text);
     cantidadCtrl.dispose();
     totalCtrl.dispose();
     if (ok != true || !mounted) return;
@@ -222,7 +226,9 @@ class _PantallaRegistrarGastoState extends State<PantallaRegistrarGasto> {
               const SizedBox(height: 16),
               TextField(
                 controller: montoCtrl,
-                keyboardType: TextInputType.number,
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
+                inputFormatters: [Decimal2Formatter()],
                 decoration: InputDecoration(
                     labelText: t.monto, prefixText: '\$ '),
               ),
@@ -272,7 +278,7 @@ class _PantallaRegistrarGastoState extends State<PantallaRegistrarGasto> {
               title: Text(l.insumo.nombre,
                   style: const TextStyle(fontWeight: FontWeight.w600)),
               subtitle: Text(t.ingredienteSubtitulo(
-                  l.cantidad.toStringAsFixed(0),
+                  cantidadStr(l.cantidad),
                   l.insumo.unidad,
                   pesos(l.total))),
               trailing: IconButton(

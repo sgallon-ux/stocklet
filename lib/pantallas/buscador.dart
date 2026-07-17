@@ -52,8 +52,8 @@ class _PantallaBuscadorState extends State<PantallaBuscador> {
     final t = AppLocalizations.of(context)!;
     final m = AppColores.of(context);
     final datos = context.watch<DatosApp>();
-    final q = _consulta.trim().toLowerCase();
-    bool coincide(String s) => s.toLowerCase().contains(q);
+    final q = sinTildes(_consulta.trim());
+    bool coincide(String s) => sinTildes(s).contains(q);
 
     return Scaffold(
       appBar: AppBar(
@@ -158,7 +158,7 @@ class _PantallaBuscadorState extends State<PantallaBuscador> {
               m,
               Icons.category_outlined,
               i.nombre,
-              t.stockTexto(i.stockActual.toStringAsFixed(0), i.unidad),
+              t.stockTexto(cantidadStr(i.stockActual), i.unidad),
               () => _ir(PantallaEditarInsumo(insumo: i)),
             ),
         ]),

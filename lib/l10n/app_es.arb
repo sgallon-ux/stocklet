@@ -309,7 +309,7 @@
   "@ventaSubtitulo": {
     "placeholders": {
       "fecha": { "type": "String" },
-      "cantidad": { "type": "int" }
+      "cantidad": { "type": "String" }
     }
   },
 
@@ -504,7 +504,7 @@
   "topSinVentasMes": "Aún no hay ventas de productos este mes.",
   "vendidosAbrev": "{cantidad} vend.",
   "@vendidosAbrev": {
-    "placeholders": { "cantidad": { "type": "int" } }
+    "placeholders": { "cantidad": { "type": "String" } }
   },
   "resumenAnalisisCorto": "Ticket promedio {ticket} · Mejor día: {dia}",
   "@resumenAnalisisCorto": {
@@ -735,5 +735,6 @@
   "restaurarCompras": "Restaurar compras",
   "pagosPronto": "Los pagos se activarán al publicar la app.",
   "yaEresPro": "¡Ya eres Pro! Gracias.",
-  "errorCompra": "No se pudo completar la compra."
+  "errorCompra": "No se pudo completar la compra.",
+  "productosEligeFiltro": "Elige un tipo o busca un producto."
 }

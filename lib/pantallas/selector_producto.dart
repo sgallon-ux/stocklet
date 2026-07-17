@@ -33,7 +33,7 @@ class _DialogoSelectorProductoState extends State<_DialogoSelectorProducto> {
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
     final filtrados = widget.productos
-        .where((p) => p.nombre.toLowerCase().contains(consulta.toLowerCase()))
+        .where((p) => sinTildes(p.nombre).contains(sinTildes(consulta)))
         .toList()
       ..sort((a, b) => a.nombre.toLowerCase().compareTo(b.nombre.toLowerCase()));
 

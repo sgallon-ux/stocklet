@@ -4,7 +4,7 @@ class Venta {
   String id;
   DateTime fecha;
   String descripcion;
-  int cantidad;
+  double cantidad;
   double precioUnitario;
   double costoUnitario;
 
@@ -35,7 +35,7 @@ class Venta {
       id: id,
       fecha: (map['fecha'] as Timestamp).toDate(),
       descripcion: map['descripcion'] as String,
-      cantidad: (map['cantidad'] as num).toInt(),
+      cantidad: (map['cantidad'] as num).toDouble(),
       precioUnitario: (map['precioUnitario'] as num).toDouble(),
       costoUnitario: (map['costoUnitario'] as num).toDouble(),
     );

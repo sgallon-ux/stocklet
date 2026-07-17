@@ -13,7 +13,7 @@ class RecetaItem {
 
 class ItemPedido {
   String nombre;
-  int cantidad;
+  double cantidad;
   double precioUnitario;
   double costoUnitario;
   List<RecetaItem> receta; // copia de la receta al momento de agregarlo
@@ -39,7 +39,7 @@ class ItemPedido {
 
   factory ItemPedido.fromMap(Map<String, dynamic> map) => ItemPedido(
         nombre: map['nombre'] as String,
-        cantidad: (map['cantidad'] as num).toInt(),
+        cantidad: (map['cantidad'] as num).toDouble(),
         precioUnitario: (map['precioUnitario'] as num).toDouble(),
         costoUnitario: (map['costoUnitario'] as num).toDouble(),
         receta: ((map['receta'] as List?) ?? [])

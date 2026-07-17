@@ -86,9 +86,9 @@ class _PantallaNotificacionesState extends State<PantallaNotificaciones> {
                         color: m.rojo,
                         titulo: i.nombre,
                         detalle: t.insumoBajoDetalle(
-                            i.stockActual.toStringAsFixed(0),
+                            cantidadStr(i.stockActual),
                             i.unidad,
-                            i.stockMinimo.toStringAsFixed(0)),
+                            cantidadStr(i.stockMinimo)),
                         onTap: () => Navigator.push(context,
                             MaterialPageRoute(builder: (_) => const PantallaInventario())),
                       )),

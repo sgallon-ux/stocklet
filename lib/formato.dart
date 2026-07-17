@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:currency_picker/currency_picker.dart';
 
@@ -28,3 +29,46 @@ void reiniciarMoneda() {
 }
 
 String pesos(num valor) => _formato.format(valor);
+
+// ---------------------------------------------------------------------------
+// Utilidades de cantidades y búsqueda
+// ---------------------------------------------------------------------------
+
+/// Quita tildes/acentos y pasa a minúsculas, para buscar sin importar tildes.
+/// Ej: "Azúcar" y "azucar" quedan iguales ("azucar").
+String sinTildes(String s) {
+  var r = s.toLowerCase();
+  const con = 'áàäâãéèëêíìïîóòöôõúùüûñç';
+  const sin = 'aaaaaeeeeiiiiooooouuuunc';
+  for (var i = 0; i < con.length; i++) {
+    r = r.replaceAll(con[i], sin[i]);
+  }
+  return r;
+}
+
+/// Muestra una cantidad con hasta 2 decimales, sin ceros sobrantes.
+/// 2 -> "2", 2.5 -> "2.5", 2.25 -> "2.25".
+String cantidadStr(num v) {
+  final d = v.toDouble();
+  if (d == d.roundToDouble()) return d.toInt().toString();
+  var s = d.toStringAsFixed(2);
+  s = s.replaceFirst(RegExp(r'0+$'), '');
+  s = s.replaceFirst(RegExp(r'\.$'), '');
+  return s;
+}
+
+/// Convierte texto (acepta coma o punto) a double. Vacío/ inválido -> 0.
+double parseCantidad(String s) =>
+    double.tryParse(s.trim().replaceAll(',', '.')) ?? 0;
+
+/// Formatter para inputs: permite un número con hasta 2 decimales (coma o punto).
+class Decimal2Formatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    final t = newValue.text;
+    if (t.isEmpty) return newValue;
+    if (RegExp(r'^\d*([.,]\d{0,2})?$').hasMatch(t)) return newValue;
+    return oldValue;
+  }
+}

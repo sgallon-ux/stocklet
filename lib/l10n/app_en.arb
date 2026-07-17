@@ -550,5 +550,6 @@
   "restaurarCompras": "Restore purchases",
   "pagosPronto": "Payments will be enabled when the app is published.",
   "yaEresPro": "You're Pro now! Thank you.",
-  "errorCompra": "The purchase could not be completed."
+  "errorCompra": "The purchase could not be completed.",
+  "productosEligeFiltro": "Choose a type or search for a product."
 }

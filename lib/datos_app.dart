@@ -40,7 +40,7 @@ enum RangoTendencia { mes, tres, seis, anio }
 
 class ProductoVendido {
   final String nombre;
-  final int cantidad;
+  final double cantidad;
   final double total;
   ProductoVendido(this.nombre, this.cantidad, this.total);
 }
@@ -559,7 +559,7 @@ Future<void> _cargarNegocioId(String uid) async {
   }
 
   // --- Registrar movimientos ---
-  void registrarVenta(Producto producto, int cantidad) {
+  void registrarVenta(Producto producto, double cantidad) {
     final venta = Venta(
       fecha: DateTime.now(),
       descripcion: producto.nombre,
@@ -750,7 +750,7 @@ Future<void> _cargarNegocioId(String uid) async {
   void editarVenta(
     Venta venta, {
     required String descripcion,
-    required int cantidad,
+    required double cantidad,
     required double precioUnitario,
   }) {
     venta.descripcion = descripcion;
@@ -951,7 +951,7 @@ Future<void> _cargarNegocioId(String uid) async {
   // --- Top de productos (solo nombres que existen en el catálogo) ---
   List<ProductoVendido> topProductos(int anio, int mes) {
     final nombres = productos.map((p) => p.nombre).toSet();
-    final cant = <String, int>{};
+    final cant = <String, double>{};
     final tot = <String, double>{};
     for (final v in ventas) {
       if (v.fecha.year != anio || v.fecha.month != mes) continue;
@@ -1109,6 +1109,12 @@ Future<void> _cargarNegocioId(String uid) async {
     if (_negocioId == null) return;       // sin negocio, no hay qué escuchar
     if (_suscripciones.isNotEmpty) return;
 
+    // Rendimiento a escala: ventas y gastos se escuchan solo de los últimos
+    // ~12 meses (ventana móvil). Los datos más viejos no se cargan en vivo.
+    final ahora = DateTime.now();
+    final corteHistorial =
+        Timestamp.fromDate(DateTime(ahora.year - 1, ahora.month, 1));
+
     _suscripciones.add(
       _col('insumos').snapshots().listen((snap) {
         insumos = snap.docs.map((d) => Insumo.fromMap(d.id, d.data())).toList();
@@ -1124,13 +1130,19 @@ Future<void> _cargarNegocioId(String uid) async {
       }),
     );
     _suscripciones.add(
-      _col('gastos').snapshots().listen((snap) {
+      _col('gastos')
+          .where('fecha', isGreaterThanOrEqualTo: corteHistorial)
+          .snapshots()
+          .listen((snap) {
         gastos = snap.docs.map((d) => Gasto.fromMap(d.id, d.data())).toList();
         notifyListeners();
       }),
     );
     _suscripciones.add(
-      _col('ventas').snapshots().listen((snap) {
+      _col('ventas')
+          .where('fecha', isGreaterThanOrEqualTo: corteHistorial)
+          .snapshots()
+          .listen((snap) {
         ventas = snap.docs.map((d) => Venta.fromMap(d.id, d.data())).toList();
         notifyListeners();
       }),

@@ -673,7 +673,7 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String ventaSubtitulo(String fecha, int cantidad) {
+  String ventaSubtitulo(String fecha, String cantidad) {
     return '$fecha  ·  Qté : $cantidad';
   }
 
@@ -1074,7 +1074,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'Aucune vente de produit ce mois-ci pour l\'instant.';
 
   @override
-  String vendidosAbrev(int cantidad) {
+  String vendidosAbrev(String cantidad) {
     return '$cantidad vend.';
   }
 
@@ -1660,4 +1660,8 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get errorCompra => 'L\'achat n\'a pas pu être effectué.';
+
+  @override
+  String get productosEligeFiltro =>
+      'Choisissez un type ou cherchez un produit.';
 }

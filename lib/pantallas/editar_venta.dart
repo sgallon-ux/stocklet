@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../datos_app.dart';
 import '../models/venta.dart';
+import '../formato.dart';
 
 class PantallaEditarVenta extends StatefulWidget {
   final Venta venta;
@@ -21,8 +22,10 @@ class _PantallaEditarVentaState extends State<PantallaEditarVenta> {
   void initState() {
     super.initState();
     descripcionCtrl = TextEditingController(text: widget.venta.descripcion);
-    cantidadCtrl = TextEditingController(text: widget.venta.cantidad.toString());
-    precioCtrl = TextEditingController(text: widget.venta.precioUnitario.toStringAsFixed(0));
+    cantidadCtrl =
+        TextEditingController(text: cantidadStr(widget.venta.cantidad));
+    precioCtrl = TextEditingController(
+        text: cantidadStr(widget.venta.precioUnitario));
   }
 
   @override
@@ -36,8 +39,8 @@ class _PantallaEditarVentaState extends State<PantallaEditarVenta> {
   void guardar() {
     final t = AppLocalizations.of(context)!;
     final descripcion = descripcionCtrl.text.trim();
-    final cantidad = int.tryParse(cantidadCtrl.text) ?? 0;
-    final precio = double.tryParse(precioCtrl.text) ?? 0;
+    final cantidad = parseCantidad(cantidadCtrl.text);
+    final precio = parseCantidad(precioCtrl.text);
 
     if (descripcion.isEmpty || cantidad <= 0 || precio <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -74,13 +77,17 @@ class _PantallaEditarVentaState extends State<PantallaEditarVenta> {
             const SizedBox(height: 16),
             TextField(
               controller: cantidadCtrl,
-              keyboardType: TextInputType.number,
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
+              inputFormatters: [Decimal2Formatter()],
               decoration: InputDecoration(labelText: t.cantidad),
             ),
             const SizedBox(height: 16),
             TextField(
               controller: precioCtrl,
-              keyboardType: TextInputType.number,
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
+              inputFormatters: [Decimal2Formatter()],
               decoration: InputDecoration(
                   labelText: t.precioUnitario, prefixText: '\$ '),
             ),

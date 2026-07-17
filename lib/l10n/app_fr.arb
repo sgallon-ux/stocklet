@@ -550,5 +550,6 @@
   "restaurarCompras": "Restaurer les achats",
   "pagosPronto": "Les paiements seront activés à la publication de l'app.",
   "yaEresPro": "Vous êtes Pro ! Merci.",
-  "errorCompra": "L'achat n'a pas pu être effectué."
+  "errorCompra": "L'achat n'a pas pu être effectué.",
+  "productosEligeFiltro": "Choisissez un type ou cherchez un produit."
 }

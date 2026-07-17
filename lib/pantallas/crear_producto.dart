@@ -46,7 +46,7 @@ class _PantallaCrearProductoState extends State<PantallaCrearProducto> {
 
   void agregarIngrediente() {
     final t = AppLocalizations.of(context)!;
-    final cantidad = double.tryParse(cantidadCtrl.text) ?? 0;
+    final cantidad = parseCantidad(cantidadCtrl.text);
     if (insumoSeleccionado == null || cantidad <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(t.eligeInsumoCantidad)),
@@ -70,7 +70,7 @@ class _PantallaCrearProductoState extends State<PantallaCrearProducto> {
   void guardarProducto() {
     final t = AppLocalizations.of(context)!;
     final nombre = nombreCtrl.text.trim();
-    final precio = double.tryParse(precioCtrl.text) ?? 0;
+    final precio = parseCantidad(precioCtrl.text);
     if (nombre.isEmpty || precio <= 0 || receta.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(t.faltaNombrePrecioIngrediente)),
@@ -98,7 +98,7 @@ class _PantallaCrearProductoState extends State<PantallaCrearProducto> {
         if (p.tipo.trim().isNotEmpty) p.tipo
     }.toList()
       ..sort());
-    final precio = double.tryParse(precioCtrl.text) ?? 0;
+    final precio = parseCantidad(precioCtrl.text);
 
     return Scaffold(
       appBar: AppBar(title: Text(t.crearProductoTitulo)),
@@ -143,7 +143,9 @@ class _PantallaCrearProductoState extends State<PantallaCrearProducto> {
                   const SizedBox(height: 16),
                   TextField(
                     controller: precioCtrl,
-                    keyboardType: TextInputType.number,
+                    keyboardType:
+                        const TextInputType.numberWithOptions(decimal: true),
+                    inputFormatters: [Decimal2Formatter()],
                     onChanged: (_) => setState(() {}),
                     decoration: InputDecoration(
                       labelText: t.precioVenta,
@@ -200,7 +202,9 @@ class _PantallaCrearProductoState extends State<PantallaCrearProducto> {
                         Expanded(
                           child: TextField(
                             controller: cantidadCtrl,
-                            keyboardType: TextInputType.number,
+                            keyboardType: const TextInputType.numberWithOptions(
+                                decimal: true),
+                            inputFormatters: [Decimal2Formatter()],
                             decoration:
                                 InputDecoration(labelText: t.cantidad),
                           ),
@@ -231,7 +235,7 @@ class _PantallaCrearProductoState extends State<PantallaCrearProducto> {
                       style: const TextStyle(fontWeight: FontWeight.w600)),
                   subtitle: Text(
                     t.ingredienteSubtitulo(
-                        ing.cantidad.toStringAsFixed(0),
+                        cantidadStr(ing.cantidad),
                         ing.insumo.unidad,
                         pesos(ing.costo)),
                   ),

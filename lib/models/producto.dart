@@ -36,7 +36,7 @@ class Producto {
   double get ganancia => precioVenta - costoProduccion();
   double get margen => ganancia / precioVenta;
 
-  void descontarStock(int cantidad) {
+  void descontarStock(double cantidad) {
     for (IngredienteDeReceta ing in receta) {
       ing.insumo.stockActual -= ing.cantidad * cantidad;
     }

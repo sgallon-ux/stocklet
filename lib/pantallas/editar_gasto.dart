@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../datos_app.dart';
 import '../models/gasto.dart';
+import '../formato.dart';
 import 'gasto_categoria_l10n.dart';
 
 class PantallaEditarGasto extends StatefulWidget {
@@ -22,7 +23,7 @@ class _PantallaEditarGastoState extends State<PantallaEditarGasto> {
   void initState() {
     super.initState();
     descripcionCtrl = TextEditingController(text: widget.gasto.descripcion);
-    montoCtrl = TextEditingController(text: widget.gasto.monto.toStringAsFixed(0));
+    montoCtrl = TextEditingController(text: cantidadStr(widget.gasto.monto));
     categoria = widget.gasto.categoria;
   }
 
@@ -36,7 +37,7 @@ class _PantallaEditarGastoState extends State<PantallaEditarGasto> {
   void guardar() {
     final t = AppLocalizations.of(context)!;
     final descripcion = descripcionCtrl.text.trim();
-    final monto = double.tryParse(montoCtrl.text) ?? -1;
+    final monto = double.tryParse(montoCtrl.text.replaceAll(',', '.')) ?? -1;
 
     if (descripcion.isEmpty || monto <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -73,7 +74,9 @@ class _PantallaEditarGastoState extends State<PantallaEditarGasto> {
             const SizedBox(height: 16),
             TextField(
               controller: montoCtrl,
-              keyboardType: TextInputType.number,
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
+              inputFormatters: [Decimal2Formatter()],
               decoration:
                   InputDecoration(labelText: t.monto, prefixText: '\$ '),
             ),

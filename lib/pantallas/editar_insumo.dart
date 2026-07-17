@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../datos_app.dart';
 import '../models/insumo.dart';
+import '../formato.dart';
 
 class PantallaEditarInsumo extends StatefulWidget {
   final Insumo insumo;
@@ -23,11 +24,12 @@ class _PantallaEditarInsumoState extends State<PantallaEditarInsumo> {
   void initState() {
     super.initState();
     nombreCtrl = TextEditingController(text: widget.insumo.nombre);
-    costoCtrl =
-        TextEditingController(text: widget.insumo.costoPorUnidad.toString());
+    costoCtrl = TextEditingController(
+        text: cantidadStr(widget.insumo.costoPorUnidad));
     stockCtrl =
-        TextEditingController(text: widget.insumo.stockActual.toString());
-    minimoCtrl = TextEditingController(text: widget.insumo.stockMinimo.toString());
+        TextEditingController(text: cantidadStr(widget.insumo.stockActual));
+    minimoCtrl =
+        TextEditingController(text: cantidadStr(widget.insumo.stockMinimo));
     unidad = widget.insumo.unidad;
   }
 
@@ -43,8 +45,8 @@ class _PantallaEditarInsumoState extends State<PantallaEditarInsumo> {
   void guardar() {
     final t = AppLocalizations.of(context)!;
     final nombre = nombreCtrl.text.trim();
-    final costo = double.tryParse(costoCtrl.text) ?? -1;
-    final stock = double.tryParse(stockCtrl.text) ?? -1;
+    final costo = double.tryParse(costoCtrl.text.replaceAll(',', '.')) ?? -1;
+    final stock = double.tryParse(stockCtrl.text.replaceAll(',', '.')) ?? -1;
 
     if (nombre.isEmpty || costo < 0 || stock < 0) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -53,7 +55,7 @@ class _PantallaEditarInsumoState extends State<PantallaEditarInsumo> {
       return;
     }
 
-    final minimo = double.tryParse(minimoCtrl.text) ?? 0;
+    final minimo = parseCantidad(minimoCtrl.text);
 
     context.read<DatosApp>().editarInsumo(
       widget.insumo,
@@ -109,7 +111,9 @@ class _PantallaEditarInsumoState extends State<PantallaEditarInsumo> {
                   const SizedBox(height: 16),
                   TextField(
                     controller: costoCtrl,
-                    keyboardType: TextInputType.number,
+                    keyboardType:
+                        const TextInputType.numberWithOptions(decimal: true),
+                    inputFormatters: [Decimal2Formatter()],
                     decoration: InputDecoration(
                       labelText: t.costoPorUnidadLabel,
                       prefixIcon: const Icon(Icons.attach_money),
@@ -118,7 +122,9 @@ class _PantallaEditarInsumoState extends State<PantallaEditarInsumo> {
                   const SizedBox(height: 16),
                   TextField(
                     controller: stockCtrl,
-                    keyboardType: TextInputType.number,
+                    keyboardType:
+                        const TextInputType.numberWithOptions(decimal: true),
+                    inputFormatters: [Decimal2Formatter()],
                     decoration: InputDecoration(
                       labelText: t.stockActualLabel,
                       prefixIcon: const Icon(Icons.inventory_2_outlined),
@@ -127,7 +133,9 @@ class _PantallaEditarInsumoState extends State<PantallaEditarInsumo> {
                   const SizedBox(height: 16),
                   TextField(
                     controller: minimoCtrl,
-                    keyboardType: TextInputType.number,
+                    keyboardType:
+                        const TextInputType.numberWithOptions(decimal: true),
+                    inputFormatters: [Decimal2Formatter()],
                     decoration: InputDecoration(
                       labelText: t.stockMinimoOpcional,
                       hintText: t.stockMinimoHint,

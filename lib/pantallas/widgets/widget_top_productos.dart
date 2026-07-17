@@ -4,6 +4,7 @@ import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../../servicios/gate_pro.dart';
 import '../../datos_app.dart';
 import '../../tema.dart';
+import '../../formato.dart';
 import '../top_productos.dart';
 
 class WidgetTopProductos extends StatelessWidget {
@@ -92,7 +93,7 @@ class WidgetTopProductos extends StatelessWidget {
                 style: TextStyle(
                     fontWeight: FontWeight.w600, color: m.texto)),
           ),
-          Text(t.vendidosAbrev(p.cantidad),
+          Text(t.vendidosAbrev(cantidadStr(p.cantidad)),
               style: TextStyle(fontSize: 13, color: m.textoSuave)),
         ],
       ),

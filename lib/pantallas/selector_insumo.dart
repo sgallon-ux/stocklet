@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../models/insumo.dart';
+import '../formato.dart';
 
 // Abre un diálogo con buscador y devuelve el insumo elegido (o null si cancela)
 Future<Insumo?> elegirInsumo(BuildContext context, List<Insumo> insumos) {
@@ -32,7 +33,7 @@ class _DialogoSelectorInsumoState extends State<_DialogoSelectorInsumo> {
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
     final filtrados = widget.insumos
-        .where((i) => i.nombre.toLowerCase().contains(consulta.toLowerCase()))
+        .where((i) => sinTildes(i.nombre).contains(sinTildes(consulta)))
         .toList()
       ..sort((a, b) => a.nombre.toLowerCase().compareTo(b.nombre.toLowerCase()));
 
