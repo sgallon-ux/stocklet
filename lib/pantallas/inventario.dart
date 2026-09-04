@@ -7,6 +7,7 @@ import '../tema.dart';
 import '../formato.dart';
 import 'agregar_insumo.dart';
 import 'editar_insumo.dart';
+import 'catalogo_insumos.dart';
 
 class PantallaInventario extends StatefulWidget {
   const PantallaInventario({super.key});
@@ -73,6 +74,16 @@ class _PantallaInventarioState extends State<PantallaInventario> {
               )
             : Text(t.inventario),
         actions: [
+          if (!buscando &&
+              context.watch<DatosApp>().puedeGestionarCatalogo)
+            IconButton(
+              icon: const Icon(Icons.playlist_add),
+              tooltip: t.traerDelCatalogo,
+              onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => const PantallaCatalogoInsumos())),
+            ),
           buscando
               ? IconButton(
                   icon: const Icon(Icons.close),
@@ -167,16 +178,24 @@ class _PantallaInventarioState extends State<PantallaInventario> {
                                       color: m.texto)),
                               const SizedBox(height: 3),
                               Text(
+                                  insumo.proveedor.trim().isEmpty
+                                      ? insumo.categoria
+                                      : '${insumo.categoria} · ${insumo.proveedor}',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontSize: 11, color: m.textoSuave)),
+                              Text(
                                   t.costoPorUnidadTexto(
                                       pesos(insumo.costoPorUnidad),
-                                      insumo.unidad),
+                                      insumo.rotUnidadBase),
                                   style: TextStyle(
                                       fontSize: 12,
                                       color: m.textoSuave)),
                               Text(
                                   t.stockTexto(
                                       cantidadStr(insumo.stockActual),
-                                      insumo.unidad),
+                                      insumo.rotUnidadBase),
                                   style: TextStyle(
                                       fontSize: 12,
                                       color: m.textoSuave)),

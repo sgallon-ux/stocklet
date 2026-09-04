@@ -10,10 +10,9 @@ import 'editar_producto.dart';
 import 'editar_insumo.dart';
 import 'editar_pedido.dart';
 import 'ver_receta.dart';
-import 'ver_nota.dart';
 
 // Buscador global desde el inicio: busca en productos, insumos, pedidos,
-// recetas, notas y catálogos, y salta a la pantalla de cada resultado.
+// recetas y catálogos, y salta a la pantalla de cada resultado.
 class PantallaBuscador extends StatefulWidget {
   const PantallaBuscador({super.key});
 
@@ -112,10 +111,6 @@ class _PantallaBuscadorState extends State<PantallaBuscador> {
       ..sort((a, b) => b.fechaEntrega.compareTo(a.fechaEntrega));
     final recetas = datos.recetas.where((r) => coincide(r.titulo)).toList()
       ..sort((a, b) => a.titulo.toLowerCase().compareTo(b.titulo.toLowerCase()));
-    final notas = datos.notas
-        .where((n) => coincide(n.asunto) || coincide(n.contenido))
-        .toList()
-      ..sort((a, b) => b.fecha.compareTo(a.fecha));
     final catalogos = datos.catalogos.where((c) => coincide(c.nombre)).toList()
       ..sort((a, b) => b.fecha.compareTo(a.fecha));
 
@@ -123,7 +118,6 @@ class _PantallaBuscadorState extends State<PantallaBuscador> {
         insumos.isEmpty &&
         pedidos.isEmpty &&
         recetas.isEmpty &&
-        notas.isEmpty &&
         catalogos.isEmpty;
 
     if (vacio) {
@@ -180,16 +174,6 @@ class _PantallaBuscadorState extends State<PantallaBuscador> {
               r.titulo,
               t.recetaSubtitulo(r.ingredientes.length, r.pasos.length),
               () => _ir(PantallaVerReceta(receta: r)),
-            ),
-        ]),
-        _seccion(m, t.notas, [
-          for (final n in notas)
-            _item(
-              m,
-              Icons.sticky_note_2_outlined,
-              n.asunto,
-              n.contenido,
-              () => _ir(PantallaVerNota(nota: n)),
             ),
         ]),
         _seccion(m, t.catalogo, [

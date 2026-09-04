@@ -33,15 +33,6 @@ class PantallaNotificacionesConfig extends StatelessWidget {
                 ),
                 const Divider(height: 1),
                 SwitchListTile(
-                  value: datos.notifNotas,
-                  onChanged: (v) => datos.setNotif(notas: v),
-                  secondary:
-                      Icon(Icons.sticky_note_2_outlined, color: m.verde),
-                  title: Text(t.notasNuevas),
-                  subtitle: Text(t.notifNotasSub),
-                ),
-                const Divider(height: 1),
-                SwitchListTile(
                   value: datos.notifInsumos,
                   onChanged: (v) => datos.setNotif(insumos: v),
                   secondary:

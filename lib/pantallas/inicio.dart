@@ -7,7 +7,7 @@ import 'registrar_gasto.dart';
 import 'panel_usuario.dart';
 import 'widgets/panel_resumen.dart';
 import 'widgets/widget_pedidos.dart';
-import 'widgets/widget_notas.dart';
+import 'widgets/widget_comparador.dart';
 import '../tema.dart';
 import 'notificaciones.dart';
 import 'buscador.dart';
@@ -128,7 +128,7 @@ class PantallaInicio extends StatelessWidget {
           const SizedBox(height: 20),
           const WidgetPedidos(),
           const SizedBox(height: 20),
-          const WidgetNotas(),
+          const WidgetComparador(),
         ],
       ),
     );

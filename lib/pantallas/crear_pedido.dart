@@ -93,10 +93,7 @@ class _PantallaCrearPedidoState extends State<PantallaCrearPedido> {
           cantidad: cant,
           precioUnitario: prod.precioVenta,
           costoUnitario: prod.costoProduccion(),
-          receta: prod.receta
-              .map((ing) =>
-                  RecetaItem(insumoId: ing.insumo.id, cantidad: ing.cantidad))
-              .toList(),
+          receta: prod.consumoPorUnidad(),
         )));
   }
 

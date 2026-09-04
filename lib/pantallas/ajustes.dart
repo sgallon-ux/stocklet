@@ -10,6 +10,7 @@ import 'ajustes_seguridad.dart';
 import 'notificaciones_config.dart';
 import 'apariencia.dart';
 import 'miembros_invitaciones.dart';
+import 'ajustes_costeo.dart';
 
 class PantallaAjustes extends StatelessWidget {
   const PantallaAjustes({super.key});
@@ -173,6 +174,16 @@ class PantallaAjustes extends StatelessWidget {
                   onTap: () =>
                       _ir(context, const PantallaNotificacionesConfig()),
                 ),
+                if (datos.puedeGestionarCatalogo) ...[
+                  const Divider(height: 1),
+                  _opcion(
+                    context,
+                    icono: Icons.calculate_outlined,
+                    titulo: t.ajustesCosteoTitulo,
+                    subtitulo: t.ajustesCosteoSub,
+                    onTap: () => _ir(context, const PantallaAjustesCosteo()),
+                  ),
+                ],
                 const Divider(height: 1),
                 _opcion(
                   context,

@@ -14,7 +14,7 @@
   "datosEmpresaSubtitulo": "Nombre, NIT, contacto y ubicación",
 
   "notificaciones": "Notificaciones",
-  "notificacionesSubtitulo": "Avisos de pedidos, notas e inventario",
+  "notificacionesSubtitulo": "Avisos de pedidos e inventario",
 
   "ajustesSeguridad": "Ajustes y seguridad",
   "ajustesSeguridadSubtitulo": "País, moneda, idioma y contraseña",
@@ -118,10 +118,6 @@
     "placeholders": { "dias": { "type": "int" } }
   },
 
-  "notasImportantes": "Notas importantes",
-  "nuevaNota": "Nueva nota",
-  "sinNotas": "No tienes notas. Crea una con el +",
-
   "eliminar": "Eliminar",
   "editar": "Editar",
   "campoNombre": "Nombre",
@@ -176,6 +172,166 @@
   "costoPorUnidadLabel": "Costo por unidad",
   "stockActualLabel": "Stock actual",
   "guardarCambios": "Guardar cambios",
+
+  "categoriaLabel": "Categoría",
+  "cantidadQueCompras": "Cantidad que compras",
+  "unidadDeCompra": "Unidad",
+  "precioPresentacionLabel": "Precio de esa presentación",
+  "proveedorOpcional": "Proveedor (opcional)",
+  "insumoEspecialLabel": "Insumo especial (sin azúcar añadida)",
+  "insumoEspecialAyuda": "Márcalo para sustitutos del azúcar y productos aptos para diabéticos.",
+  "costoPorUnidadCalculado": "Costo: {costo} por {unidad}",
+  "@costoPorUnidadCalculado": {
+    "placeholders": {
+      "costo": { "type": "String" },
+      "unidad": { "type": "String" }
+    }
+  },
+  "especialEtiqueta": "sin azúcar",
+  "traerDelCatalogo": "Traer del catálogo",
+  "catalogoRefTitulo": "Catálogo de referencia",
+  "catalogoRefAyuda": "Son presentaciones habituales de compra. El precio entra en cero: tú pones lo que pagas. Escoge los que uses.",
+  "buscarEnCatalogo": "Buscar en el catálogo",
+  "marcarTodoVisible": "Marcar todo lo visible",
+  "catalogoTodoAgregado": "Ya agregaste todos los insumos del catálogo.",
+  "insumosAgregadosN": "{n} insumos agregados",
+  "@insumosAgregadosN": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "agregarSeleccionadosN": "Agregar {n}",
+  "@agregarSeleccionadosN": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+
+  "prodBasico": "Lo básico",
+  "prodRendimiento": "¿Cuántas unidades salen?",
+  "prodSinAzucar": "Es de la línea sin azúcar añadida",
+  "prodIngredientesLote": "Ingredientes (por lote)",
+  "prodEmpaque": "Empaque (por unidad)",
+  "prodTiemposMerma": "Tiempos y merma",
+  "prodMinutosPrep": "Minutos de trabajo",
+  "prodMinutosHorno": "Minutos de horno",
+  "prodMerma": "Merma (%)",
+  "prodMermaAyuda": "Lo que se daña o se prueba. Perder 10% encarece 11,1%.",
+  "prodPrecioSeccion": "Precio",
+  "prodMetodoMargen": "Método de margen",
+  "prodMetodoDefault": "El de Ajustes",
+  "prodMetodoVenta": "Sobre el precio de venta",
+  "prodMetodoMarkup": "Sobre el costo (markup)",
+  "prodMargenReceta": "Margen para este producto (%)",
+  "prodMargenHint": "El de Ajustes",
+  "prodPrecioCobras": "Precio que cobras",
+  "prodSugeridoCorto": "Sugerido {precio}",
+  "@prodSugeridoCorto": {
+    "placeholders": { "precio": { "type": "String" } }
+  },
+  "costeoMateriaPrima": "Materia prima",
+  "costeoEmpaque": "Empaque",
+  "costeoManoObra": "Mano de obra",
+  "costeoEnergia": "Energía",
+  "costeoGastosFijos": "Gastos fijos",
+  "costeoCostoUnidad": "Costo por unidad",
+  "costeoPrecioSugerido": "Precio sugerido",
+  "costeoUsarSugerido": "Usar este precio",
+  "costeoFijosIncompletos": "Faltan tus gastos fijos y unidades/mes para el costo completo.",
+  "costeoCompletar": "Completar",
+  "estadoPerdida": "Pérdida",
+  "estadoBajo": "Por debajo",
+  "estadoBien": "Bien",
+  "ajustesCosteoTitulo": "Ajustes de costeo",
+  "ajustesCosteoSub": "Tarifa, gastos fijos y márgenes",
+  "costeoNegocioTiempo": "Tu tiempo y tu horno",
+  "costeoTarifaHora": "Cuánto vale tu hora de trabajo",
+  "costeoEnergiaHoraLabel": "Cuánto cuesta una hora de horno",
+  "costeoGastosMes": "Gastos fijos del mes",
+  "costeoConcepto": "Concepto",
+  "costeoValorMensual": "Valor mensual",
+  "costeoAgregarConcepto": "Agregar concepto",
+  "costeoUnidadesMes": "Unidades que produces al mes",
+  "costeoTotalMensual": "Total mensual: {total} · por unidad: {unidad}",
+  "@costeoTotalMensual": {
+    "placeholders": {
+      "total": { "type": "String" },
+      "unidad": { "type": "String" }
+    }
+  },
+  "costeoMargenSeccion": "Margen y precio",
+  "costeoMargenGeneral": "Margen general (%)",
+  "costeoMargenEspecial": "Margen sin azúcar (%)",
+  "costeoIva": "IVA",
+  "costeoIvaAplica": "Cobrar IVA",
+  "costeoIvaTasa": "Tasa de IVA (%)",
+  "costeoGuardado": "Ajustes guardados",
+
+  "cotizarTitulo": "Cotizar",
+  "cotizarSub": "Arma cotizaciones para tus clientes",
+  "nuevaCotizacion": "Nueva cotización",
+  "cotizarVacio": "Aquí quedarán tus cotizaciones. Arma el pedido y sale listo para WhatsApp e impresión.",
+  "cotizarSinProductos": "Para cotizar necesitas productos con precio.",
+  "cotizaSinCliente": "Sin cliente",
+  "cotizaNumProductos": "{n} productos",
+  "@cotizaNumProductos": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "cotizaEliminarTitulo": "Eliminar cotización",
+  "cotizaEliminarConfirm": "¿Eliminar esta cotización?",
+  "cotizaCliente": "Cliente",
+  "cotizaFecha": "Fecha",
+  "cotizaEstado": "Estado",
+  "cotizaProductosTitulo": "Productos",
+  "cotizaSinLineas": "Agrega el primer producto al pedido.",
+  "cotizaCantidad": "Cantidad",
+  "cotizaPrecioUnitario": "Precio unitario",
+  "cotizaAgregarProducto": "Agregar producto",
+  "cotizaAdicionesTitulo": "Adiciones y personalizaciones",
+  "cotizaSinAdiciones": "Letreros, figuras, decoración… lo que cobras aparte.",
+  "cotizaAdicion": "Adición",
+  "cotizaValor": "Valor",
+  "cotizaAgregarAdicion": "Agregar adición",
+  "cotizaCierre": "Cierre",
+  "cotizaDomicilio": "Domicilio",
+  "cotizaDescuento": "Descuento",
+  "cotizaCobrarIva": "Cobrar IVA en esta cotización",
+  "cotizaNota": "Nota para el cliente",
+  "cotizaSubtotal": "Subtotal",
+  "cotizaTotal": "Total",
+  "cotizaGuardada": "Cotización guardada.",
+  "cotizaCopiado": "Texto copiado.",
+  "cotizaCopiar": "Copiar texto",
+  "cotizaWhatsapp": "WhatsApp",
+  "cotizaImprimir": "Imprimir",
+  "cotizacionTitulo": "Cotización",
+  "cotizaPara": "Para:",
+  "cotizaProducto": "Producto",
+  "cotizaValorUnitario": "Valor unitario",
+  "cotizaPieValidez": "Cotización válida por 8 días.",
+  "estCotBorrador": "Borrador",
+  "estCotEnviada": "Enviada",
+  "estCotAceptada": "Aceptada",
+  "estCotEntregada": "Entregada",
+  "estCotRechazada": "Rechazada",
+
+  "comparadorTitulo": "Comparador de productos",
+  "comparadorVacio": "Aún no tienes productos para comparar.",
+  "simuladorTitulo": "Simular alza",
+  "simuladorAyuda": "Mira cómo cambian tus costos y precios si los insumos suben.",
+  "simuladorSinProductos": "No tienes productos para simular.",
+  "oportunidadTitulo": "Dinero que dejas de ganar al mes",
+  "oportunidadBien": "Ningún producto se vende por debajo del precio sugerido. ¡Bien!",
+  "oportunidadDetalle": "Sumando {n} producto(s) por debajo del precio, según tus unidades/mes.",
+  "@oportunidadDetalle": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "oportunidadSinEstimado": "{n} producto(s) por debajo del precio. Agrega \"unidades al mes\" para estimar el dinero.",
+  "@oportunidadSinEstimado": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "oportunidadResumen": "Dejas de ganar ~{monto} al mes",
+  "@oportunidadResumen": {
+    "placeholders": { "monto": { "type": "String" } }
+  },
+  "prodUnidadesMes": "Unidades que vendes al mes (opcional)",
+  "prodUnidadesMesAyuda": "Con esto calculamos cuánta plata dejas sobre la mesa cada mes.",
 
   "elegirInsumoTitulo": "Elegir insumo",
   "ningunInsumoCoincide": "Ningún insumo coincide.",
@@ -533,26 +689,8 @@
   "catalogosVacio": "Aún no tienes catálogos.\nSube un PDF con el botón de abajo.",
   "abrir": "Abrir",
 
-  "notaFaltaAsunto": "Escribe al menos el asunto de la nota",
-  "editarNotaTitulo": "Editar nota",
   "asunto": "Asunto",
   "contenido": "Contenido",
-  "notaContenidoHint": "Escribe el detalle de la nota...",
-  "guardarNota": "Guardar nota",
-  "eliminarNotaTitulo": "Eliminar nota",
-  "eliminarNotaConfirmacion": "¿Seguro que quieres eliminar «{asunto}»?",
-  "@eliminarNotaConfirmacion": {
-    "placeholders": { "asunto": { "type": "String" } }
-  },
-  "notaTitulo": "Nota",
-  "notaNoExiste": "Esta nota ya no existe.",
-  "notaPorAutor": "{fecha}  ·  Por {autor}",
-  "@notaPorAutor": {
-    "placeholders": {
-      "fecha": { "type": "String" },
-      "autor": { "type": "String" }
-    }
-  },
   "sinContenido": "(Sin contenido)",
 
   "entregaHoy": "Entrega hoy",
@@ -574,14 +712,12 @@
       "minimo": { "type": "String" }
     }
   },
-  "notasNuevas": "Notas nuevas",
   "porAutor": "Por {autor}",
   "@porAutor": {
     "placeholders": { "autor": { "type": "String" } }
   },
   "notifConfigAyuda": "Elige qué avisos quieres recibir dentro de la app.",
   "notifPedidosSub": "Entregas de hoy, mañana o atrasadas",
-  "notifNotasSub": "Cuando alguien crea una nota",
   "notifInsumosSub": "Insumos por debajo de su stock mínimo",
 
   "modo": "Modo",
@@ -655,9 +791,8 @@
   "ajustesSeguridadCaption": "El idioma de la aplicación se puede cambiar aquí y se aplica a toda la app. País y moneda no se pueden cambiar por ahora.",
   "seguridad": "Seguridad",
 
-  "notas": "Notas",
   "buscadorHint": "Buscar en tu negocio...",
-  "buscadorInicio": "Busca productos, insumos, pedidos, recetas, notas y catálogos.",
+  "buscadorInicio": "Busca productos, insumos, pedidos, recetas y catálogos.",
   "buscadorSinResultados": "Sin resultados para «{q}»",
   "@buscadorSinResultados": {
     "placeholders": { "q": { "type": "String" } }

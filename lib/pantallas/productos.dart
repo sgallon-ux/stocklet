@@ -3,10 +3,12 @@ import 'package:provider/provider.dart';
 import 'package:reposteria_app/l10n/app_localizations.dart';
 import '../datos_app.dart';
 import '../models/producto.dart';
+import '../costeo.dart';
 import '../tema.dart';
 import '../formato.dart';
 import 'crear_producto.dart';
 import 'editar_producto.dart';
+import 'widgets/desglose_costeo.dart';
 
 class PantallaProductos extends StatefulWidget {
   const PantallaProductos({super.key});
@@ -18,7 +20,7 @@ class PantallaProductos extends StatefulWidget {
 class _PantallaProductosState extends State<PantallaProductos> {
   final busquedaCtrl = TextEditingController();
   String busqueda = '';
-  String? tipoSel; // null = ninguno (pantalla limpia); 'Todos' = mostrar todos
+  String? tipoSel = 'Todos'; // 'Todos' por defecto (muestra todos)
 
   @override
   void dispose() {
@@ -175,6 +177,7 @@ class _PantallaProductosState extends State<PantallaProductos> {
   Widget _tarjeta(BuildContext context, DatosApp datos, MarcaColores m,
       AppLocalizations t, Producto p) {
     final gananciaColor = p.ganancia >= 0 ? m.verde : m.rojo;
+    final r = costear(p, datos.configCosteo);
     return Card(
       clipBehavior: Clip.antiAlias,
       child: InkWell(
@@ -201,11 +204,22 @@ class _PantallaProductosState extends State<PantallaProductos> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(p.nombre,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, color: m.texto)),
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Text(p.nombre,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, color: m.texto)),
+                        ),
+                        if (r.estado == EstadoPrecio.perdida ||
+                            r.estado == EstadoPrecio.bajo) ...[
+                          const SizedBox(width: 6),
+                          ChipEstadoPrecio(estado: r.estado),
+                        ],
+                      ],
+                    ),
                     const SizedBox(height: 2),
                     Text(
                         p.tipo.trim().isEmpty
@@ -218,6 +232,10 @@ class _PantallaProductosState extends State<PantallaProductos> {
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
                             color: gananciaColor)),
+                    if (r.estado == EstadoPrecio.perdida ||
+                        r.estado == EstadoPrecio.bajo)
+                      Text(t.prodSugeridoCorto(pesos(r.precioSugerido)),
+                          style: TextStyle(fontSize: 12, color: m.verde)),
                   ],
                 ),
               ),

@@ -6,6 +6,7 @@ import 'productos.dart';
 import 'pedidos.dart';
 import 'recetas.dart';
 import 'catalogo.dart';
+import 'cotizar.dart';
 
 class CrearHub extends StatelessWidget {
   const CrearHub({super.key});
@@ -52,6 +53,8 @@ class CrearHub extends StatelessWidget {
               t.productosSub, const PantallaProductos()),
           _item(context, Icons.receipt_long_outlined, t.pedidos,
               t.pedidosSub, const PantallaPedidos()),
+          _item(context, Icons.request_quote_outlined, t.cotizarTitulo,
+              t.cotizarSub, const PantallaCotizar()),
           _item(context, Icons.menu_book_outlined, t.recetas,
               t.recetasSub, const PantallaRecetas()),
           _item(context, Icons.picture_as_pdf_outlined, t.catalogo,

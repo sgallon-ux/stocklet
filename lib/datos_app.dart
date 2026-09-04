@@ -12,8 +12,9 @@ import 'models/pedido.dart';
 import 'models/ingrediente_de_receta.dart';
 import 'models/resumen_mensual.dart';
 import 'models/negocio.dart';
+import 'models/cotizacion.dart';
+import 'costeo.dart';
 import 'formato.dart';
-import 'models/nota.dart';
 import 'models/guia_receta.dart';
 import 'models/item_pedido.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -22,6 +23,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'servicios/push_service.dart';
 import 'servicios/suscripcion_service.dart';
+
+// Centinela para distinguir "no tocar" de "poner en null" en parámetros.
+class _Sentinel {
+  const _Sentinel();
+}
+const _sinCambio = _Sentinel();
 
 enum EstadoApp { cargando, sinSesion, sinNegocio, listo }
 
@@ -101,7 +108,6 @@ class DatosApp extends ChangeNotifier {
   String perfilCelular = '';
   String perfilFotoUrl = '';
   bool notifPedidos = true;
-  bool notifNotas = true;
   bool notifInsumos = true;
   String acentoId = 'verde';
   String modoTemaId = 'claro'; // 'claro' | 'oscuro' | 'auto'
@@ -117,9 +123,9 @@ class DatosApp extends ChangeNotifier {
   List<Venta> ventas = [];
   List<Gasto> gastos = [];
   List<Pedido> pedidos = [];
-  List<Nota> notas = [];
   List<GuiaReceta> recetas = [];
   List<Catalogo> catalogos = [];
+  List<Cotizacion> cotizaciones = [];
 
   List<QueryDocumentSnapshot<Map<String, dynamic>>> _productosRaw = [];
   final List<StreamSubscription> _suscripciones = [];
@@ -135,7 +141,6 @@ class DatosApp extends ChangeNotifier {
         await _cargarNegocioId(usuario.uid);
         if (_negocioId != null) {
           _escucharTodo();
-          await _cargarUltimaRevision();
           estado = EstadoApp.listo;
           PushService.instance.guardarToken(usuario.uid);
           guardarIdiomaUsuario();
@@ -350,7 +355,6 @@ Future<void> _cargarNegocioId(String uid) async {
         );
       }
       _escucharTodo();
-      await _cargarUltimaRevision();
       estado = EstadoApp.listo;
       PushService.instance.guardarToken(uid);
       guardarIdiomaUsuario();
@@ -378,7 +382,6 @@ Future<void> _cargarNegocioId(String uid) async {
   Future<void> _cargarPrefsNotif() async {
     final prefs = await SharedPreferences.getInstance();
     notifPedidos = prefs.getBool('notifPedidos') ?? true;
-    notifNotas = prefs.getBool('notifNotas') ?? true;
     notifInsumos = prefs.getBool('notifInsumos') ?? true;
     acentoId = prefs.getString('acentoId') ?? 'verde';
     modoTemaId = prefs.getString('modoTemaId') ?? 'claro';
@@ -386,15 +389,11 @@ Future<void> _cargarNegocioId(String uid) async {
     notifyListeners();
   }
 
-  Future<void> setNotif({bool? pedidos, bool? notas, bool? insumos}) async {
+  Future<void> setNotif({bool? pedidos, bool? insumos}) async {
     final prefs = await SharedPreferences.getInstance();
     if (pedidos != null) {
       notifPedidos = pedidos;
       await prefs.setBool('notifPedidos', pedidos);
-    }
-    if (notas != null) {
-      notifNotas = notas;
-      await prefs.setBool('notifNotas', notas);
     }
     if (insumos != null) {
       notifInsumos = insumos;
@@ -501,40 +500,7 @@ Future<void> _cargarNegocioId(String uid) async {
       ..sort((a, b) => a.nombre.toLowerCase().compareTo(b.nombre.toLowerCase()));
   }
 
-  List<Nota> get avisosNotas {
-    if (!notifNotas) return [];
-    final uid = FirebaseAuth.instance.currentUser?.uid ?? '';
-    return notas.where((n) {
-      if (n.autorUid == uid) return false; // no aviso de mis propias notas
-      return n.fecha.isAfter(_notasUltimaRevision);
-    }).toList()
-      ..sort((a, b) => b.fecha.compareTo(a.fecha));
-  }
-
-  int get totalAvisos =>
-      avisosPedidos.length + avisosInsumos.length + avisosNotas.length;
-
-  DateTime _notasUltimaRevision = DateTime.fromMillisecondsSinceEpoch(0);
-
-  Future<void> _cargarUltimaRevision() async {
-    final uid = FirebaseAuth.instance.currentUser?.uid ?? '';
-    if (uid.isEmpty) return;
-    final prefs = await SharedPreferences.getInstance();
-    final ms = prefs.getInt('notasUltimaRevision_$uid') ?? 0;
-    _notasUltimaRevision = DateTime.fromMillisecondsSinceEpoch(ms);
-    notifyListeners();
-  }
-
-  Future<void> marcarNotasRevisadas() async {
-    final uid = FirebaseAuth.instance.currentUser?.uid ?? '';
-    if (uid.isEmpty) return;
-    final ahora = DateTime.now();
-    _notasUltimaRevision = ahora;
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt(
-        'notasUltimaRevision_$uid', ahora.millisecondsSinceEpoch);
-    notifyListeners();
-  }
+  int get totalAvisos => avisosPedidos.length + avisosInsumos.length;
 
   // Atajo: la colección X DENTRO de mi negocio
   CollectionReference<Map<String, dynamic>> _col(String nombre) =>
@@ -571,8 +537,15 @@ Future<void> _cargarNegocioId(String uid) async {
     producto.descontarStock(cantidad);
 
     _col('ventas').doc(venta.id).set(venta.toMap());
+    final tocados = <String, Insumo>{};
     for (final ing in producto.receta) {
-      _col('insumos').doc(ing.insumo.id).set(ing.insumo.toMap());
+      tocados[ing.insumo.id] = ing.insumo;
+    }
+    for (final e in producto.empaque) {
+      tocados[e.insumo.id] = e.insumo;
+    }
+    for (final ins in tocados.values) {
+      _col('insumos').doc(ins.id).set(ins.toMap());
     }
     notifyListeners();
   }
@@ -693,6 +666,15 @@ Future<void> _cargarNegocioId(String uid) async {
     notifyListeners();
   }
 
+  // Agrega varios insumos de una vez (traídos del catálogo de referencia).
+  void agregarInsumosDesdeCatalogo(List<Insumo> nuevos) {
+    for (final ins in nuevos) {
+      insumos.add(ins);
+      _col('insumos').doc(ins.id).set(ins.toMap());
+    }
+    notifyListeners();
+  }
+
   // --- Editar y eliminar insumos ---
   void editarInsumo(
     Insumo insumo, {
@@ -701,12 +683,26 @@ Future<void> _cargarNegocioId(String uid) async {
     required double costoPorUnidad,
     required double stockActual,
     required double stockMinimo,
+    String? categoria,
+    String? unidadCompra,
+    double? cantidadCompra,
+    double? precioPresentacion,
+    String? proveedor,
+    bool? especial,
   }) {
     insumo.nombre = nombre;
     insumo.unidad = unidad;
     insumo.costoPorUnidad = costoPorUnidad;
     insumo.stockActual = stockActual;
     insumo.stockMinimo = stockMinimo;
+    if (categoria != null) insumo.categoria = categoria;
+    if (unidadCompra != null) insumo.unidadCompra = unidadCompra;
+    if (cantidadCompra != null) insumo.cantidadCompra = cantidadCompra;
+    if (precioPresentacion != null) {
+      insumo.precioPresentacion = precioPresentacion;
+    }
+    if (proveedor != null) insumo.proveedor = proveedor;
+    if (especial != null) insumo.especial = especial;
     _col('insumos').doc(insumo.id).set(insumo.toMap());
     notifyListeners();
   }
@@ -773,11 +769,33 @@ Future<void> _cargarNegocioId(String uid) async {
     required String tipo,
     required double precioVenta,
     required List<IngredienteDeReceta> receta,
+    List<IngredienteDeReceta>? empaque,
+    double? rendimiento,
+    double? mermaPct,
+    double? minutosPrep,
+    double? minutosHorno,
+    String? metodoMargen,
+    Object? margenPct = _sinCambio,
+    bool? sinAzucar,
+    double? unidadesMesEstimadas,
   }) {
     producto.nombre = nombre;
     producto.tipo = tipo;
     producto.precioVenta = precioVenta;
     producto.receta = receta;
+    if (empaque != null) producto.empaque = empaque;
+    if (rendimiento != null) producto.rendimiento = rendimiento;
+    if (mermaPct != null) producto.mermaPct = mermaPct;
+    if (minutosPrep != null) producto.minutosPrep = minutosPrep;
+    if (minutosHorno != null) producto.minutosHorno = minutosHorno;
+    if (metodoMargen != null) producto.metodoMargen = metodoMargen;
+    if (!identical(margenPct, _sinCambio)) {
+      producto.margenPct = margenPct as double?;
+    }
+    if (sinAzucar != null) producto.sinAzucar = sinAzucar;
+    if (unidadesMesEstimadas != null) {
+      producto.unidadesMesEstimadas = unidadesMesEstimadas;
+    }
     _col('productos').doc(producto.id).set(producto.toMap());
     notifyListeners();
   }
@@ -818,29 +836,21 @@ Future<void> _cargarNegocioId(String uid) async {
     notifyListeners();
   }
 
-  void agregarNota(Nota nota) {
-    // Autor: nombre de Perfil (o correo como respaldo) + uid
-    final user = FirebaseAuth.instance.currentUser;
-    nota.autorUid = user?.uid ?? '';
-    nota.autorNombre =
-        perfilNombre.isNotEmpty ? perfilNombre : (user?.email ?? '');
-    notas.add(nota);
-    _col('notas').doc(nota.id).set(nota.toMap());
+  // --- Cotizaciones ---
+  void guardarCotizacion(Cotizacion c) {
+    final i = cotizaciones.indexWhere((x) => x.id == c.id);
+    if (i == -1) {
+      cotizaciones.add(c);
+    } else {
+      cotizaciones[i] = c;
+    }
+    _col('cotizaciones').doc(c.id).set(c.toMap());
     notifyListeners();
   }
 
-  void editarNota(Nota nota,
-      {required String asunto, required String contenido}) {
-    nota.asunto = asunto;
-    nota.contenido = contenido;
-    nota.fecha = DateTime.now();
-    _col('notas').doc(nota.id).set(nota.toMap());
-    notifyListeners();
-  }
-
-  void eliminarNota(Nota nota) {
-    notas.remove(nota);
-    _col('notas').doc(nota.id).delete();
+  void eliminarCotizacion(Cotizacion c) {
+    cotizaciones.removeWhere((x) => x.id == c.id);
+    _col('cotizaciones').doc(c.id).delete();
     notifyListeners();
   }
 
@@ -1154,12 +1164,6 @@ Future<void> _cargarNegocioId(String uid) async {
       }),
     );
     _suscripciones.add(
-      _col('notas').snapshots().listen((snap) {
-        notas = snap.docs.map((d) => Nota.fromMap(d.id, d.data())).toList();
-        notifyListeners();
-      }),
-    );
-    _suscripciones.add(
       _col('recetas').snapshots().listen((snap) {
         recetas =
             snap.docs.map((d) => GuiaReceta.fromMap(d.id, d.data())).toList();
@@ -1170,6 +1174,13 @@ Future<void> _cargarNegocioId(String uid) async {
       _col('catalogos').snapshots().listen((snap) {
         catalogos =
             snap.docs.map((d) => Catalogo.fromMap(d.id, d.data())).toList();
+        notifyListeners();
+      }),
+    );
+    _suscripciones.add(
+      _col('cotizaciones').snapshots().listen((snap) {
+        cotizaciones =
+            snap.docs.map((d) => Cotizacion.fromMap(d.id, d.data())).toList();
         notifyListeners();
       }),
     );
@@ -1186,9 +1197,9 @@ Future<void> _cargarNegocioId(String uid) async {
     ventas = [];
     gastos = [];
     pedidos = [];
-    notas = [];
     recetas = [];
     catalogos = [];
+    cotizaciones = [];
     perfilNombre = '';
     perfilCelular = '';
     perfilFotoUrl = '';
@@ -1268,6 +1279,48 @@ Future<void> _cargarNegocioId(String uid) async {
     negocio!.correo = correo;
     negocio!.tel = tel;
     negocio!.ubicacion = ubicacion;
+    notifyListeners();
+  }
+
+  // Configuración de costeo derivada del negocio.
+  ConfigCosteo get configCosteo => ConfigCosteo.deNegocio(negocio);
+
+  // Guarda los ajustes de costeo (tarifa, energía, gastos fijos, márgenes, IVA).
+  Future<void> guardarAjustesCosteo({
+    required double tarifaHora,
+    required double costoEnergiaHora,
+    required List<GastoFijo> gastosFijos,
+    required double unidadesMes,
+    required String metodoMargen,
+    required double margenPct,
+    required double margenEspecialPct,
+    required bool ivaAplica,
+    required double ivaTasa,
+  }) async {
+    if (_negocioId == null || negocio == null) return;
+    negocio!.tarifaHora = tarifaHora;
+    negocio!.costoEnergiaHora = costoEnergiaHora;
+    negocio!.gastosFijos = gastosFijos;
+    negocio!.unidadesMes = unidadesMes;
+    negocio!.metodoMargen = metodoMargen;
+    negocio!.margenPct = margenPct;
+    negocio!.margenEspecialPct = margenEspecialPct;
+    negocio!.ivaAplica = ivaAplica;
+    negocio!.ivaTasa = ivaTasa;
+    await _db.collection('negocios').doc(_negocioId).set(
+      {
+        'tarifaHora': tarifaHora,
+        'costoEnergiaHora': costoEnergiaHora,
+        'gastosFijos': gastosFijos.map((g) => g.toMap()).toList(),
+        'unidadesMes': unidadesMes,
+        'metodoMargen': metodoMargen,
+        'margenPct': margenPct,
+        'margenEspecialPct': margenEspecialPct,
+        'ivaAplica': ivaAplica,
+        'ivaTasa': ivaTasa,
+      },
+      SetOptions(merge: true),
+    );
     notifyListeners();
   }
 

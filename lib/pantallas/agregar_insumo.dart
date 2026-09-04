@@ -5,6 +5,7 @@ import '../datos_app.dart';
 import '../models/insumo.dart';
 import '../tema.dart';
 import '../formato.dart';
+import '../unidades.dart';
 
 class PantallaAgregarInsumo extends StatefulWidget {
   const PantallaAgregarInsumo({super.key});
@@ -18,7 +19,17 @@ class _PantallaAgregarInsumoState extends State<PantallaAgregarInsumo> {
   final cantidadCtrl = TextEditingController();
   final precioCtrl = TextEditingController();
   final minimoCtrl = TextEditingController();
-  String unidad = 'g';
+  final proveedorCtrl = TextEditingController();
+  String categoria = 'Otros';
+  String unidadCompra = 'kg';
+  bool especial = false;
+
+  @override
+  void initState() {
+    super.initState();
+    cantidadCtrl.addListener(() => setState(() {}));
+    precioCtrl.addListener(() => setState(() {}));
+  }
 
   @override
   void dispose() {
@@ -26,6 +37,7 @@ class _PantallaAgregarInsumoState extends State<PantallaAgregarInsumo> {
     cantidadCtrl.dispose();
     precioCtrl.dispose();
     minimoCtrl.dispose();
+    proveedorCtrl.dispose();
     super.dispose();
   }
 
@@ -42,16 +54,15 @@ class _PantallaAgregarInsumoState extends State<PantallaAgregarInsumo> {
       return;
     }
 
-    final costoPorUnidad = precio / cantidad; // la app hace la cuenta
-
-    final minimo = parseCantidad(minimoCtrl.text);
-
-    context.read<DatosApp>().agregarInsumo(Insumo(
+    context.read<DatosApp>().agregarInsumo(Insumo.desdePresentacion(
           nombre: nombre,
-          unidad: unidad,
-          costoPorUnidad: costoPorUnidad,
-          stockActual: cantidad, // lo que compraste es tu stock inicial
-          stockMinimo: minimo,
+          categoria: categoria,
+          cantidadCompra: cantidad,
+          unidadCompra: unidadCompra,
+          precioPresentacion: precio,
+          stockMinimo: parseCantidad(minimoCtrl.text),
+          proveedor: proveedorCtrl.text.trim(),
+          especial: especial,
         ));
 
     Navigator.pop(context);
@@ -60,6 +71,12 @@ class _PantallaAgregarInsumoState extends State<PantallaAgregarInsumo> {
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
+    final m = AppColores.of(context);
+    final cantidad = parseCantidad(cantidadCtrl.text);
+    final precio = parseCantidad(precioCtrl.text);
+    final base = baseDeUnidad(unidadCompra);
+    final costo = costoBaseDesde(precio, cantidad, unidadCompra);
+
     return Scaffold(
       appBar: AppBar(title: Text(t.agregarInsumoTitulo)),
       body: ListView(
@@ -82,31 +99,49 @@ class _PantallaAgregarInsumoState extends State<PantallaAgregarInsumo> {
                   ),
                   const SizedBox(height: 16),
                   DropdownButtonFormField<String>(
-                    initialValue: unidad,
+                    initialValue: categoria,
+                    isExpanded: true,
                     decoration: InputDecoration(
-                      labelText: t.unidadMedida,
-                      prefixIcon: const Icon(Icons.straighten),
+                      labelText: t.categoriaLabel,
+                      prefixIcon: const Icon(Icons.label_outline),
                     ),
                     items: [
-                      DropdownMenuItem(value: 'g', child: Text(t.unidadGramos)),
-                      DropdownMenuItem(
-                          value: 'ml', child: Text(t.unidadMililitros)),
-                      DropdownMenuItem(
-                          value: 'unidad', child: Text(t.unidadUnidades)),
+                      for (final c in kCategoriasInsumo)
+                        DropdownMenuItem(value: c, child: Text(c)),
                     ],
-                    onChanged: (nueva) => setState(() => unidad = nueva!),
+                    onChanged: (v) => setState(() => categoria = v!),
                   ),
                   const SizedBox(height: 16),
-                  TextField(
-                    controller: cantidadCtrl,
-                    keyboardType:
-                        const TextInputType.numberWithOptions(decimal: true),
-                    inputFormatters: [Decimal2Formatter()],
-                    decoration: InputDecoration(
-                      labelText: t.cantidadComprada,
-                      hintText: t.cantidadCompradaHint,
-                      prefixIcon: const Icon(Icons.scale_outlined),
-                    ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: cantidadCtrl,
+                          keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true),
+                          inputFormatters: [Decimal2Formatter()],
+                          decoration: InputDecoration(
+                            labelText: t.cantidadQueCompras,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: DropdownButtonFormField<String>(
+                          initialValue: unidadCompra,
+                          isExpanded: true,
+                          decoration:
+                              InputDecoration(labelText: t.unidadDeCompra),
+                          items: [
+                            for (final e in kUnidades.entries)
+                              DropdownMenuItem(
+                                  value: e.key, child: Text(e.value.rot)),
+                          ],
+                          onChanged: (v) => setState(() => unidadCompra = v!),
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 16),
                   TextField(
@@ -115,10 +150,30 @@ class _PantallaAgregarInsumoState extends State<PantallaAgregarInsumo> {
                         const TextInputType.numberWithOptions(decimal: true),
                     inputFormatters: [Decimal2Formatter()],
                     decoration: InputDecoration(
-                      labelText: t.precioTotalPagado,
+                      labelText: t.precioPresentacionLabel,
                       prefixIcon: const Icon(Icons.attach_money),
                     ),
                   ),
+                  if (costo > 0) ...[
+                    const SizedBox(height: 10),
+                    Text(
+                      t.costoPorUnidadCalculado(pesos(costo), rotBase(base)),
+                      style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: m.verde),
+                    ),
+                  ],
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: proveedorCtrl,
+                    textCapitalization: TextCapitalization.sentences,
+                    decoration: InputDecoration(
+                      labelText: t.proveedorOpcional,
+                      prefixIcon: const Icon(Icons.storefront_outlined),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
                   TextField(
                     controller: minimoCtrl,
                     keyboardType:
@@ -131,18 +186,17 @@ class _PantallaAgregarInsumoState extends State<PantallaAgregarInsumo> {
                           const Icon(Icons.notifications_active_outlined),
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 8),
+                  SwitchListTile(
+                    contentPadding: EdgeInsets.zero,
+                    value: especial,
+                    onChanged: (v) => setState(() => especial = v),
+                    title: Text(t.insumoEspecialLabel),
+                    subtitle: Text(t.insumoEspecialAyuda,
+                        style: TextStyle(fontSize: 12, color: m.textoSuave)),
+                  ),
                 ],
               ),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4),
-            child: Text(
-              t.agregarInsumoAyuda,
-              style:
-                  TextStyle(fontSize: 12, color: AppColores.of(context).textoSuave),
             ),
           ),
           const SizedBox(height: 16),

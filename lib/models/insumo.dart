@@ -1,43 +1,114 @@
+import '../unidades.dart';
+
 class Insumo {
   String id;
   String nombre;
+  String categoria;
+  // Unidad BASE del insumo: 'g' | 'ml' | 'unidad'. El costo y el stock están
+  // expresados en esta unidad. Se deriva de la unidad de compra.
   String unidad;
-  double costoPorUnidad;
-  double stockActual;
-  double stockMinimo;
+  double costoPorUnidad; // costo por unidad base (fuente de cálculo)
+  double stockActual; // en unidad base
+  double stockMinimo; // en unidad base
+
+  // Presentación de compra (para mostrar y reeditar). Ej: 1 kg a $4.000.
+  String unidadCompra;
+  double cantidadCompra;
+  double precioPresentacion;
+
+  String proveedor;
+  bool especial; // insumo de la línea sin azúcar añadida
 
   Insumo({
     String? id,
     required this.nombre,
+    this.categoria = 'Otros',
     required this.unidad,
     required this.costoPorUnidad,
     required this.stockActual,
     this.stockMinimo = 0,
-  }) : id = id ?? DateTime.now().microsecondsSinceEpoch.toString();
+    String? unidadCompra,
+    double? cantidadCompra,
+    double? precioPresentacion,
+    this.proveedor = '',
+    this.especial = false,
+  })  : unidadCompra = unidadCompra ?? unidad,
+        cantidadCompra = cantidadCompra ?? 1,
+        precioPresentacion = precioPresentacion ?? costoPorUnidad,
+        id = id ?? DateTime.now().microsecondsSinceEpoch.toString();
+
+  /// Crea un insumo a partir de una presentación de compra, convirtiendo a
+  /// unidad base. Ej: 1 kg a $4.000 -> unidad 'g', costo 4/g, stock 1000 g.
+  factory Insumo.desdePresentacion({
+    String? id,
+    required String nombre,
+    String categoria = 'Otros',
+    required double cantidadCompra,
+    required String unidadCompra,
+    required double precioPresentacion,
+    double? stockActual,
+    double stockMinimo = 0,
+    String proveedor = '',
+    bool especial = false,
+  }) {
+    final base = baseDeUnidad(unidadCompra);
+    final costo = costoBaseDesde(precioPresentacion, cantidadCompra, unidadCompra);
+    return Insumo(
+      id: id,
+      nombre: nombre,
+      categoria: categoria,
+      unidad: base,
+      costoPorUnidad: costo,
+      stockActual:
+          stockActual ?? cantidadBaseDesde(cantidadCompra, unidadCompra),
+      stockMinimo: stockMinimo,
+      unidadCompra: unidadCompra,
+      cantidadCompra: cantidadCompra,
+      precioPresentacion: precioPresentacion,
+      proveedor: proveedor,
+      especial: especial,
+    );
+  }
 
   // ¿Está por debajo de su mínimo? (0 = sin mínimo, no avisa)
   bool get bajoMinimo => stockMinimo > 0 && stockActual < stockMinimo;
 
-  // objeto -> Map (para GUARDAR en Firestore)
+  String get rotUnidadBase => rotBase(unidad);
+
   Map<String, dynamic> toMap() {
     return {
       'nombre': nombre,
+      'categoria': categoria,
       'unidad': unidad,
       'costoPorUnidad': costoPorUnidad,
       'stockActual': stockActual,
       'stockMinimo': stockMinimo,
+      'unidadCompra': unidadCompra,
+      'cantidadCompra': cantidadCompra,
+      'precioPresentacion': precioPresentacion,
+      'proveedor': proveedor,
+      'especial': especial,
     };
   }
 
-  // Map -> objeto (para LEER de Firestore; lo usaremos al cargar)
   factory Insumo.fromMap(String id, Map<String, dynamic> map) {
+    final unidad = map['unidad'] as String? ?? 'g';
+    final costo = (map['costoPorUnidad'] as num?)?.toDouble() ?? 0;
     return Insumo(
       id: id,
       nombre: map['nombre'] as String,
-      unidad: map['unidad'] as String,
-      costoPorUnidad: (map['costoPorUnidad'] as num).toDouble(),
-      stockActual: (map['stockActual'] as num).toDouble(),
+      categoria: map['categoria'] as String? ?? 'Otros',
+      unidad: unidad,
+      costoPorUnidad: costo,
+      stockActual: (map['stockActual'] as num?)?.toDouble() ?? 0,
       stockMinimo: (map['stockMinimo'] as num?)?.toDouble() ?? 0,
+      // Compat: insumos viejos no traen presentación -> se asume 1 unidad base.
+      unidadCompra: map['unidadCompra'] as String? ?? unidad,
+      cantidadCompra: (map['cantidadCompra'] as num?)?.toDouble() ?? 1,
+      precioPresentacion:
+          (map['precioPresentacion'] as num?)?.toDouble() ?? costo,
+      proveedor: map['proveedor'] as String? ?? '',
+      especial: map['especial'] as bool? ?? false,
     );
   }
 }

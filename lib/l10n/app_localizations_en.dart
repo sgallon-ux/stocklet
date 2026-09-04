@@ -30,7 +30,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notificaciones => 'Notifications';
 
   @override
-  String get notificacionesSubtitulo => 'Order, note and inventory alerts';
+  String get notificacionesSubtitulo => 'Order and inventory alerts';
 
   @override
   String get ajustesSeguridad => 'Settings and security';
@@ -283,15 +283,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get notasImportantes => 'Important notes';
-
-  @override
-  String get nuevaNota => 'New note';
-
-  @override
-  String get sinNotas => 'You have no notes. Create one with +';
-
-  @override
   String get eliminar => 'Delete';
 
   @override
@@ -400,6 +391,403 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get guardarCambios => 'Save changes';
+
+  @override
+  String get categoriaLabel => 'Category';
+
+  @override
+  String get cantidadQueCompras => 'Amount you buy';
+
+  @override
+  String get unidadDeCompra => 'Unit';
+
+  @override
+  String get precioPresentacionLabel => 'Price of that pack';
+
+  @override
+  String get proveedorOpcional => 'Supplier (optional)';
+
+  @override
+  String get insumoEspecialLabel => 'Special supply (sugar-free line)';
+
+  @override
+  String get insumoEspecialAyuda =>
+      'Mark sugar substitutes and diabetic-friendly products.';
+
+  @override
+  String costoPorUnidadCalculado(String costo, String unidad) {
+    return 'Cost: $costo per $unidad';
+  }
+
+  @override
+  String get especialEtiqueta => 'sugar-free';
+
+  @override
+  String get traerDelCatalogo => 'Add from catalog';
+
+  @override
+  String get catalogoRefTitulo => 'Reference catalog';
+
+  @override
+  String get catalogoRefAyuda =>
+      'These are common purchase packs. Price starts at zero: you set what you pay. Pick the ones you use.';
+
+  @override
+  String get buscarEnCatalogo => 'Search the catalog';
+
+  @override
+  String get marcarTodoVisible => 'Select all visible';
+
+  @override
+  String get catalogoTodoAgregado =>
+      'You\'ve already added every catalog supply.';
+
+  @override
+  String insumosAgregadosN(int n) {
+    return '$n supplies added';
+  }
+
+  @override
+  String agregarSeleccionadosN(int n) {
+    return 'Add $n';
+  }
+
+  @override
+  String get prodBasico => 'Basics';
+
+  @override
+  String get prodRendimiento => 'How many units come out?';
+
+  @override
+  String get prodSinAzucar => 'It\'s from the sugar-free line';
+
+  @override
+  String get prodIngredientesLote => 'Ingredients (per batch)';
+
+  @override
+  String get prodEmpaque => 'Packaging (per unit)';
+
+  @override
+  String get prodTiemposMerma => 'Time and waste';
+
+  @override
+  String get prodMinutosPrep => 'Minutes of work';
+
+  @override
+  String get prodMinutosHorno => 'Oven minutes';
+
+  @override
+  String get prodMerma => 'Waste (%)';
+
+  @override
+  String get prodMermaAyuda =>
+      'What gets damaged or tasted. Losing 10% raises cost 11.1%.';
+
+  @override
+  String get prodPrecioSeccion => 'Price';
+
+  @override
+  String get prodMetodoMargen => 'Margin method';
+
+  @override
+  String get prodMetodoDefault => 'From Settings';
+
+  @override
+  String get prodMetodoVenta => 'On sale price';
+
+  @override
+  String get prodMetodoMarkup => 'On cost (markup)';
+
+  @override
+  String get prodMargenReceta => 'Margin for this product (%)';
+
+  @override
+  String get prodMargenHint => 'From Settings';
+
+  @override
+  String get prodPrecioCobras => 'Price you charge';
+
+  @override
+  String prodSugeridoCorto(String precio) {
+    return 'Suggested $precio';
+  }
+
+  @override
+  String get costeoMateriaPrima => 'Raw materials';
+
+  @override
+  String get costeoEmpaque => 'Packaging';
+
+  @override
+  String get costeoManoObra => 'Labor';
+
+  @override
+  String get costeoEnergia => 'Energy';
+
+  @override
+  String get costeoGastosFijos => 'Fixed costs';
+
+  @override
+  String get costeoCostoUnidad => 'Cost per unit';
+
+  @override
+  String get costeoPrecioSugerido => 'Suggested price';
+
+  @override
+  String get costeoUsarSugerido => 'Use this price';
+
+  @override
+  String get costeoFijosIncompletos =>
+      'Add your fixed costs and units/month for the full cost.';
+
+  @override
+  String get costeoCompletar => 'Complete';
+
+  @override
+  String get estadoPerdida => 'Loss';
+
+  @override
+  String get estadoBajo => 'Underpriced';
+
+  @override
+  String get estadoBien => 'OK';
+
+  @override
+  String get ajustesCosteoTitulo => 'Costing settings';
+
+  @override
+  String get ajustesCosteoSub => 'Rate, fixed costs and margins';
+
+  @override
+  String get costeoNegocioTiempo => 'Your time and your oven';
+
+  @override
+  String get costeoTarifaHora => 'How much your work hour is worth';
+
+  @override
+  String get costeoEnergiaHoraLabel => 'Cost of one oven hour';
+
+  @override
+  String get costeoGastosMes => 'Monthly fixed costs';
+
+  @override
+  String get costeoConcepto => 'Item';
+
+  @override
+  String get costeoValorMensual => 'Monthly value';
+
+  @override
+  String get costeoAgregarConcepto => 'Add item';
+
+  @override
+  String get costeoUnidadesMes => 'Units you make per month';
+
+  @override
+  String costeoTotalMensual(String total, String unidad) {
+    return 'Monthly total: $total · per unit: $unidad';
+  }
+
+  @override
+  String get costeoMargenSeccion => 'Margin and price';
+
+  @override
+  String get costeoMargenGeneral => 'General margin (%)';
+
+  @override
+  String get costeoMargenEspecial => 'Sugar-free margin (%)';
+
+  @override
+  String get costeoIva => 'VAT';
+
+  @override
+  String get costeoIvaAplica => 'Charge VAT';
+
+  @override
+  String get costeoIvaTasa => 'VAT rate (%)';
+
+  @override
+  String get costeoGuardado => 'Settings saved';
+
+  @override
+  String get cotizarTitulo => 'Quote';
+
+  @override
+  String get cotizarSub => 'Create quotes for your customers';
+
+  @override
+  String get nuevaCotizacion => 'New quote';
+
+  @override
+  String get cotizarVacio =>
+      'Your quotes will appear here. Build the order and get it ready for WhatsApp and printing.';
+
+  @override
+  String get cotizarSinProductos => 'To quote you need products with a price.';
+
+  @override
+  String get cotizaSinCliente => 'No customer';
+
+  @override
+  String cotizaNumProductos(int n) {
+    return '$n products';
+  }
+
+  @override
+  String get cotizaEliminarTitulo => 'Delete quote';
+
+  @override
+  String get cotizaEliminarConfirm => 'Delete this quote?';
+
+  @override
+  String get cotizaCliente => 'Customer';
+
+  @override
+  String get cotizaFecha => 'Date';
+
+  @override
+  String get cotizaEstado => 'Status';
+
+  @override
+  String get cotizaProductosTitulo => 'Products';
+
+  @override
+  String get cotizaSinLineas => 'Add the first product to the order.';
+
+  @override
+  String get cotizaCantidad => 'Quantity';
+
+  @override
+  String get cotizaPrecioUnitario => 'Unit price';
+
+  @override
+  String get cotizaAgregarProducto => 'Add product';
+
+  @override
+  String get cotizaAdicionesTitulo => 'Add-ons and customizations';
+
+  @override
+  String get cotizaSinAdiciones =>
+      'Toppers, figures, special decoration… anything charged separately.';
+
+  @override
+  String get cotizaAdicion => 'Add-on';
+
+  @override
+  String get cotizaValor => 'Value';
+
+  @override
+  String get cotizaAgregarAdicion => 'Add add-on';
+
+  @override
+  String get cotizaCierre => 'Closing';
+
+  @override
+  String get cotizaDomicilio => 'Delivery';
+
+  @override
+  String get cotizaDescuento => 'Discount';
+
+  @override
+  String get cotizaCobrarIva => 'Charge VAT on this quote';
+
+  @override
+  String get cotizaNota => 'Note for the customer';
+
+  @override
+  String get cotizaSubtotal => 'Subtotal';
+
+  @override
+  String get cotizaTotal => 'Total';
+
+  @override
+  String get cotizaGuardada => 'Quote saved.';
+
+  @override
+  String get cotizaCopiado => 'Text copied.';
+
+  @override
+  String get cotizaCopiar => 'Copy text';
+
+  @override
+  String get cotizaWhatsapp => 'WhatsApp';
+
+  @override
+  String get cotizaImprimir => 'Print';
+
+  @override
+  String get cotizacionTitulo => 'Quote';
+
+  @override
+  String get cotizaPara => 'For:';
+
+  @override
+  String get cotizaProducto => 'Product';
+
+  @override
+  String get cotizaValorUnitario => 'Unit value';
+
+  @override
+  String get cotizaPieValidez => 'Quote valid for 8 days.';
+
+  @override
+  String get estCotBorrador => 'Draft';
+
+  @override
+  String get estCotEnviada => 'Sent';
+
+  @override
+  String get estCotAceptada => 'Accepted';
+
+  @override
+  String get estCotEntregada => 'Delivered';
+
+  @override
+  String get estCotRechazada => 'Rejected';
+
+  @override
+  String get comparadorTitulo => 'Product comparison';
+
+  @override
+  String get comparadorVacio => 'You have no products to compare yet.';
+
+  @override
+  String get simuladorTitulo => 'Price-rise simulator';
+
+  @override
+  String get simuladorAyuda =>
+      'See how your costs and prices change if supplies go up.';
+
+  @override
+  String get simuladorSinProductos => 'You have no products to simulate.';
+
+  @override
+  String get oportunidadTitulo => 'Money you leave on the table each month';
+
+  @override
+  String get oportunidadBien =>
+      'No product is sold below its suggested price. Nice!';
+
+  @override
+  String oportunidadDetalle(int n) {
+    return 'Adding up $n product(s) priced too low, based on your units/month.';
+  }
+
+  @override
+  String oportunidadSinEstimado(int n) {
+    return '$n product(s) priced too low. Add \"units per month\" to estimate the money.';
+  }
+
+  @override
+  String oportunidadResumen(String monto) {
+    return 'You\'re leaving ~$monto on the table monthly';
+  }
+
+  @override
+  String get prodUnidadesMes => 'Units you sell per month (optional)';
+
+  @override
+  String get prodUnidadesMesAyuda =>
+      'We use this to estimate how much money you leave on the table each month.';
 
   @override
   String get elegirInsumoTitulo => 'Choose supply';
@@ -1113,41 +1501,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get abrir => 'Open';
 
   @override
-  String get notaFaltaAsunto => 'Write at least the note subject';
-
-  @override
-  String get editarNotaTitulo => 'Edit note';
-
-  @override
   String get asunto => 'Subject';
 
   @override
   String get contenido => 'Content';
-
-  @override
-  String get notaContenidoHint => 'Write the note details...';
-
-  @override
-  String get guardarNota => 'Save note';
-
-  @override
-  String get eliminarNotaTitulo => 'Delete note';
-
-  @override
-  String eliminarNotaConfirmacion(String asunto) {
-    return 'Are you sure you want to delete «$asunto»?';
-  }
-
-  @override
-  String get notaTitulo => 'Note';
-
-  @override
-  String get notaNoExiste => 'This note no longer exists.';
-
-  @override
-  String notaPorAutor(String fecha, String autor) {
-    return '$fecha  ·  By $autor';
-  }
 
   @override
   String get sinContenido => '(No content)';
@@ -1175,9 +1532,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get notasNuevas => 'New notes';
-
-  @override
   String porAutor(String autor) {
     return 'By $autor';
   }
@@ -1188,9 +1542,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notifPedidosSub => 'Deliveries today, tomorrow or overdue';
-
-  @override
-  String get notifNotasSub => 'When someone creates a note';
 
   @override
   String get notifInsumosSub => 'Supplies below their minimum stock';
@@ -1405,14 +1756,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get seguridad => 'Security';
 
   @override
-  String get notas => 'Notes';
-
-  @override
   String get buscadorHint => 'Search your business...';
 
   @override
   String get buscadorInicio =>
-      'Search products, supplies, orders, recipes, notes and catalogs.';
+      'Search products, supplies, orders, recipes and catalogs.';
 
   @override
   String buscadorSinResultados(String q) {

@@ -147,7 +147,7 @@ abstract class AppLocalizations {
   /// No description provided for @notificacionesSubtitulo.
   ///
   /// In es, this message translates to:
-  /// **'Avisos de pedidos, notas e inventario'**
+  /// **'Avisos de pedidos e inventario'**
   String get notificacionesSubtitulo;
 
   /// No description provided for @ajustesSeguridad.
@@ -636,24 +636,6 @@ abstract class AppLocalizations {
   /// **'En {dias} días'**
   String enDias(int dias);
 
-  /// No description provided for @notasImportantes.
-  ///
-  /// In es, this message translates to:
-  /// **'Notas importantes'**
-  String get notasImportantes;
-
-  /// No description provided for @nuevaNota.
-  ///
-  /// In es, this message translates to:
-  /// **'Nueva nota'**
-  String get nuevaNota;
-
-  /// No description provided for @sinNotas.
-  ///
-  /// In es, this message translates to:
-  /// **'No tienes notas. Crea una con el +'**
-  String get sinNotas;
-
   /// No description provided for @eliminar.
   ///
   /// In es, this message translates to:
@@ -851,6 +833,744 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Guardar cambios'**
   String get guardarCambios;
+
+  /// No description provided for @categoriaLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Categoría'**
+  String get categoriaLabel;
+
+  /// No description provided for @cantidadQueCompras.
+  ///
+  /// In es, this message translates to:
+  /// **'Cantidad que compras'**
+  String get cantidadQueCompras;
+
+  /// No description provided for @unidadDeCompra.
+  ///
+  /// In es, this message translates to:
+  /// **'Unidad'**
+  String get unidadDeCompra;
+
+  /// No description provided for @precioPresentacionLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Precio de esa presentación'**
+  String get precioPresentacionLabel;
+
+  /// No description provided for @proveedorOpcional.
+  ///
+  /// In es, this message translates to:
+  /// **'Proveedor (opcional)'**
+  String get proveedorOpcional;
+
+  /// No description provided for @insumoEspecialLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Insumo especial (sin azúcar añadida)'**
+  String get insumoEspecialLabel;
+
+  /// No description provided for @insumoEspecialAyuda.
+  ///
+  /// In es, this message translates to:
+  /// **'Márcalo para sustitutos del azúcar y productos aptos para diabéticos.'**
+  String get insumoEspecialAyuda;
+
+  /// No description provided for @costoPorUnidadCalculado.
+  ///
+  /// In es, this message translates to:
+  /// **'Costo: {costo} por {unidad}'**
+  String costoPorUnidadCalculado(String costo, String unidad);
+
+  /// No description provided for @especialEtiqueta.
+  ///
+  /// In es, this message translates to:
+  /// **'sin azúcar'**
+  String get especialEtiqueta;
+
+  /// No description provided for @traerDelCatalogo.
+  ///
+  /// In es, this message translates to:
+  /// **'Traer del catálogo'**
+  String get traerDelCatalogo;
+
+  /// No description provided for @catalogoRefTitulo.
+  ///
+  /// In es, this message translates to:
+  /// **'Catálogo de referencia'**
+  String get catalogoRefTitulo;
+
+  /// No description provided for @catalogoRefAyuda.
+  ///
+  /// In es, this message translates to:
+  /// **'Son presentaciones habituales de compra. El precio entra en cero: tú pones lo que pagas. Escoge los que uses.'**
+  String get catalogoRefAyuda;
+
+  /// No description provided for @buscarEnCatalogo.
+  ///
+  /// In es, this message translates to:
+  /// **'Buscar en el catálogo'**
+  String get buscarEnCatalogo;
+
+  /// No description provided for @marcarTodoVisible.
+  ///
+  /// In es, this message translates to:
+  /// **'Marcar todo lo visible'**
+  String get marcarTodoVisible;
+
+  /// No description provided for @catalogoTodoAgregado.
+  ///
+  /// In es, this message translates to:
+  /// **'Ya agregaste todos los insumos del catálogo.'**
+  String get catalogoTodoAgregado;
+
+  /// No description provided for @insumosAgregadosN.
+  ///
+  /// In es, this message translates to:
+  /// **'{n} insumos agregados'**
+  String insumosAgregadosN(int n);
+
+  /// No description provided for @agregarSeleccionadosN.
+  ///
+  /// In es, this message translates to:
+  /// **'Agregar {n}'**
+  String agregarSeleccionadosN(int n);
+
+  /// No description provided for @prodBasico.
+  ///
+  /// In es, this message translates to:
+  /// **'Lo básico'**
+  String get prodBasico;
+
+  /// No description provided for @prodRendimiento.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Cuántas unidades salen?'**
+  String get prodRendimiento;
+
+  /// No description provided for @prodSinAzucar.
+  ///
+  /// In es, this message translates to:
+  /// **'Es de la línea sin azúcar añadida'**
+  String get prodSinAzucar;
+
+  /// No description provided for @prodIngredientesLote.
+  ///
+  /// In es, this message translates to:
+  /// **'Ingredientes (por lote)'**
+  String get prodIngredientesLote;
+
+  /// No description provided for @prodEmpaque.
+  ///
+  /// In es, this message translates to:
+  /// **'Empaque (por unidad)'**
+  String get prodEmpaque;
+
+  /// No description provided for @prodTiemposMerma.
+  ///
+  /// In es, this message translates to:
+  /// **'Tiempos y merma'**
+  String get prodTiemposMerma;
+
+  /// No description provided for @prodMinutosPrep.
+  ///
+  /// In es, this message translates to:
+  /// **'Minutos de trabajo'**
+  String get prodMinutosPrep;
+
+  /// No description provided for @prodMinutosHorno.
+  ///
+  /// In es, this message translates to:
+  /// **'Minutos de horno'**
+  String get prodMinutosHorno;
+
+  /// No description provided for @prodMerma.
+  ///
+  /// In es, this message translates to:
+  /// **'Merma (%)'**
+  String get prodMerma;
+
+  /// No description provided for @prodMermaAyuda.
+  ///
+  /// In es, this message translates to:
+  /// **'Lo que se daña o se prueba. Perder 10% encarece 11,1%.'**
+  String get prodMermaAyuda;
+
+  /// No description provided for @prodPrecioSeccion.
+  ///
+  /// In es, this message translates to:
+  /// **'Precio'**
+  String get prodPrecioSeccion;
+
+  /// No description provided for @prodMetodoMargen.
+  ///
+  /// In es, this message translates to:
+  /// **'Método de margen'**
+  String get prodMetodoMargen;
+
+  /// No description provided for @prodMetodoDefault.
+  ///
+  /// In es, this message translates to:
+  /// **'El de Ajustes'**
+  String get prodMetodoDefault;
+
+  /// No description provided for @prodMetodoVenta.
+  ///
+  /// In es, this message translates to:
+  /// **'Sobre el precio de venta'**
+  String get prodMetodoVenta;
+
+  /// No description provided for @prodMetodoMarkup.
+  ///
+  /// In es, this message translates to:
+  /// **'Sobre el costo (markup)'**
+  String get prodMetodoMarkup;
+
+  /// No description provided for @prodMargenReceta.
+  ///
+  /// In es, this message translates to:
+  /// **'Margen para este producto (%)'**
+  String get prodMargenReceta;
+
+  /// No description provided for @prodMargenHint.
+  ///
+  /// In es, this message translates to:
+  /// **'El de Ajustes'**
+  String get prodMargenHint;
+
+  /// No description provided for @prodPrecioCobras.
+  ///
+  /// In es, this message translates to:
+  /// **'Precio que cobras'**
+  String get prodPrecioCobras;
+
+  /// No description provided for @prodSugeridoCorto.
+  ///
+  /// In es, this message translates to:
+  /// **'Sugerido {precio}'**
+  String prodSugeridoCorto(String precio);
+
+  /// No description provided for @costeoMateriaPrima.
+  ///
+  /// In es, this message translates to:
+  /// **'Materia prima'**
+  String get costeoMateriaPrima;
+
+  /// No description provided for @costeoEmpaque.
+  ///
+  /// In es, this message translates to:
+  /// **'Empaque'**
+  String get costeoEmpaque;
+
+  /// No description provided for @costeoManoObra.
+  ///
+  /// In es, this message translates to:
+  /// **'Mano de obra'**
+  String get costeoManoObra;
+
+  /// No description provided for @costeoEnergia.
+  ///
+  /// In es, this message translates to:
+  /// **'Energía'**
+  String get costeoEnergia;
+
+  /// No description provided for @costeoGastosFijos.
+  ///
+  /// In es, this message translates to:
+  /// **'Gastos fijos'**
+  String get costeoGastosFijos;
+
+  /// No description provided for @costeoCostoUnidad.
+  ///
+  /// In es, this message translates to:
+  /// **'Costo por unidad'**
+  String get costeoCostoUnidad;
+
+  /// No description provided for @costeoPrecioSugerido.
+  ///
+  /// In es, this message translates to:
+  /// **'Precio sugerido'**
+  String get costeoPrecioSugerido;
+
+  /// No description provided for @costeoUsarSugerido.
+  ///
+  /// In es, this message translates to:
+  /// **'Usar este precio'**
+  String get costeoUsarSugerido;
+
+  /// No description provided for @costeoFijosIncompletos.
+  ///
+  /// In es, this message translates to:
+  /// **'Faltan tus gastos fijos y unidades/mes para el costo completo.'**
+  String get costeoFijosIncompletos;
+
+  /// No description provided for @costeoCompletar.
+  ///
+  /// In es, this message translates to:
+  /// **'Completar'**
+  String get costeoCompletar;
+
+  /// No description provided for @estadoPerdida.
+  ///
+  /// In es, this message translates to:
+  /// **'Pérdida'**
+  String get estadoPerdida;
+
+  /// No description provided for @estadoBajo.
+  ///
+  /// In es, this message translates to:
+  /// **'Por debajo'**
+  String get estadoBajo;
+
+  /// No description provided for @estadoBien.
+  ///
+  /// In es, this message translates to:
+  /// **'Bien'**
+  String get estadoBien;
+
+  /// No description provided for @ajustesCosteoTitulo.
+  ///
+  /// In es, this message translates to:
+  /// **'Ajustes de costeo'**
+  String get ajustesCosteoTitulo;
+
+  /// No description provided for @ajustesCosteoSub.
+  ///
+  /// In es, this message translates to:
+  /// **'Tarifa, gastos fijos y márgenes'**
+  String get ajustesCosteoSub;
+
+  /// No description provided for @costeoNegocioTiempo.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu tiempo y tu horno'**
+  String get costeoNegocioTiempo;
+
+  /// No description provided for @costeoTarifaHora.
+  ///
+  /// In es, this message translates to:
+  /// **'Cuánto vale tu hora de trabajo'**
+  String get costeoTarifaHora;
+
+  /// No description provided for @costeoEnergiaHoraLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Cuánto cuesta una hora de horno'**
+  String get costeoEnergiaHoraLabel;
+
+  /// No description provided for @costeoGastosMes.
+  ///
+  /// In es, this message translates to:
+  /// **'Gastos fijos del mes'**
+  String get costeoGastosMes;
+
+  /// No description provided for @costeoConcepto.
+  ///
+  /// In es, this message translates to:
+  /// **'Concepto'**
+  String get costeoConcepto;
+
+  /// No description provided for @costeoValorMensual.
+  ///
+  /// In es, this message translates to:
+  /// **'Valor mensual'**
+  String get costeoValorMensual;
+
+  /// No description provided for @costeoAgregarConcepto.
+  ///
+  /// In es, this message translates to:
+  /// **'Agregar concepto'**
+  String get costeoAgregarConcepto;
+
+  /// No description provided for @costeoUnidadesMes.
+  ///
+  /// In es, this message translates to:
+  /// **'Unidades que produces al mes'**
+  String get costeoUnidadesMes;
+
+  /// No description provided for @costeoTotalMensual.
+  ///
+  /// In es, this message translates to:
+  /// **'Total mensual: {total} · por unidad: {unidad}'**
+  String costeoTotalMensual(String total, String unidad);
+
+  /// No description provided for @costeoMargenSeccion.
+  ///
+  /// In es, this message translates to:
+  /// **'Margen y precio'**
+  String get costeoMargenSeccion;
+
+  /// No description provided for @costeoMargenGeneral.
+  ///
+  /// In es, this message translates to:
+  /// **'Margen general (%)'**
+  String get costeoMargenGeneral;
+
+  /// No description provided for @costeoMargenEspecial.
+  ///
+  /// In es, this message translates to:
+  /// **'Margen sin azúcar (%)'**
+  String get costeoMargenEspecial;
+
+  /// No description provided for @costeoIva.
+  ///
+  /// In es, this message translates to:
+  /// **'IVA'**
+  String get costeoIva;
+
+  /// No description provided for @costeoIvaAplica.
+  ///
+  /// In es, this message translates to:
+  /// **'Cobrar IVA'**
+  String get costeoIvaAplica;
+
+  /// No description provided for @costeoIvaTasa.
+  ///
+  /// In es, this message translates to:
+  /// **'Tasa de IVA (%)'**
+  String get costeoIvaTasa;
+
+  /// No description provided for @costeoGuardado.
+  ///
+  /// In es, this message translates to:
+  /// **'Ajustes guardados'**
+  String get costeoGuardado;
+
+  /// No description provided for @cotizarTitulo.
+  ///
+  /// In es, this message translates to:
+  /// **'Cotizar'**
+  String get cotizarTitulo;
+
+  /// No description provided for @cotizarSub.
+  ///
+  /// In es, this message translates to:
+  /// **'Arma cotizaciones para tus clientes'**
+  String get cotizarSub;
+
+  /// No description provided for @nuevaCotizacion.
+  ///
+  /// In es, this message translates to:
+  /// **'Nueva cotización'**
+  String get nuevaCotizacion;
+
+  /// No description provided for @cotizarVacio.
+  ///
+  /// In es, this message translates to:
+  /// **'Aquí quedarán tus cotizaciones. Arma el pedido y sale listo para WhatsApp e impresión.'**
+  String get cotizarVacio;
+
+  /// No description provided for @cotizarSinProductos.
+  ///
+  /// In es, this message translates to:
+  /// **'Para cotizar necesitas productos con precio.'**
+  String get cotizarSinProductos;
+
+  /// No description provided for @cotizaSinCliente.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin cliente'**
+  String get cotizaSinCliente;
+
+  /// No description provided for @cotizaNumProductos.
+  ///
+  /// In es, this message translates to:
+  /// **'{n} productos'**
+  String cotizaNumProductos(int n);
+
+  /// No description provided for @cotizaEliminarTitulo.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar cotización'**
+  String get cotizaEliminarTitulo;
+
+  /// No description provided for @cotizaEliminarConfirm.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Eliminar esta cotización?'**
+  String get cotizaEliminarConfirm;
+
+  /// No description provided for @cotizaCliente.
+  ///
+  /// In es, this message translates to:
+  /// **'Cliente'**
+  String get cotizaCliente;
+
+  /// No description provided for @cotizaFecha.
+  ///
+  /// In es, this message translates to:
+  /// **'Fecha'**
+  String get cotizaFecha;
+
+  /// No description provided for @cotizaEstado.
+  ///
+  /// In es, this message translates to:
+  /// **'Estado'**
+  String get cotizaEstado;
+
+  /// No description provided for @cotizaProductosTitulo.
+  ///
+  /// In es, this message translates to:
+  /// **'Productos'**
+  String get cotizaProductosTitulo;
+
+  /// No description provided for @cotizaSinLineas.
+  ///
+  /// In es, this message translates to:
+  /// **'Agrega el primer producto al pedido.'**
+  String get cotizaSinLineas;
+
+  /// No description provided for @cotizaCantidad.
+  ///
+  /// In es, this message translates to:
+  /// **'Cantidad'**
+  String get cotizaCantidad;
+
+  /// No description provided for @cotizaPrecioUnitario.
+  ///
+  /// In es, this message translates to:
+  /// **'Precio unitario'**
+  String get cotizaPrecioUnitario;
+
+  /// No description provided for @cotizaAgregarProducto.
+  ///
+  /// In es, this message translates to:
+  /// **'Agregar producto'**
+  String get cotizaAgregarProducto;
+
+  /// No description provided for @cotizaAdicionesTitulo.
+  ///
+  /// In es, this message translates to:
+  /// **'Adiciones y personalizaciones'**
+  String get cotizaAdicionesTitulo;
+
+  /// No description provided for @cotizaSinAdiciones.
+  ///
+  /// In es, this message translates to:
+  /// **'Letreros, figuras, decoración… lo que cobras aparte.'**
+  String get cotizaSinAdiciones;
+
+  /// No description provided for @cotizaAdicion.
+  ///
+  /// In es, this message translates to:
+  /// **'Adición'**
+  String get cotizaAdicion;
+
+  /// No description provided for @cotizaValor.
+  ///
+  /// In es, this message translates to:
+  /// **'Valor'**
+  String get cotizaValor;
+
+  /// No description provided for @cotizaAgregarAdicion.
+  ///
+  /// In es, this message translates to:
+  /// **'Agregar adición'**
+  String get cotizaAgregarAdicion;
+
+  /// No description provided for @cotizaCierre.
+  ///
+  /// In es, this message translates to:
+  /// **'Cierre'**
+  String get cotizaCierre;
+
+  /// No description provided for @cotizaDomicilio.
+  ///
+  /// In es, this message translates to:
+  /// **'Domicilio'**
+  String get cotizaDomicilio;
+
+  /// No description provided for @cotizaDescuento.
+  ///
+  /// In es, this message translates to:
+  /// **'Descuento'**
+  String get cotizaDescuento;
+
+  /// No description provided for @cotizaCobrarIva.
+  ///
+  /// In es, this message translates to:
+  /// **'Cobrar IVA en esta cotización'**
+  String get cotizaCobrarIva;
+
+  /// No description provided for @cotizaNota.
+  ///
+  /// In es, this message translates to:
+  /// **'Nota para el cliente'**
+  String get cotizaNota;
+
+  /// No description provided for @cotizaSubtotal.
+  ///
+  /// In es, this message translates to:
+  /// **'Subtotal'**
+  String get cotizaSubtotal;
+
+  /// No description provided for @cotizaTotal.
+  ///
+  /// In es, this message translates to:
+  /// **'Total'**
+  String get cotizaTotal;
+
+  /// No description provided for @cotizaGuardada.
+  ///
+  /// In es, this message translates to:
+  /// **'Cotización guardada.'**
+  String get cotizaGuardada;
+
+  /// No description provided for @cotizaCopiado.
+  ///
+  /// In es, this message translates to:
+  /// **'Texto copiado.'**
+  String get cotizaCopiado;
+
+  /// No description provided for @cotizaCopiar.
+  ///
+  /// In es, this message translates to:
+  /// **'Copiar texto'**
+  String get cotizaCopiar;
+
+  /// No description provided for @cotizaWhatsapp.
+  ///
+  /// In es, this message translates to:
+  /// **'WhatsApp'**
+  String get cotizaWhatsapp;
+
+  /// No description provided for @cotizaImprimir.
+  ///
+  /// In es, this message translates to:
+  /// **'Imprimir'**
+  String get cotizaImprimir;
+
+  /// No description provided for @cotizacionTitulo.
+  ///
+  /// In es, this message translates to:
+  /// **'Cotización'**
+  String get cotizacionTitulo;
+
+  /// No description provided for @cotizaPara.
+  ///
+  /// In es, this message translates to:
+  /// **'Para:'**
+  String get cotizaPara;
+
+  /// No description provided for @cotizaProducto.
+  ///
+  /// In es, this message translates to:
+  /// **'Producto'**
+  String get cotizaProducto;
+
+  /// No description provided for @cotizaValorUnitario.
+  ///
+  /// In es, this message translates to:
+  /// **'Valor unitario'**
+  String get cotizaValorUnitario;
+
+  /// No description provided for @cotizaPieValidez.
+  ///
+  /// In es, this message translates to:
+  /// **'Cotización válida por 8 días.'**
+  String get cotizaPieValidez;
+
+  /// No description provided for @estCotBorrador.
+  ///
+  /// In es, this message translates to:
+  /// **'Borrador'**
+  String get estCotBorrador;
+
+  /// No description provided for @estCotEnviada.
+  ///
+  /// In es, this message translates to:
+  /// **'Enviada'**
+  String get estCotEnviada;
+
+  /// No description provided for @estCotAceptada.
+  ///
+  /// In es, this message translates to:
+  /// **'Aceptada'**
+  String get estCotAceptada;
+
+  /// No description provided for @estCotEntregada.
+  ///
+  /// In es, this message translates to:
+  /// **'Entregada'**
+  String get estCotEntregada;
+
+  /// No description provided for @estCotRechazada.
+  ///
+  /// In es, this message translates to:
+  /// **'Rechazada'**
+  String get estCotRechazada;
+
+  /// No description provided for @comparadorTitulo.
+  ///
+  /// In es, this message translates to:
+  /// **'Comparador de productos'**
+  String get comparadorTitulo;
+
+  /// No description provided for @comparadorVacio.
+  ///
+  /// In es, this message translates to:
+  /// **'Aún no tienes productos para comparar.'**
+  String get comparadorVacio;
+
+  /// No description provided for @simuladorTitulo.
+  ///
+  /// In es, this message translates to:
+  /// **'Simular alza'**
+  String get simuladorTitulo;
+
+  /// No description provided for @simuladorAyuda.
+  ///
+  /// In es, this message translates to:
+  /// **'Mira cómo cambian tus costos y precios si los insumos suben.'**
+  String get simuladorAyuda;
+
+  /// No description provided for @simuladorSinProductos.
+  ///
+  /// In es, this message translates to:
+  /// **'No tienes productos para simular.'**
+  String get simuladorSinProductos;
+
+  /// No description provided for @oportunidadTitulo.
+  ///
+  /// In es, this message translates to:
+  /// **'Dinero que dejas de ganar al mes'**
+  String get oportunidadTitulo;
+
+  /// No description provided for @oportunidadBien.
+  ///
+  /// In es, this message translates to:
+  /// **'Ningún producto se vende por debajo del precio sugerido. ¡Bien!'**
+  String get oportunidadBien;
+
+  /// No description provided for @oportunidadDetalle.
+  ///
+  /// In es, this message translates to:
+  /// **'Sumando {n} producto(s) por debajo del precio, según tus unidades/mes.'**
+  String oportunidadDetalle(int n);
+
+  /// No description provided for @oportunidadSinEstimado.
+  ///
+  /// In es, this message translates to:
+  /// **'{n} producto(s) por debajo del precio. Agrega \"unidades al mes\" para estimar el dinero.'**
+  String oportunidadSinEstimado(int n);
+
+  /// No description provided for @oportunidadResumen.
+  ///
+  /// In es, this message translates to:
+  /// **'Dejas de ganar ~{monto} al mes'**
+  String oportunidadResumen(String monto);
+
+  /// No description provided for @prodUnidadesMes.
+  ///
+  /// In es, this message translates to:
+  /// **'Unidades que vendes al mes (opcional)'**
+  String get prodUnidadesMes;
+
+  /// No description provided for @prodUnidadesMesAyuda.
+  ///
+  /// In es, this message translates to:
+  /// **'Con esto calculamos cuánta plata dejas sobre la mesa cada mes.'**
+  String get prodUnidadesMesAyuda;
 
   /// No description provided for @elegirInsumoTitulo.
   ///
@@ -2112,18 +2832,6 @@ abstract class AppLocalizations {
   /// **'Abrir'**
   String get abrir;
 
-  /// No description provided for @notaFaltaAsunto.
-  ///
-  /// In es, this message translates to:
-  /// **'Escribe al menos el asunto de la nota'**
-  String get notaFaltaAsunto;
-
-  /// No description provided for @editarNotaTitulo.
-  ///
-  /// In es, this message translates to:
-  /// **'Editar nota'**
-  String get editarNotaTitulo;
-
   /// No description provided for @asunto.
   ///
   /// In es, this message translates to:
@@ -2135,48 +2843,6 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Contenido'**
   String get contenido;
-
-  /// No description provided for @notaContenidoHint.
-  ///
-  /// In es, this message translates to:
-  /// **'Escribe el detalle de la nota...'**
-  String get notaContenidoHint;
-
-  /// No description provided for @guardarNota.
-  ///
-  /// In es, this message translates to:
-  /// **'Guardar nota'**
-  String get guardarNota;
-
-  /// No description provided for @eliminarNotaTitulo.
-  ///
-  /// In es, this message translates to:
-  /// **'Eliminar nota'**
-  String get eliminarNotaTitulo;
-
-  /// No description provided for @eliminarNotaConfirmacion.
-  ///
-  /// In es, this message translates to:
-  /// **'¿Seguro que quieres eliminar «{asunto}»?'**
-  String eliminarNotaConfirmacion(String asunto);
-
-  /// No description provided for @notaTitulo.
-  ///
-  /// In es, this message translates to:
-  /// **'Nota'**
-  String get notaTitulo;
-
-  /// No description provided for @notaNoExiste.
-  ///
-  /// In es, this message translates to:
-  /// **'Esta nota ya no existe.'**
-  String get notaNoExiste;
-
-  /// No description provided for @notaPorAutor.
-  ///
-  /// In es, this message translates to:
-  /// **'{fecha}  ·  Por {autor}'**
-  String notaPorAutor(String fecha, String autor);
 
   /// No description provided for @sinContenido.
   ///
@@ -2220,12 +2886,6 @@ abstract class AppLocalizations {
   /// **'Quedan {stock} {unidad} (mínimo {minimo})'**
   String insumoBajoDetalle(String stock, String unidad, String minimo);
 
-  /// No description provided for @notasNuevas.
-  ///
-  /// In es, this message translates to:
-  /// **'Notas nuevas'**
-  String get notasNuevas;
-
   /// No description provided for @porAutor.
   ///
   /// In es, this message translates to:
@@ -2243,12 +2903,6 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Entregas de hoy, mañana o atrasadas'**
   String get notifPedidosSub;
-
-  /// No description provided for @notifNotasSub.
-  ///
-  /// In es, this message translates to:
-  /// **'Cuando alguien crea una nota'**
-  String get notifNotasSub;
 
   /// No description provided for @notifInsumosSub.
   ///
@@ -2658,12 +3312,6 @@ abstract class AppLocalizations {
   /// **'Seguridad'**
   String get seguridad;
 
-  /// No description provided for @notas.
-  ///
-  /// In es, this message translates to:
-  /// **'Notas'**
-  String get notas;
-
   /// No description provided for @buscadorHint.
   ///
   /// In es, this message translates to:
@@ -2673,7 +3321,7 @@ abstract class AppLocalizations {
   /// No description provided for @buscadorInicio.
   ///
   /// In es, this message translates to:
-  /// **'Busca productos, insumos, pedidos, recetas, notas y catálogos.'**
+  /// **'Busca productos, insumos, pedidos, recetas y catálogos.'**
   String get buscadorInicio;
 
   /// No description provided for @buscadorSinResultados.
