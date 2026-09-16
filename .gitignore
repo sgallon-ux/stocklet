@@ -58,3 +58,5 @@ node_modules/
 android/key.properties
 *.jks
 *.keystore
+# Caché local de Firebase Hosting — se regenera en cada deploy
+.firebase/
