@@ -59,9 +59,10 @@ class _PantallaEditarInsumoState extends State<PantallaEditarInsumo> {
     final nombre = nombreCtrl.text.trim();
     final cantidad = parseCantidad(cantidadCtrl.text);
     final precio = parseCantidad(precioCtrl.text);
-    final stock = double.tryParse(stockCtrl.text.replaceAll(',', '.')) ?? -1;
+    // El stock puede ser negativo (por descuentos) y debe poder corregirse.
+    final stock = parseCantidad(stockCtrl.text);
 
-    if (nombre.isEmpty || cantidad <= 0 || precio < 0 || stock < 0) {
+    if (nombre.isEmpty || cantidad <= 0 || precio < 0) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(t.revisaCamposNegativos)),
       );
@@ -187,9 +188,9 @@ class _PantallaEditarInsumoState extends State<PantallaEditarInsumo> {
                   const SizedBox(height: 16),
                   TextField(
                     controller: stockCtrl,
-                    keyboardType:
-                        const TextInputType.numberWithOptions(decimal: true),
-                    inputFormatters: [Decimal2Formatter()],
+                    keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true, signed: true),
+                    inputFormatters: [DecimalSignedFormatter()],
                     decoration: InputDecoration(
                       labelText: '${t.stockActualLabel} (${rotBase(base)})',
                       prefixIcon: const Icon(Icons.inventory_2_outlined),

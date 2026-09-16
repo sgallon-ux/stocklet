@@ -72,3 +72,16 @@ class Decimal2Formatter extends TextInputFormatter {
     return oldValue;
   }
 }
+
+/// Como Decimal2Formatter pero admite un signo negativo inicial. Útil para
+/// campos como el stock, que puede quedar negativo y hay que poder corregirlo.
+class DecimalSignedFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    final t = newValue.text;
+    if (t.isEmpty || t == '-') return newValue;
+    if (RegExp(r'^-?\d*([.,]\d{0,2})?$').hasMatch(t)) return newValue;
+    return oldValue;
+  }
+}
