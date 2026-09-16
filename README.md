@@ -32,6 +32,29 @@ firebase deploy --only functions     # Cloud Functions
 firebase deploy --only hosting       # web/ (tras flutter build web)
 ```
 
+## Reglas de seguridad
+
+Las reglas viven en el repositorio y son la única barrera real entre un negocio
+y los datos de otro (la UI solo oculta botones):
+
+- `firestore.rules` — aislamiento por negocio y permisos por rol (`dueno`,
+  `socio`, `empleado`).
+- `storage.rules` — fotos de perfil, logo del negocio y catálogos en PDF.
+
+Tienen una suite que las ejerce contra el emulador. Requiere Java y una vez
+`npm install` dentro de `test/rules`:
+
+```
+cd test/rules
+npm test
+```
+
+Para desplegarlas (sobrescribe lo que haya en la consola de Firebase):
+
+```
+firebase deploy --only firestore:rules,storage:rules
+```
+
 ## Documentación
 
 El estado del proyecto, el plan de monetización y el checklist para publicar están en

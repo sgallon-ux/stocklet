@@ -1,0 +1,298 @@
+rules_version = '2';
+
+// Reglas de seguridad de Firestore para Stocklet.
+//
+// Principio rector (constitución, Principio II): la UI oculta botones, pero
+// quien decide de verdad es este archivo. Todo dato de negocio vive bajo
+// negocios/{negocioId} y solo lo toca quien pertenece a ese negocio, con el
+// permiso que le da su rol.
+//
+// Modelo de datos:
+//   usuarios/{uid}          -> { negocioId, rol, nombre, celular, fotoUrl, ... }
+//   negocios/{negocioId}    -> { nombre, pais, moneda, idioma, duenoUid, ... }
+//   negocios/{negocioId}/{insumos|productos|ventas|gastos|pedidos|
+//                          cotizaciones|recetas|catalogos}/{docId}
+//   invitaciones/{codigo}   -> { negocioId, rol, estado, creadoPor, usadaPor }
+//
+// Roles: 'dueno' | 'socio' | 'empleado'.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ------------------------------------------------------------------
+    // Helpers
+    // ------------------------------------------------------------------
+
+    function autenticado() {
+      return request.auth != null;
+    }
+
+    function esElMismo(uid) {
+      return autenticado() && request.auth.uid == uid;
+    }
+
+    function rutaMiUsuario() {
+      return /databases/$(database)/documents/usuarios/$(request.auth.uid);
+    }
+
+    // Tengo ficha de usuario (y por tanto puedo pertenecer a un negocio).
+    function tengoFicha() {
+      return autenticado() && exists(rutaMiUsuario());
+    }
+
+    function miFicha() {
+      return get(rutaMiUsuario()).data;
+    }
+
+    function miNegocio() {
+      return miFicha().get('negocioId', '');
+    }
+
+    function miRol() {
+      return miFicha().get('rol', 'empleado');
+    }
+
+    // Un negocioId utilizable: existe y no es cadena vacía. Sin este guardia,
+    // un usuario sin negocioId ('' por defecto) sería "miembro" de cualquier
+    // documento cuyo negocioId también estuviera vacío, y las rutas que se
+    // construyen más abajo llevarían un segmento vacío (error de evaluación).
+    function negocioValido(negocioId) {
+      return negocioId is string && negocioId != '';
+    }
+
+    function esMiembro(negocioId) {
+      return tengoFicha() && negocioValido(negocioId) && miNegocio() == negocioId;
+    }
+
+    // Dueño por rol, o por ser quien creó el negocio (espejo de DatosApp.esDueno).
+    function esDueno(negocioId) {
+      return esMiembro(negocioId) && (
+        miRol() == 'dueno' ||
+        (exists(/databases/$(database)/documents/negocios/$(negocioId)) &&
+         get(/databases/$(database)/documents/negocios/$(negocioId)).data
+           .get('duenoUid', '') == request.auth.uid)
+      );
+    }
+
+    // Dueño o socio: gestiona catálogo, edita finanzas y puede eliminar.
+    function esDuenoOSocio(negocioId) {
+      return esMiembro(negocioId) && (miRol() in ['dueno', 'socio'] || esDueno(negocioId));
+    }
+
+    // Los campos indicados no cambian respecto a lo que ya había.
+    function noTocaCampos(campos) {
+      return !request.resource.data.diff(resource.data).affectedKeys().hasAny(campos);
+    }
+
+    // ------------------------------------------------------------------
+    // usuarios/{uid}
+    //
+    // Es la pieza sensible: aquí viven negocioId y rol, así que quien pueda
+    // escribirlos a voluntad puede meterse en cualquier negocio como dueño.
+    // Por eso solo se permiten dos caminos para fijarlos: crear un negocio
+    // propio, o canjear una invitación que ya quedó marcada a nombre de uno.
+    // ------------------------------------------------------------------
+
+    match /usuarios/{uid} {
+
+      // Mi propia ficha, siempre. La de otros, solo si compartimos negocio
+      // (necesario para la pantalla de miembros).
+      allow get: if esElMismo(uid) ||
+                    (tengoFicha() && resource.data.get('negocioId', '') == miNegocio());
+
+      // Listado: solo la consulta filtrada por mi negocio.
+      allow list: if tengoFicha() && resource.data.get('negocioId', '') == miNegocio();
+
+      // --- Escritura sobre mi propia ficha ---
+
+      // Datos personales y de sesión, sin tocar pertenencia ni rol.
+      function soloDatosPersonales() {
+        return resource != null && noTocaCampos(['negocioId', 'rol', 'invitacionCodigo']);
+      }
+
+      // Me convierto en dueño de un negocio que acabo de crear.
+      function meHagoDuenoDeMiNegocio() {
+        let negId = request.resource.data.get('negocioId', '');
+        return request.resource.data.get('rol', '') == 'dueno' &&
+               negId != '' &&
+               exists(/databases/$(database)/documents/negocios/$(negId)) &&
+               get(/databases/$(database)/documents/negocios/$(negId)).data
+                 .get('duenoUid', '') == request.auth.uid;
+      }
+
+      // Me uno a un negocio con un código que ya reclamé (estado 'usada' a mi
+      // nombre). La invitación manda: negocio y rol deben coincidir con ella.
+      // Ojo: la ruta se construye dentro del cortocircuito, nunca en un `let`.
+      // Con el código vacío la ruta lleva un segmento vacío y la regla revienta
+      // antes de poder descartarla.
+      function meUnoConInvitacion() {
+        let codigo = request.resource.data.get('invitacionCodigo', '');
+        return codigo != '' &&
+               exists(/databases/$(database)/documents/invitaciones/$(codigo)) &&
+               get(/databases/$(database)/documents/invitaciones/$(codigo)).data
+                 .get('usadaPor', '') == request.auth.uid &&
+               get(/databases/$(database)/documents/invitaciones/$(codigo)).data
+                 .get('negocioId', '') == request.resource.data.get('negocioId', '') &&
+               get(/databases/$(database)/documents/invitaciones/$(codigo)).data
+                 .get('rol', '') == request.resource.data.get('rol', '') &&
+               request.resource.data.get('rol', '') in ['socio', 'empleado'];
+      }
+
+      allow create: if esElMismo(uid) && (
+                       !('negocioId' in request.resource.data) ||
+                       meHagoDuenoDeMiNegocio() ||
+                       meUnoConInvitacion()
+                     );
+
+      allow update: if esElMismo(uid) && (
+                       soloDatosPersonales() ||
+                       meHagoDuenoDeMiNegocio() ||
+                       meUnoConInvitacion()
+                     );
+
+      // --- Escritura sobre la ficha de otro miembro ---
+      // El dueño cambia el rol de su gente, pero no puede fabricar más dueños
+      // ni mover a nadie de negocio.
+      allow update: if resource != null &&
+                       esDueno(resource.data.get('negocioId', '')) &&
+                       request.resource.data.get('negocioId', '') == resource.data.get('negocioId', '') &&
+                       request.resource.data.get('rol', '') in ['socio', 'empleado'];
+
+      // Salirme yo, o que el dueño saque a un miembro de su negocio.
+      allow delete: if esElMismo(uid) ||
+                       (resource != null && esDueno(resource.data.get('negocioId', '')));
+    }
+
+    // ------------------------------------------------------------------
+    // negocios/{negocioId}
+    // ------------------------------------------------------------------
+
+    match /negocios/{negocioId} {
+
+      allow get, list: if esMiembro(negocioId);
+
+      // Crear un negocio propio: el creador queda como dueño, sin excepción.
+      allow create: if autenticado() &&
+                       request.resource.data.get('duenoUid', '') == request.auth.uid;
+
+      // Ajustes del negocio (moneda, costeo, apariencia): dueño o socio.
+      // El dueño no se puede reasignar desde el cliente.
+      allow update: if resource != null && esDuenoOSocio(negocioId) &&
+                       request.resource.data.get('duenoUid', '') == resource.data.get('duenoUid', '');
+
+      // El borrado del negocio lo hace la Cloud Function eliminarCuenta con
+      // privilegios de admin; desde el cliente, nunca.
+      allow delete: if false;
+
+      // ----------------------------------------------------------------
+      // Subcolecciones del negocio
+      // ----------------------------------------------------------------
+
+      // Catálogo y documentos comerciales: solo dueño o socio los tocan.
+      match /productos/{docId} {
+        allow read: if esMiembro(negocioId);
+        allow write: if esDuenoOSocio(negocioId);
+      }
+
+      match /recetas/{docId} {
+        allow read: if esMiembro(negocioId);
+        allow write: if esDuenoOSocio(negocioId);
+      }
+
+      match /cotizaciones/{docId} {
+        allow read: if esMiembro(negocioId);
+        allow write: if esDuenoOSocio(negocioId);
+      }
+
+      match /catalogos/{docId} {
+        allow read: if esMiembro(negocioId);
+        allow write: if esDuenoOSocio(negocioId);
+      }
+
+      // Insumos: dueño y socio mandan. El empleado NO puede editar un insumo,
+      // pero sí tiene que poder descontar inventario al vender o despachar un
+      // pedido. La app guarda el documento entero en ese flujo, así que lo que
+      // se verifica es que el único campo que cambie de valor sea stockActual.
+      match /insumos/{docId} {
+        allow read: if esMiembro(negocioId);
+        allow create, delete: if esDuenoOSocio(negocioId);
+        allow update: if esDuenoOSocio(negocioId) ||
+                         (esMiembro(negocioId) &&
+                          request.resource.data.diff(resource.data)
+                            .affectedKeys().hasOnly(['stockActual']));
+      }
+
+      // Movimientos: cualquier miembro registra; corregir o borrar el
+      // historial queda para dueño y socio.
+      match /ventas/{docId} {
+        allow read, create: if esMiembro(negocioId);
+        allow update, delete: if esDuenoOSocio(negocioId);
+      }
+
+      match /gastos/{docId} {
+        allow read, create: if esMiembro(negocioId);
+        allow update, delete: if esDuenoOSocio(negocioId);
+      }
+
+      // Pedidos: un empleado los crea y los avanza de estado; eliminarlos, no.
+      match /pedidos/{docId} {
+        allow read, create, update: if esMiembro(negocioId);
+        allow delete: if esDuenoOSocio(negocioId);
+      }
+
+      // Cualquier subcolección futura queda cerrada hasta que se le escriba
+      // una regla propia y consciente.
+      match /{otraColeccion}/{docId} {
+        allow read, write: if false;
+      }
+    }
+
+    // ------------------------------------------------------------------
+    // invitaciones/{codigo}
+    //
+    // El código de 6 caracteres es la credencial. Quien lo tiene puede leerlo
+    // para canjearlo; nadie puede listar los códigos de un negocio ajeno.
+    // ------------------------------------------------------------------
+
+    match /invitaciones/{codigo} {
+
+      // Leer un código suelto: hace falta para canjearlo sin ser aún miembro.
+      allow get: if autenticado();
+
+      // Listar: solo el dueño, y solo los de su propio negocio.
+      allow list: if tengoFicha() &&
+                     resource.data.get('negocioId', '') == miNegocio() &&
+                     esDueno(miNegocio());
+
+      // Crear: el dueño invita a su negocio, nunca a otro, y nunca como dueño.
+      allow create: if esDueno(request.resource.data.get('negocioId', '')) &&
+                       request.resource.data.get('negocioId', '') == miNegocio() &&
+                       request.resource.data.get('rol', '') in ['socio', 'empleado'] &&
+                       request.resource.data.get('estado', '') == 'pendiente' &&
+                       request.resource.data.get('creadoPor', '') == request.auth.uid &&
+                       request.resource.data.get('usadaPor', '') == '';
+
+      // Canjear: pendiente -> usada, a mi nombre, sin alterar nada más.
+      // (O el dueño, que puede corregir su propia invitación.)
+      allow update: if resource != null && (
+                       (autenticado() &&
+                        resource.data.get('estado', '') == 'pendiente' &&
+                        request.resource.data.get('estado', '') == 'usada' &&
+                        request.resource.data.get('usadaPor', '') == request.auth.uid &&
+                        noTocaCampos(['negocioId', 'rol', 'creadoPor'])) ||
+                       esDueno(resource.data.get('negocioId', ''))
+                     );
+
+      allow delete: if resource != null && esDueno(resource.data.get('negocioId', ''));
+    }
+
+    // ------------------------------------------------------------------
+    // Todo lo demás: cerrado. Si aparece una colección nueva, que falle
+    // ruidosamente en desarrollo antes que quedar abierta en producción.
+    // ------------------------------------------------------------------
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

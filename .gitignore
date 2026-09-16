@@ -60,3 +60,7 @@ android/key.properties
 *.keystore
 # Caché local de Firebase Hosting — se regenera en cada deploy
 .firebase/
+
+# Emulador de Firebase y pruebas de reglas
+*-debug.log
+test/rules/node_modules/
