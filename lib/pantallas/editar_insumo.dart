@@ -59,10 +59,12 @@ class _PantallaEditarInsumoState extends State<PantallaEditarInsumo> {
     final nombre = nombreCtrl.text.trim();
     final cantidad = parseCantidad(cantidadCtrl.text);
     final precio = parseCantidad(precioCtrl.text);
-    // El stock puede ser negativo (por descuentos) y debe poder corregirse.
-    final stock = parseCantidad(stockCtrl.text);
+    // El stock puede ser negativo (por descuentos) y debe poder corregirse,
+    // pero vacío no es cero: si no se puede leer, es un error de captura y hay
+    // que avisar en vez de guardar un 0 en silencio.
+    final stock = double.tryParse(stockCtrl.text.trim().replaceAll(',', '.'));
 
-    if (nombre.isEmpty || cantidad <= 0 || precio < 0) {
+    if (nombre.isEmpty || cantidad <= 0 || precio < 0 || stock == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(t.revisaCamposNegativos)),
       );

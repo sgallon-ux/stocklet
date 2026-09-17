@@ -1,11 +1,11 @@
 // Cloud Functions para notificaciones push de Stocklet.
-// Envían push cuando: (1) un miembro crea una nota, (2) un insumo baja del
-// mínimo, (3) recordatorio diario de pedidos por entregar (hoy o atrasados).
+// Envían push cuando: (1) un insumo baja del mínimo, (2) recordatorio diario
+// de pedidos por entregar (hoy o atrasados).
 // Cada usuario recibe el texto en SU idioma (guardado en usuarios/{uid}.idioma).
 //
 // Requiere plan Blaze. Despliegue:  firebase deploy --only functions
 
-const {onDocumentCreated, onDocumentUpdated} =
+const {onDocumentUpdated} =
     require('firebase-functions/v2/firestore');
 const {onSchedule} = require('firebase-functions/v2/scheduler');
 const {onCall, HttpsError} = require('firebase-functions/v2/https');
@@ -19,32 +19,24 @@ const IDIOMA_DEFECTO = 'es';
 // Textos de las notificaciones por idioma. Los parámetros se pasan como función.
 const T = {
   es: {
-    notaTitulo: (asunto) => 'Nueva nota: ' + asunto,
-    notaPorAutor: (autor) => 'Por ' + autor,
     invTitulo: 'Inventario bajo',
     invBody: (nombre) => nombre + ' está por debajo del mínimo.',
     pedTitulo: 'Pedidos por entregar',
     pedBody: (n) => 'Tienes ' + n + ' pedido(s) para hoy o atrasados.',
   },
   en: {
-    notaTitulo: (asunto) => 'New note: ' + asunto,
-    notaPorAutor: (autor) => 'By ' + autor,
     invTitulo: 'Low inventory',
     invBody: (nombre) => nombre + ' is below the minimum.',
     pedTitulo: 'Orders to deliver',
     pedBody: (n) => 'You have ' + n + ' order(s) due today or overdue.',
   },
   pt: {
-    notaTitulo: (asunto) => 'Nova nota: ' + asunto,
-    notaPorAutor: (autor) => 'Por ' + autor,
     invTitulo: 'Estoque baixo',
     invBody: (nombre) => nombre + ' está abaixo do mínimo.',
     pedTitulo: 'Pedidos para entregar',
     pedBody: (n) => 'Você tem ' + n + ' pedido(s) para hoje ou atrasados.',
   },
   fr: {
-    notaTitulo: (asunto) => 'Nouvelle note : ' + asunto,
-    notaPorAutor: (autor) => 'Par ' + autor,
     invTitulo: 'Stock faible',
     invBody: (nombre) => nombre + ' est en dessous du minimum.',
     pedTitulo: 'Commandes à livrer',
@@ -86,20 +78,7 @@ async function enviarPorIdioma(grupos, construir) {
   }
 }
 
-// (1) Nota nueva -> avisar a los demás miembros.
-exports.notaNueva = onDocumentCreated(
-    'negocios/{negocioId}/notas/{notaId}', async (event) => {
-      const data = event.data && event.data.data();
-      if (!data) return;
-      const grupos = await tokensPorIdioma(
-          event.params.negocioId, data.autorUid);
-      await enviarPorIdioma(grupos, (t) => ({
-        title: t.notaTitulo(data.asunto || ''),
-        body: data.autorNombre ? t.notaPorAutor(data.autorNombre) : '',
-      }));
-    });
-
-// (2) Insumo que cruza por debajo de su stock mínimo.
+// (1) Insumo que cruza por debajo de su stock mínimo.
 exports.inventarioBajo = onDocumentUpdated(
     'negocios/{negocioId}/insumos/{insumoId}', async (event) => {
       const antes = event.data.before.data();
@@ -117,7 +96,7 @@ exports.inventarioBajo = onDocumentUpdated(
       }));
     });
 
-// (3) Recordatorio diario de pedidos por entregar (hoy o atrasados).
+// (2) Recordatorio diario de pedidos por entregar (hoy o atrasados).
 exports.recordatorioPedidos = onSchedule(
     {schedule: 'every day 08:00', timeZone: 'America/Bogota'}, async () => {
       const ahora = new Date();
@@ -150,7 +129,7 @@ exports.recordatorioPedidos = onSchedule(
       }
     });
 
-// (4) Eliminar cuenta (requisito de las tiendas). El cliente ya reautenticó
+// (3) Eliminar cuenta (requisito de las tiendas). El cliente ya reautenticó
 // antes de llamar. Si el usuario es DUEÑO, se borra TODO el negocio y se
 // desvincula a los demás miembros. Si es socio/empleado, solo se borra su
 // propia cuenta. Al final se elimina el usuario de Firebase Auth.
