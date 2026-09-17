@@ -118,15 +118,15 @@ distingue ambas líneas, nombra el insumo corto y deja continuar igual.
 
 ## Phase 6: Polish & Cross-Cutting Concerns
 
-> **T026, T027 y T028 quedan pendientes y son tuyas.** Requieren ejecutar la app
-> con cuentas reales, y nadie puede darlas por hechas desde la terminal. El
-> Principio V es explícito: "compila no cuenta como verificado, y las pruebas en
-> verde tampoco".
+> **Validado en la app el 2026-09-17.** T026, T027 y T028 se ejecutaron con
+> cuentas reales y pasaron. En particular T027 confirma la premisa D6 del plan:
+> convertir no necesita permisos nuevos, un empleado puede hacerlo porque ya
+> puede crear pedidos y editar cotizaciones. No hubo que tocar reglas.
 
 - [X] T025 Puerta del Principio V: `flutter analyze` limpio y `flutter test` entero en verde
-- [ ] T026 Recorrer [quickstart.md](quickstart.md) en la app con `flutter run`: camino principal, convertir más tarde, el resumen, y los tres "no debe pasar" (convertir dos veces, mover inventario al convertir, que cancelar deje algo escrito)
-- [ ] T027 Probar la conversión **con rol empleado**, como exige el Principio V por tocar datos de negocio. Si sale `PERMISSION_DENIED`, la premisa de D6 era falsa y hay que revisar reglas, UI y la suite de `test/rules` en el mismo cambio
-- [ ] T028 Verificar el cierre del ciclo: marcar entregado el pedido convertido y comprobar que descuenta solo los insumos de las líneas con receta y registra la venta
+- [X] T026 Recorrer [quickstart.md](quickstart.md) en la app con `flutter run`: camino principal, convertir más tarde, el resumen, y los tres "no debe pasar" (convertir dos veces, mover inventario al convertir, que cancelar deje algo escrito)
+- [X] T027 Probar la conversión **con rol empleado**, como exige el Principio V por tocar datos de negocio. Si sale `PERMISSION_DENIED`, la premisa de D6 era falsa y hay que revisar reglas, UI y la suite de `test/rules` en el mismo cambio
+- [X] T028 Verificar el cierre del ciclo: marcar entregado el pedido convertido y comprobar que descuenta solo los insumos de las líneas con receta y registra la venta
 
 ---
 
