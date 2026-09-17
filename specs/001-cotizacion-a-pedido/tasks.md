@@ -34,7 +34,7 @@ No aplica la separación backend/frontend.
 
 **Purpose**: partir de un estado conocido.
 
-- [ ] T001 Verificar que la base está en verde antes de tocar nada: `flutter analyze` sin hallazgos y `flutter test` con las 79 pruebas actuales pasando
+- [X] T001 Verificar que la base está en verde antes de tocar nada: `flutter analyze` sin hallazgos y `flutter test` con las 79 pruebas actuales pasando
 
 ---
 
@@ -45,14 +45,14 @@ puede funcionar.
 
 **⚠️ CRITICAL**: US1 y US2 dependen por completo de esta fase.
 
-- [ ] T002 Añadir el campo `pedidoId` a `lib/models/cotizacion.dart`: `String pedidoId` con valor por defecto `''`, serializado con la clave `pedidoId`, y al leer `(map['pedidoId'] as String?) ?? ''` para que los documentos existentes no necesiten migración — "la ausencia significa exactamente no convertida"
-- [ ] T003 Añadir el getter `bool get convertida => pedidoId.isNotEmpty;` a `lib/models/cotizacion.dart`, que es lo que consultan las pantallas
-- [ ] T004 Escribir las pruebas de `Pedido.desdeCotizacion` en `test/conversion_pedido_test.dart`, cubriendo: `precio == cotizacion.total` exacto; línea con producto → ítem con costo y receta; línea sin producto → ítem con costo 0 y receta vacía; producto borrado → se degrada sin fallar; el precio cotizado se conserva aunque el producto haya subido; `otroValor` cuadra el total y puede ser negativo cuando el descuento supera adiciones más domicilio (depende de T005 para compilar)
-- [ ] T005 Implementar el constructor `Pedido.desdeCotizacion` en `lib/models/pedido.dart` con la firma de [contracts/api-interna.md](contracts/api-interna.md): puro, sin Firestore ni `DatosApp`. Reglas de [data-model.md](data-model.md): `precioUnitario` es "el cotizado, nunca el actual del producto"; `costoUnitario` y `receta` salen del producto de hoy vía `costoProduccion()` y `consumoPorUnidad()`; sin producto o producto borrado → `costoUnitario = 0` y `receta` vacía; `precio = cotizacion.total`; `otroValor = cotizacion.total − Σ precioTotal de los ítems`; `entregado = false`, `archivado = false`
-- [ ] T006 Implementar `DatosApp.convertirCotizacionEnPedido` en `lib/datos_app.dart`: construye con `Pedido.desdeCotizacion`, registra con el `registrarPedido` existente, asigna `pedidoId` a la cotización y la guarda con `guardarCotizacion`. Devuelve `null` si la cotización ya estaba convertida. **No debe tocar inventario** (FR-011)
-- [ ] T007 [P] Añadir las cadenas base del diálogo a los cuatro ARB (`lib/l10n/app_es.arb`, `app_en.arb`, `app_pt.arb`, `app_fr.arb`): título, teléfono del cliente, fecha de entrega, botón confirmar, aviso de que el inventario se descuenta al marcar entregado, error de cotización sin líneas o con total cero, y confirmación de pedido creado
-- [ ] T008 Ejecutar `flutter gen-l10n` tras T007 y comprobar que el resultado compila
-- [ ] T009 Crear el diálogo base en `lib/pantallas/widgets/dialogo_convertir_pedido.dart`: pide teléfono y fecha de entrega, muestra cliente, total y número de ítems, y el aviso de que el descuento ocurre al entregar. Rechaza confirmar sin fecha de entrega (FR-004). Cancelar no escribe nada (FR-017)
+- [X] T002 Añadir el campo `pedidoId` a `lib/models/cotizacion.dart`: `String pedidoId` con valor por defecto `''`, serializado con la clave `pedidoId`, y al leer `(map['pedidoId'] as String?) ?? ''` para que los documentos existentes no necesiten migración — "la ausencia significa exactamente no convertida"
+- [X] T003 Añadir el getter `bool get convertida => pedidoId.isNotEmpty;` a `lib/models/cotizacion.dart`, que es lo que consultan las pantallas
+- [X] T004 Escribir las pruebas de `Pedido.desdeCotizacion` en `test/conversion_pedido_test.dart`, cubriendo: `precio == cotizacion.total` exacto; línea con producto → ítem con costo y receta; línea sin producto → ítem con costo 0 y receta vacía; producto borrado → se degrada sin fallar; el precio cotizado se conserva aunque el producto haya subido; `otroValor` cuadra el total y puede ser negativo cuando el descuento supera adiciones más domicilio (depende de T005 para compilar)
+- [X] T005 Implementar el constructor `Pedido.desdeCotizacion` en `lib/models/pedido.dart` con la firma de [contracts/api-interna.md](contracts/api-interna.md): puro, sin Firestore ni `DatosApp`. Reglas de [data-model.md](data-model.md): `precioUnitario` es "el cotizado, nunca el actual del producto"; `costoUnitario` y `receta` salen del producto de hoy vía `costoProduccion()` y `consumoPorUnidad()`; sin producto o producto borrado → `costoUnitario = 0` y `receta` vacía; `precio = cotizacion.total`; `otroValor = cotizacion.total − Σ precioTotal de los ítems`; `entregado = false`, `archivado = false`
+- [X] T006 Implementar `DatosApp.convertirCotizacionEnPedido` en `lib/datos_app.dart`: construye con `Pedido.desdeCotizacion`, registra con el `registrarPedido` existente, asigna `pedidoId` a la cotización y la guarda con `guardarCotizacion`. Devuelve `null` si la cotización ya estaba convertida. **No debe tocar inventario** (FR-011)
+- [X] T007 [P] Añadir las cadenas base del diálogo a los cuatro ARB (`lib/l10n/app_es.arb`, `app_en.arb`, `app_pt.arb`, `app_fr.arb`): título, teléfono del cliente, fecha de entrega, botón confirmar, aviso de que el inventario se descuenta al marcar entregado, error de cotización sin líneas o con total cero, y confirmación de pedido creado
+- [X] T008 Ejecutar `flutter gen-l10n` tras T007 y comprobar que el resultado compila
+- [X] T009 Crear el diálogo base en `lib/pantallas/widgets/dialogo_convertir_pedido.dart`: pide teléfono y fecha de entrega, muestra cliente, total y número de ítems, y el aviso de que el descuento ocurre al entregar. Rechaza confirmar sin fecha de entrega (FR-004). Cancelar no escribe nada (FR-017)
 
 **Checkpoint**: la conversión existe y está probada, pero aún no hay dónde dispararla.
 
@@ -68,10 +68,10 @@ aceptada → completar teléfono y fecha → confirmar → el pedido aparece con
 mismo cliente, los mismos productos y el mismo total, sin haber escrito nada de
 eso a mano, y el inventario no cambió.
 
-- [ ] T010 [US1] En `lib/pantallas/editar_cotizacion.dart`, detectar al guardar que el estado quedó en `aceptada` y que `!cotizacion.convertida`, y ofrecer el diálogo de conversión antes de salir de la pantalla
-- [ ] T011 [US1] Conectar la confirmación del diálogo con `DatosApp.convertirCotizacionEnPedido` y mostrar la confirmación de pedido creado
-- [ ] T012 [US1] Manejar el rechazo del ofrecimiento: la cotización queda `aceptada` y no se crea ningún pedido (escenario 3 de US1)
-- [ ] T013 [US1] Impedir la conversión cuando la cotización no tiene líneas o su total es cero, explicando por qué (caso límite del spec)
+- [X] T010 [US1] En `lib/pantallas/editar_cotizacion.dart`, detectar al guardar que el estado quedó en `aceptada` y que `!cotizacion.convertida`, y ofrecer el diálogo de conversión antes de salir de la pantalla
+- [X] T011 [US1] Conectar la confirmación del diálogo con `DatosApp.convertirCotizacionEnPedido` y mostrar la confirmación de pedido creado
+- [X] T012 [US1] Manejar el rechazo del ofrecimiento: la cotización queda `aceptada` y no se crea ningún pedido (escenario 3 de US1)
+- [X] T013 [US1] Impedir la conversión cuando la cotización no tiene líneas o su total es cero, explicando por qué (caso límite del spec)
 
 **Checkpoint**: MVP completo. La conversión ya elimina el trabajo duplicado.
 
@@ -86,9 +86,9 @@ volver a editarla.
 lista y convertirla desde ahí, con el mismo resultado que US1. Al volver a
 mirarla, ya no lo ofrece.
 
-- [ ] T014 [US2] En `lib/pantallas/cotizar.dart`, añadir la acción "crear pedido" por fila, visible solo cuando `estado == 'aceptada'` y `!convertida` (FR-002)
-- [ ] T015 [P] [US2] Añadir a los cuatro ARB la etiqueta de la acción y la marca de "ya tiene pedido", y ejecutar `flutter gen-l10n`
-- [ ] T016 [US2] Mostrar en la lista qué cotizaciones ya generaron pedido, sin ofrecer convertirlas otra vez (FR-015, FR-016)
+- [X] T014 [US2] En `lib/pantallas/cotizar.dart`, añadir la acción "crear pedido" por fila, visible solo cuando `estado == 'aceptada'` y `!convertida` (FR-002)
+- [X] T015 [P] [US2] Añadir a los cuatro ARB la etiqueta de la acción y la marca de "ya tiene pedido", y ejecutar `flutter gen-l10n`
+- [X] T016 [US2] Mostrar en la lista qué cotizaciones ya generaron pedido, sin ofrecer convertirlas otra vez (FR-015, FR-016)
 
 **Checkpoint**: US1 y US2 funcionan por separado; los dos caminos llegan al mismo pedido.
 
@@ -103,14 +103,14 @@ existencias no alcanzan.
 línea escrita a mano, con stock insuficiente para el primero → el resumen
 distingue ambas líneas, nombra el insumo corto y deja continuar igual.
 
-- [ ] T017 [US3] Escribir las pruebas de `consumoDeInsumos` y `faltantesDeInventario` en `test/conversion_pedido_test.dart`: la suma es `receta[i].cantidad × item.cantidad` agrupada por insumo; los ítems sin receta no aportan nada; `faltantesDeInventario` nombra solo los insumos cuyo stock no cubre el consumo; un insumo que ya no existe en el catálogo **no** se reporta, "tampoco se descuenta al entregar, así que avisar de él confundiría"
-- [ ] T018 [US3] Implementar `consumoDeInsumos(Pedido) → Map<String, double>` en `lib/models/pedido.dart`, puro
-- [ ] T019 [US3] Implementar `faltantesDeInventario(Pedido, List<Insumo>) → List<String>` en `lib/models/pedido.dart`, puro, devolviendo nombres
-- [ ] T020 [US3] Refactorizar `DatosApp.marcarPedidoEntregado` en `lib/datos_app.dart` para que use `consumoDeInsumos` en vez de su bucle propio. **Su comportamiento observable no debe cambiar**: sigue descontando lo mismo, registrando la venta y devolviendo los insumos en negativo. Es lo que evita que el aviso y el descuento real puedan discrepar (D2 de research.md)
-- [ ] T021 [P] [US3] Añadir a los cuatro ARB las cadenas del resumen: "estas líneas no descuentan inventario", el aviso de faltantes con los nombres, y la etiqueta del ajuste cuando es negativo; ejecutar `flutter gen-l10n`
-- [ ] T022 [US3] Ampliar `lib/pantallas/widgets/dialogo_convertir_pedido.dart` para listar qué líneas descontarán inventario y cuáles no (FR-012)
-- [ ] T023 [US3] Mostrar en el diálogo el aviso de faltantes usando `faltantesDeInventario`, **sin bloquear la creación** (FR-013)
-- [ ] T024 [US3] Mostrar el ajuste en el resumen cuando resulta negativo, es decir cuando el descuento supera a las adiciones más el domicilio (FR-010)
+- [X] T017 [US3] Escribir las pruebas de `consumoDeInsumos` y `faltantesDeInventario` en `test/conversion_pedido_test.dart`: la suma es `receta[i].cantidad × item.cantidad` agrupada por insumo; los ítems sin receta no aportan nada; `faltantesDeInventario` nombra solo los insumos cuyo stock no cubre el consumo; un insumo que ya no existe en el catálogo **no** se reporta, "tampoco se descuenta al entregar, así que avisar de él confundiría"
+- [X] T018 [US3] Implementar `consumoDeInsumos(Pedido) → Map<String, double>` en `lib/models/pedido.dart`, puro
+- [X] T019 [US3] Implementar `faltantesDeInventario(Pedido, List<Insumo>) → List<String>` en `lib/models/pedido.dart`, puro, devolviendo nombres
+- [X] T020 [US3] Refactorizar `DatosApp.marcarPedidoEntregado` en `lib/datos_app.dart` para que use `consumoDeInsumos` en vez de su bucle propio. **Su comportamiento observable no debe cambiar**: sigue descontando lo mismo, registrando la venta y devolviendo los insumos en negativo. Es lo que evita que el aviso y el descuento real puedan discrepar (D2 de research.md)
+- [X] T021 [P] [US3] Añadir a los cuatro ARB las cadenas del resumen: "estas líneas no descuentan inventario", el aviso de faltantes con los nombres, y la etiqueta del ajuste cuando es negativo; ejecutar `flutter gen-l10n`
+- [X] T022 [US3] Ampliar `lib/pantallas/widgets/dialogo_convertir_pedido.dart` para listar qué líneas descontarán inventario y cuáles no (FR-012)
+- [X] T023 [US3] Mostrar en el diálogo el aviso de faltantes usando `faltantesDeInventario`, **sin bloquear la creación** (FR-013)
+- [X] T024 [US3] Mostrar el ajuste en el resumen cuando resulta negativo, es decir cuando el descuento supera a las adiciones más el domicilio (FR-010)
 
 **Checkpoint**: las tres historias funcionan de forma independiente.
 
@@ -118,7 +118,12 @@ distingue ambas líneas, nombra el insumo corto y deja continuar igual.
 
 ## Phase 6: Polish & Cross-Cutting Concerns
 
-- [ ] T025 Puerta del Principio V: `flutter analyze` limpio y `flutter test` entero en verde
+> **T026, T027 y T028 quedan pendientes y son tuyas.** Requieren ejecutar la app
+> con cuentas reales, y nadie puede darlas por hechas desde la terminal. El
+> Principio V es explícito: "compila no cuenta como verificado, y las pruebas en
+> verde tampoco".
+
+- [X] T025 Puerta del Principio V: `flutter analyze` limpio y `flutter test` entero en verde
 - [ ] T026 Recorrer [quickstart.md](quickstart.md) en la app con `flutter run`: camino principal, convertir más tarde, el resumen, y los tres "no debe pasar" (convertir dos veces, mover inventario al convertir, que cancelar deje algo escrito)
 - [ ] T027 Probar la conversión **con rol empleado**, como exige el Principio V por tocar datos de negocio. Si sale `PERMISSION_DENIED`, la premisa de D6 era falsa y hay que revisar reglas, UI y la suite de `test/rules` en el mismo cambio
 - [ ] T028 Verificar el cierre del ciclo: marcar entregado el pedido convertido y comprobar que descuenta solo los insumos de las líneas con receta y registra la venta

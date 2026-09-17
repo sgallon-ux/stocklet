@@ -624,14 +624,9 @@ Future<void> _cargarNegocioId(String uid) async {
     pedido.entregado = true;
     _col('pedidos').doc(pedido.id).set(pedido.toMap());
 
-    // Acumular cuánto descontar por insumo (sumando todos los ítems).
-    final descuento = <String, double>{};
-    for (final item in pedido.items) {
-      for (final r in item.receta) {
-        descuento[r.insumoId] =
-            (descuento[r.insumoId] ?? 0) + r.cantidad * item.cantidad;
-      }
-    }
+    // Mismo cálculo que usa el aviso de inventario insuficiente al convertir
+    // una cotización: una sola fuente, para que aviso y descuento no discrepen.
+    final descuento = consumoDeInsumos(pedido);
 
     final negativos = <String>[];
     descuento.forEach((insumoId, cantidad) {
@@ -851,6 +846,32 @@ Future<void> _cargarNegocioId(String uid) async {
     }
     _col('cotizaciones').doc(c.id).set(c.toMap());
     notifyListeners();
+  }
+
+  /// Crea el pedido que corresponde a una cotización aceptada y las deja
+  /// enlazadas. Devuelve el pedido creado, o `null` si la cotización ya había
+  /// generado uno.
+  ///
+  /// **No toca el inventario**: el descuento ocurre al marcar el pedido como
+  /// entregado, igual que con cualquier pedido creado a mano.
+  Pedido? convertirCotizacionEnPedido(
+    Cotizacion cotizacion, {
+    required String telefono,
+    required DateTime fechaEntrega,
+    required String descripcionFallback,
+  }) {
+    if (cotizacion.convertida) return null;
+    final pedido = Pedido.desdeCotizacion(
+      cotizacion,
+      productos: productos,
+      telefono: telefono,
+      fechaEntrega: fechaEntrega,
+      descripcionFallback: descripcionFallback,
+    );
+    registrarPedido(pedido);
+    cotizacion.pedidoId = pedido.id;
+    guardarCotizacion(cotizacion);
+    return pedido;
   }
 
   void eliminarCotizacion(Cotizacion c) {

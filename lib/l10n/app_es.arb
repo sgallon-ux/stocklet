@@ -1,48 +1,39 @@
 {
   "@@locale": "es",
-
   "ajustesTitulo": "Ajustes",
-  "@ajustesTitulo": { "description": "Titulo del AppBar de la pantalla de ajustes" },
-
+  "@ajustesTitulo": {
+    "description": "Titulo del AppBar de la pantalla de ajustes"
+  },
   "miNegocio": "Mi negocio",
-  "@miNegocio": { "description": "Nombre por defecto cuando el negocio no tiene nombre" },
-
+  "@miNegocio": {
+    "description": "Nombre por defecto cuando el negocio no tiene nombre"
+  },
   "perfil": "Perfil",
   "perfilSubtitulo": "Tu información personal",
-
   "datosEmpresa": "Datos de la empresa",
   "datosEmpresaSubtitulo": "Nombre, NIT, contacto y ubicación",
-
   "notificaciones": "Notificaciones",
   "notificacionesSubtitulo": "Avisos de pedidos e inventario",
-
   "ajustesSeguridad": "Ajustes y seguridad",
   "ajustesSeguridadSubtitulo": "País, moneda, idioma y contraseña",
-
   "apariencia": "Apariencia",
   "aparienciaSubtitulo": "Tema y modo oscuro",
-
   "idioma": "Idioma",
   "idiomaSubtitulo": "Idioma de la aplicación",
   "idiomaAutomatico": "Automático (dispositivo)",
   "idiomaTituloDialogo": "Elige un idioma",
-
   "acercaDe": "Acerca de",
   "acercaDeSubtitulo": "Versión e información de la app",
   "acercaDeDescripcion": "App de contabilidad para tu negocio.",
-
   "cerrarSesion": "Cerrar sesión",
   "cerrarSesionConfirmacion": "¿Seguro que quieres cerrar sesión?",
-
   "cancelar": "Cancelar",
-
   "campoCorreo": "Correo",
   "campoContrasena": "Contraseña",
   "crearCuenta": "Crea tu cuenta",
   "iniciarSesion": "Iniciar sesión",
   "iniciaSesion": "Inicia sesión",
   "errorCorreoInvalido": "El correo no es válido",
-
   "loginBienvenido": "Bienvenido",
   "loginSubtitulo": "Inicia sesión para gestionar tu negocio",
   "loginRecordarCorreo": "Recordar mi correo",
@@ -51,7 +42,6 @@
   "loginErrorGeneral": "No se pudo iniciar sesión",
   "loginErrorNoExiste": "No existe una cuenta con ese correo",
   "loginErrorCredenciales": "Correo o contraseña incorrectos",
-
   "registroSubtitulo": "Regístrate para empezar con tu negocio",
   "registroMinimo": "Mínimo 6 caracteres",
   "registroBoton": "Crear cuenta",
@@ -60,7 +50,6 @@
   "registroErrorGeneral": "No se pudo crear la cuenta",
   "registroErrorEnUso": "Ese correo ya tiene cuenta",
   "registroErrorDebil": "La contraseña es muy débil",
-
   "crearHubTitulo": "Crear y gestionar",
   "inventario": "Inventario",
   "inventarioSub": "Insumos, costos y stock",
@@ -72,7 +61,6 @@
   "recetasSub": "Guías de preparación paso a paso",
   "catalogo": "Catálogo",
   "catalogoSub": "Tus catálogos en PDF",
-
   "onboardingBienvenido": "¡Bienvenido!",
   "onboardingSubtitulo": "Cuéntanos de tu microempresa para personalizar la app",
   "onboardingNombreNegocio": "Nombre del negocio",
@@ -83,19 +71,20 @@
   "campoMoneda": "Moneda",
   "errorGenerico": "Error: {detalle}",
   "@errorGenerico": {
-    "placeholders": { "detalle": { "type": "String" } }
+    "placeholders": {
+      "detalle": {
+        "type": "String"
+      }
+    }
   },
-
   "panelUsuario": "Panel de usuario",
   "buscar": "Buscar",
   "busquedaProximamente": "Búsqueda próximamente",
   "agregarVenta": "Agregar venta",
   "agregarGasto": "Agregar gasto",
-
   "navInicio": "Inicio",
   "navCrear": "Crear",
   "navReportes": "Reportes",
-
   "rangoEsteMes": "Este mes",
   "rango3Meses": "3 meses",
   "rango6Meses": "6 meses",
@@ -106,7 +95,6 @@
   "ganancia": "Ganancia",
   "tendenciaGanancia": "Tendencia de ganancia",
   "graficaSinDatos": "Aún no hay datos suficientes para mostrar.",
-
   "pedidosProximos": "Pedidos próximos",
   "verTodos": "Ver todos",
   "sinPedidosPendientes": "No tienes pedidos pendientes.",
@@ -115,9 +103,12 @@
   "manana": "Mañana",
   "enDias": "En {dias} días",
   "@enDias": {
-    "placeholders": { "dias": { "type": "int" } }
+    "placeholders": {
+      "dias": {
+        "type": "int"
+      }
+    }
   },
-
   "eliminar": "Eliminar",
   "editar": "Editar",
   "campoNombre": "Nombre",
@@ -129,7 +120,6 @@
   "stockMinimoHint": "Avisar cuando baje de...",
   "buscarHint": "Buscar...",
   "insumo": "Insumo",
-
   "buscarInsumoHint": "Buscar insumo...",
   "cerrarBusqueda": "Cerrar búsqueda",
   "inventarioVacio": "Aún no hay insumos.\nAgrega el primero con el botón +",
@@ -137,27 +127,42 @@
   "eliminarInsumoTitulo": "Eliminar insumo",
   "eliminarInsumoConfirmacion": "¿Seguro que quieres eliminar {nombre}?",
   "@eliminarInsumoConfirmacion": {
-    "placeholders": { "nombre": { "type": "String" } }
+    "placeholders": {
+      "nombre": {
+        "type": "String"
+      }
+    }
   },
   "insumoNoEliminarEnUso": "No puedes eliminar {nombre}: lo usa un producto",
   "@insumoNoEliminarEnUso": {
-    "placeholders": { "nombre": { "type": "String" } }
+    "placeholders": {
+      "nombre": {
+        "type": "String"
+      }
+    }
   },
   "costoPorUnidadTexto": "{costo} por {unidad}",
   "@costoPorUnidadTexto": {
     "placeholders": {
-      "costo": { "type": "String" },
-      "unidad": { "type": "String" }
+      "costo": {
+        "type": "String"
+      },
+      "unidad": {
+        "type": "String"
+      }
     }
   },
   "stockTexto": "Stock: {cantidad} {unidad}",
   "@stockTexto": {
     "placeholders": {
-      "cantidad": { "type": "String" },
-      "unidad": { "type": "String" }
+      "cantidad": {
+        "type": "String"
+      },
+      "unidad": {
+        "type": "String"
+      }
     }
   },
-
   "completaCamposValidos": "Completa todos los campos con valores válidos",
   "agregarInsumoTitulo": "Agregar insumo",
   "insumoNombreHint": "Ej: Harina",
@@ -166,13 +171,11 @@
   "precioTotalPagado": "Precio total pagado",
   "agregarInsumoAyuda": "Con la cantidad y el precio, la app calcula sola el costo por unidad.",
   "guardarInsumo": "Guardar insumo",
-
   "revisaCamposNegativos": "Revisa los campos: valores válidos, sin negativos",
   "editarInsumoTitulo": "Editar insumo",
   "costoPorUnidadLabel": "Costo por unidad",
   "stockActualLabel": "Stock actual",
   "guardarCambios": "Guardar cambios",
-
   "categoriaLabel": "Categoría",
   "cantidadQueCompras": "Cantidad que compras",
   "unidadDeCompra": "Unidad",
@@ -183,8 +186,12 @@
   "costoPorUnidadCalculado": "Costo: {costo} por {unidad}",
   "@costoPorUnidadCalculado": {
     "placeholders": {
-      "costo": { "type": "String" },
-      "unidad": { "type": "String" }
+      "costo": {
+        "type": "String"
+      },
+      "unidad": {
+        "type": "String"
+      }
     }
   },
   "especialEtiqueta": "sin azúcar",
@@ -196,13 +203,20 @@
   "catalogoTodoAgregado": "Ya agregaste todos los insumos del catálogo.",
   "insumosAgregadosN": "{n} insumos agregados",
   "@insumosAgregadosN": {
-    "placeholders": { "n": { "type": "int" } }
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
   },
   "agregarSeleccionadosN": "Agregar {n}",
   "@agregarSeleccionadosN": {
-    "placeholders": { "n": { "type": "int" } }
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
   },
-
   "prodBasico": "Lo básico",
   "prodRendimiento": "¿Cuántas unidades salen?",
   "prodSinAzucar": "Es de la línea sin azúcar añadida",
@@ -223,7 +237,11 @@
   "prodPrecioCobras": "Precio que cobras",
   "prodSugeridoCorto": "Sugerido {precio}",
   "@prodSugeridoCorto": {
-    "placeholders": { "precio": { "type": "String" } }
+    "placeholders": {
+      "precio": {
+        "type": "String"
+      }
+    }
   },
   "costeoMateriaPrima": "Materia prima",
   "costeoEmpaque": "Empaque",
@@ -251,8 +269,12 @@
   "costeoTotalMensual": "Total mensual: {total} · por lote: {unidad}",
   "@costeoTotalMensual": {
     "placeholders": {
-      "total": { "type": "String" },
-      "unidad": { "type": "String" }
+      "total": {
+        "type": "String"
+      },
+      "unidad": {
+        "type": "String"
+      }
     }
   },
   "costeoMargenSeccion": "Margen y precio",
@@ -262,7 +284,6 @@
   "costeoIvaAplica": "Cobrar IVA",
   "costeoIvaTasa": "Tasa de IVA (%)",
   "costeoGuardado": "Ajustes guardados",
-
   "cotizarTitulo": "Cotizar",
   "cotizarSub": "Arma cotizaciones para tus clientes",
   "nuevaCotizacion": "Nueva cotización",
@@ -271,7 +292,11 @@
   "cotizaSinCliente": "Sin cliente",
   "cotizaNumProductos": "{n} productos",
   "@cotizaNumProductos": {
-    "placeholders": { "n": { "type": "int" } }
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
   },
   "cotizaEliminarTitulo": "Eliminar cotización",
   "cotizaEliminarConfirm": "¿Eliminar esta cotización?",
@@ -310,7 +335,6 @@
   "estCotAceptada": "Aceptada",
   "estCotEntregada": "Entregada",
   "estCotRechazada": "Rechazada",
-
   "comparadorTitulo": "Comparador de productos",
   "comparadorVacio": "Aún no tienes productos para comparar.",
   "simuladorTitulo": "Simular alza",
@@ -320,22 +344,32 @@
   "oportunidadBien": "Ningún producto se vende por debajo del precio sugerido. ¡Bien!",
   "oportunidadDetalle": "Sumando {n} producto(s) por debajo del precio, según tus unidades/mes.",
   "@oportunidadDetalle": {
-    "placeholders": { "n": { "type": "int" } }
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
   },
   "oportunidadSinEstimado": "{n} producto(s) por debajo del precio. Agrega \"unidades al mes\" para estimar el dinero.",
   "@oportunidadSinEstimado": {
-    "placeholders": { "n": { "type": "int" } }
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
   },
   "oportunidadResumen": "Dejas de ganar ~{monto} al mes",
   "@oportunidadResumen": {
-    "placeholders": { "monto": { "type": "String" } }
+    "placeholders": {
+      "monto": {
+        "type": "String"
+      }
+    }
   },
   "prodUnidadesMes": "Unidades que vendes al mes (opcional)",
   "prodUnidadesMesAyuda": "Con esto calculamos cuánta plata dejas sobre la mesa cada mes.",
-
   "elegirInsumoTitulo": "Elegir insumo",
   "ningunInsumoCoincide": "Ningún insumo coincide.",
-
   "nuevo": "Nuevo",
   "costo": "Costo",
   "margen": "Margen",
@@ -344,18 +378,24 @@
   "tipoProducto": "Tipo de producto",
   "precioVenta": "Precio de venta",
   "recetaTitulo": "Receta",
-
   "eliminarProductoTitulo": "Eliminar producto",
   "eliminarProductoConfirmacion": "¿Eliminar «{nombre}»? Las ventas ya registradas no se modifican.",
   "@eliminarProductoConfirmacion": {
-    "placeholders": { "nombre": { "type": "String" } }
+    "placeholders": {
+      "nombre": {
+        "type": "String"
+      }
+    }
   },
   "productosVacio": "Aún no tienes productos.\nCrea uno con el botón +",
   "gananciaTexto": "Ganancia: {valor}",
   "@gananciaTexto": {
-    "placeholders": { "valor": { "type": "String" } }
+    "placeholders": {
+      "valor": {
+        "type": "String"
+      }
+    }
   },
-
   "eligeInsumoCantidad": "Elige un insumo y una cantidad válida",
   "insumoYaEnReceta": "Ese insumo ya está en la receta",
   "faltaNombrePrecioIngrediente": "Falta el nombre, el precio o al menos un ingrediente",
@@ -371,30 +411,42 @@
   "ingredienteSubtitulo": "{cantidad} {unidad}  ·  {costo}",
   "@ingredienteSubtitulo": {
     "placeholders": {
-      "cantidad": { "type": "String" },
-      "unidad": { "type": "String" },
-      "costo": { "type": "String" }
+      "cantidad": {
+        "type": "String"
+      },
+      "unidad": {
+        "type": "String"
+      },
+      "costo": {
+        "type": "String"
+      }
     }
   },
   "guardarProducto": "Guardar producto",
-
   "elegirProductoTitulo": "Elegir producto",
   "ningunProductoCoincide": "Ningún producto coincide.",
   "crearTipoHint": "Crear tipo de producto, ej: Bebidas",
   "sinTipos": "Aún no has creado tipos.",
-
   "recetasVacio": "Aún no tienes recetas.\nCrea una con el botón +",
   "recetaSubtitulo": "{ingredientes} ingredientes · {pasos} pasos",
   "@recetaSubtitulo": {
     "placeholders": {
-      "ingredientes": { "type": "int" },
-      "pasos": { "type": "int" }
+      "ingredientes": {
+        "type": "int"
+      },
+      "pasos": {
+        "type": "int"
+      }
     }
   },
   "eliminarRecetaTitulo": "Eliminar receta",
   "eliminarRecetaConfirmacion": "¿Seguro que quieres eliminar «{titulo}»?",
   "@eliminarRecetaConfirmacion": {
-    "placeholders": { "titulo": { "type": "String" } }
+    "placeholders": {
+      "titulo": {
+        "type": "String"
+      }
+    }
   },
   "recetaNoExiste": "Esta receta ya no existe.",
   "ingredientesLabel": "Ingredientes",
@@ -408,26 +460,37 @@
   "pasosHint": "Un paso por línea",
   "recetaEditorAyuda": "Escribe cada ingrediente y cada paso en su propia línea (Enter para separar).",
   "guardarReceta": "Guardar receta",
-
   "confirmarVenta": "Confirmar venta",
   "confirmarVentaProducto": "¿Registrar la venta de {nombre} por {precio}?",
   "@confirmarVentaProducto": {
     "placeholders": {
-      "nombre": { "type": "String" },
-      "precio": { "type": "String" }
+      "nombre": {
+        "type": "String"
+      },
+      "precio": {
+        "type": "String"
+      }
     }
   },
   "vender": "Vender",
   "ventaProductoRegistrada": "Venta de {nombre} registrada",
   "@ventaProductoRegistrada": {
-    "placeholders": { "nombre": { "type": "String" } }
+    "placeholders": {
+      "nombre": {
+        "type": "String"
+      }
+    }
   },
   "ventaDescripcionValor": "Escribe una descripción y un valor válido",
   "confirmarVentaManual": "¿Registrar la venta «{descripcion}» por {valor}?",
   "@confirmarVentaManual": {
     "placeholders": {
-      "descripcion": { "type": "String" },
-      "valor": { "type": "String" }
+      "descripcion": {
+        "type": "String"
+      },
+      "valor": {
+        "type": "String"
+      }
     }
   },
   "registrar": "Registrar",
@@ -442,16 +505,18 @@
   "venderProducto": "Vender un producto",
   "productosFiltro": "Productos: {tipo}",
   "@productosFiltro": {
-    "placeholders": { "tipo": { "type": "String" } }
+    "placeholders": {
+      "tipo": {
+        "type": "String"
+      }
+    }
   },
   "filtrarPorTipo": "Filtrar por tipo",
   "todos": "Todos",
   "sinProductosVenta": "No hay productos. Créalos desde el menú Crear.",
-
   "revisaCamposMayorCero": "Revisa los campos: valores válidos y mayores a cero",
   "editarVentaTitulo": "Editar venta",
   "precioUnitario": "Precio unitario",
-
   "eliminarVentaTitulo": "Eliminar venta",
   "eliminarVentaConfirmacion": "Esto corrige los ingresos, pero no devuelve los insumos al inventario. ¿Quieres continuar?",
   "historialVentasTitulo": "Historial de ventas",
@@ -459,16 +524,23 @@
   "mesLabel": "Mes:",
   "sinVentasEnMes": "No hubo ventas en {mes}.",
   "@sinVentasEnMes": {
-    "placeholders": { "mes": { "type": "String" } }
+    "placeholders": {
+      "mes": {
+        "type": "String"
+      }
+    }
   },
   "ventaSubtitulo": "{fecha}  ·  Cant: {cantidad}",
   "@ventaSubtitulo": {
     "placeholders": {
-      "fecha": { "type": "String" },
-      "cantidad": { "type": "String" }
+      "fecha": {
+        "type": "String"
+      },
+      "cantidad": {
+        "type": "String"
+      }
     }
   },
-
   "analisisVentasTitulo": "Análisis de ventas",
   "sinVentasAnalizar": "Aún no hay ventas para analizar.",
   "resumenGeneral": "Resumen general",
@@ -479,39 +551,52 @@
   "demandaFuerteFlojo": "Más fuerte: {fuerte} · Más flojo: {flojo}",
   "@demandaFuerteFlojo": {
     "placeholders": {
-      "fuerte": { "type": "String" },
-      "flojo": { "type": "String" }
+      "fuerte": {
+        "type": "String"
+      },
+      "flojo": {
+        "type": "String"
+      }
     }
   },
   "ventasPorDia": "Ventas por día de la semana",
   "mejorDia": "Tu mejor día es el {dia}",
   "@mejorDia": {
-    "placeholders": { "dia": { "type": "String" } }
+    "placeholders": {
+      "dia": {
+        "type": "String"
+      }
+    }
   },
   "sinDatosSuficientes": "Sin datos suficientes",
   "fechasPico": "Fechas pico",
   "fechasPicoAyuda": "Tus días con más ventas (ahí están tus fechas especiales)",
-
   "topProductosTitulo": "Top de productos",
   "sinVentasProductos": "Aún no hay ventas de productos registradas.",
   "sinVentasProductosMes": "No hubo ventas de productos en este mes.",
   "totalTexto": "Total: {valor}",
   "@totalTexto": {
-    "placeholders": { "valor": { "type": "String" } }
+    "placeholders": {
+      "valor": {
+        "type": "String"
+      }
+    }
   },
-
   "categoriaInsumos": "Insumos",
   "categoriaServicios": "Servicios",
   "categoriaEmpaques": "Empaques",
   "categoriaOtros": "Otros",
-
   "gastoDescripcionMonto": "Escribe una descripción y un monto válido",
   "confirmarGasto": "Confirmar gasto",
   "confirmarGastoTexto": "¿Registrar el gasto «{descripcion}» por {monto}?",
   "@confirmarGastoTexto": {
     "placeholders": {
-      "descripcion": { "type": "String" },
-      "monto": { "type": "String" }
+      "descripcion": {
+        "type": "String"
+      },
+      "monto": {
+        "type": "String"
+      }
     }
   },
   "guardar": "Guardar",
@@ -519,7 +604,11 @@
   "insumoYaEnLista": "Ese insumo ya está en la lista.",
   "cantidadCompradaUnidad": "Cantidad comprada ({unidad})",
   "@cantidadCompradaUnidad": {
-    "placeholders": { "unidad": { "type": "String" } }
+    "placeholders": {
+      "unidad": {
+        "type": "String"
+      }
+    }
   },
   "totalPagado": "Total pagado",
   "agregar": "Agregar",
@@ -529,8 +618,12 @@
   "confirmarCompraTexto": "¿Registrar la compra de {cantidad} insumo(s) por {total}? Se sumará el stock y se registrará el gasto.",
   "@confirmarCompraTexto": {
     "placeholders": {
-      "cantidad": { "type": "int" },
-      "total": { "type": "String" }
+      "cantidad": {
+        "type": "int"
+      },
+      "total": {
+        "type": "String"
+      }
     }
   },
   "registrarGastoTitulo": "Registrar gasto",
@@ -547,43 +640,65 @@
   "compraDescHint": "Ej: compra en la plaza",
   "totalGasto": "Total del gasto",
   "guardarCompraReponer": "Guardar compra y reponer stock",
-
   "eliminarGastoTitulo": "Eliminar gasto",
   "eliminarGastoConfirmacion": "¿Seguro que quieres eliminar «{descripcion}»?",
   "@eliminarGastoConfirmacion": {
-    "placeholders": { "descripcion": { "type": "String" } }
+    "placeholders": {
+      "descripcion": {
+        "type": "String"
+      }
+    }
   },
   "historialGastosTitulo": "Historial de gastos",
   "sinGastos": "Aún no hay gastos registrados.",
   "sinGastosEnMes": "No hubo gastos en {mes}.",
   "@sinGastosEnMes": {
-    "placeholders": { "mes": { "type": "String" } }
+    "placeholders": {
+      "mes": {
+        "type": "String"
+      }
+    }
   },
   "gastoSubtitulo": "{fecha}  ·  {categoria}",
   "@gastoSubtitulo": {
     "placeholders": {
-      "fecha": { "type": "String" },
-      "categoria": { "type": "String" }
+      "fecha": {
+        "type": "String"
+      },
+      "categoria": {
+        "type": "String"
+      }
     }
   },
   "editarGastoTitulo": "Editar gasto",
-
   "entregarPedido": "Entregar pedido",
   "entregarPedidoTexto": "Al marcar este pedido como entregado, su valor de {precio} se registrará como un ingreso y aparecerá en tu historial de ventas.",
   "@entregarPedidoTexto": {
-    "placeholders": { "precio": { "type": "String" } }
+    "placeholders": {
+      "precio": {
+        "type": "String"
+      }
+    }
   },
   "pedidoEntregadoOk": "Pedido entregado y registrado en ingresos",
   "pedidoEntregadoNegativo": "Entregado. Stock en negativo: {insumos}",
   "@pedidoEntregadoNegativo": {
-    "placeholders": { "insumos": { "type": "String" } }
+    "placeholders": {
+      "insumos": {
+        "type": "String"
+      }
+    }
   },
   "entregar": "Entregar",
   "eliminarPedidoTitulo": "Eliminar pedido",
   "eliminarPedidoEntregado": "Este pedido ya fue entregado. Su ingreso ya quedó registrado como una venta y NO se modificará al eliminarlo.",
   "eliminarPedidoConfirmacion": "¿Seguro que quieres eliminar el pedido de {cliente}?",
   "@eliminarPedidoConfirmacion": {
-    "placeholders": { "cliente": { "type": "String" } }
+    "placeholders": {
+      "cliente": {
+        "type": "String"
+      }
+    }
   },
   "pedidoArchivado": "Pedido archivado",
   "deshacer": "Deshacer",
@@ -595,14 +710,17 @@
   "ocultarArchivados": "Ocultar archivados",
   "verArchivadosBtn": "Ver archivados ({n})",
   "@verArchivadosBtn": {
-    "placeholders": { "n": { "type": "int" } }
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
   },
   "archivar": "Archivar",
   "desarchivar": "Desarchivar",
   "entregadoEstado": "Entregado",
   "archivadoEstado": "Archivado",
   "marcarEntregado": "Marcar como entregado",
-
   "sinProductosCreados": "Aún no tienes productos creados",
   "itemManual": "Ítem manual",
   "costoUnitarioOpcional": "Costo unitario (opcional)",
@@ -627,19 +745,26 @@
   "editarPedidoEntregado": "Este pedido ya fue entregado. Editarlo no cambia el ingreso ya registrado.",
   "sinItemsEditar": "Sin ítems. Agrega del catálogo o manuales.",
   "cambiar": "Cambiar",
-
   "analisisYReportes": "Análisis y reportes",
   "reportesVacio": "Aún no hay datos para analizar.\nRegistra ventas y gastos para ver tus reportes.",
   "gananciaDeMes": "Ganancia de {mes}",
   "@gananciaDeMes": {
-    "placeholders": { "mes": { "type": "String" } }
+    "placeholders": {
+      "mes": {
+        "type": "String"
+      }
+    }
   },
   "sinComparacion": "— sin comparación",
   "mesAnterior": "Mes anterior ({mes}): {valor}",
   "@mesAnterior": {
     "placeholders": {
-      "mes": { "type": "String" },
-      "valor": { "type": "String" }
+      "mes": {
+        "type": "String"
+      },
+      "valor": {
+        "type": "String"
+      }
     }
   },
   "gananciaPorMes": "Ganancia por mes",
@@ -650,27 +775,37 @@
   "ingresosGastos": "Ingresos: {ingresos}  ·  Gastos: {gastos}",
   "@ingresosGastos": {
     "placeholders": {
-      "ingresos": { "type": "String" },
-      "gastos": { "type": "String" }
+      "ingresos": {
+        "type": "String"
+      },
+      "gastos": {
+        "type": "String"
+      }
     }
   },
   "descargarPdf": "Descargar PDF",
-
   "topProductosMes": "Top productos del mes",
   "topSinVentasMes": "Aún no hay ventas de productos este mes.",
   "vendidosAbrev": "{cantidad} vend.",
   "@vendidosAbrev": {
-    "placeholders": { "cantidad": { "type": "String" } }
+    "placeholders": {
+      "cantidad": {
+        "type": "String"
+      }
+    }
   },
   "resumenAnalisisCorto": "Ticket promedio {ticket} · Mejor día: {dia}",
   "@resumenAnalisisCorto": {
     "placeholders": {
-      "ticket": { "type": "String" },
-      "dia": { "type": "String" }
+      "ticket": {
+        "type": "String"
+      },
+      "dia": {
+        "type": "String"
+      }
     }
   },
   "verMas": "Ver más",
-
   "nombreCatalogo": "Nombre del catálogo",
   "subir": "Subir",
   "errorLeerArchivo": "No se pudo leer el archivo.",
@@ -681,45 +816,60 @@
   "eliminarCatalogoTitulo": "Eliminar catálogo",
   "eliminarCatalogoConfirmacion": "¿Eliminar «{nombre}»? El archivo PDF se borrará.",
   "@eliminarCatalogoConfirmacion": {
-    "placeholders": { "nombre": { "type": "String" } }
+    "placeholders": {
+      "nombre": {
+        "type": "String"
+      }
+    }
   },
   "errorEliminar": "No se pudo eliminar.",
   "subiendo": "Subiendo...",
   "subirPdf": "Subir PDF",
   "catalogosVacio": "Aún no tienes catálogos.\nSube un PDF con el botón de abajo.",
   "abrir": "Abrir",
-
   "asunto": "Asunto",
   "contenido": "Contenido",
   "sinContenido": "(Sin contenido)",
-
   "entregaHoy": "Entrega hoy",
   "entregaManana": "Entrega mañana",
   "sinAvisos": "No tienes avisos por ahora. ¡Todo al día!",
   "avisoPedidoDetalle": "{urgencia}  ·  {precio}",
   "@avisoPedidoDetalle": {
     "placeholders": {
-      "urgencia": { "type": "String" },
-      "precio": { "type": "String" }
+      "urgencia": {
+        "type": "String"
+      },
+      "precio": {
+        "type": "String"
+      }
     }
   },
   "inventarioBajo": "Inventario bajo",
   "insumoBajoDetalle": "Quedan {stock} {unidad} (mínimo {minimo})",
   "@insumoBajoDetalle": {
     "placeholders": {
-      "stock": { "type": "String" },
-      "unidad": { "type": "String" },
-      "minimo": { "type": "String" }
+      "stock": {
+        "type": "String"
+      },
+      "unidad": {
+        "type": "String"
+      },
+      "minimo": {
+        "type": "String"
+      }
     }
   },
   "porAutor": "Por {autor}",
   "@porAutor": {
-    "placeholders": { "autor": { "type": "String" } }
+    "placeholders": {
+      "autor": {
+        "type": "String"
+      }
+    }
   },
   "notifConfigAyuda": "Elige qué avisos quieres recibir dentro de la app.",
   "notifPedidosSub": "Entregas de hoy, mañana o atrasadas",
   "notifInsumosSub": "Insumos por debajo de su stock mínimo",
-
   "modo": "Modo",
   "modoClaro": "Claro",
   "modoOscuro": "Oscuro",
@@ -732,7 +882,6 @@
   "acentoNaranja": "Naranja",
   "acentoRosa": "Rosa",
   "aparienciaNota": "El tema y el color de acento se aplican a toda la app.",
-
   "completaCampos": "Completa todos los campos.",
   "passwordMin6": "La nueva contraseña debe tener al menos 6 caracteres.",
   "passwordNoCoincide": "La nueva contraseña y su confirmación no coinciden.",
@@ -748,7 +897,6 @@
   "passwordNueva": "Nueva contraseña",
   "passwordConfirmar": "Confirmar nueva contraseña",
   "guardando": "Guardando...",
-
   "errorLeerImagen": "No se pudo leer la imagen.",
   "imagenSupera5": "La imagen supera el límite de 5 MB.",
   "fotoActualizada": "Foto actualizada",
@@ -786,18 +934,19 @@
   "telefono": "Teléfono",
   "ubicacion": "Ubicación",
   "guardarEmpresa": "Guardar empresa",
-
   "preferenciasNegocio": "Preferencias del negocio",
   "ajustesSeguridadCaption": "El idioma de la aplicación se puede cambiar aquí y se aplica a toda la app. País y moneda no se pueden cambiar por ahora.",
   "seguridad": "Seguridad",
-
   "buscadorHint": "Buscar en tu negocio...",
   "buscadorInicio": "Busca productos, insumos, pedidos, recetas y catálogos.",
   "buscadorSinResultados": "Sin resultados para «{q}»",
   "@buscadorSinResultados": {
-    "placeholders": { "q": { "type": "String" } }
+    "placeholders": {
+      "q": {
+        "type": "String"
+      }
+    }
   },
-
   "miembrosInvitaciones": "Miembros e invitaciones",
   "miembrosInvitacionesSub": "Invita a tu equipo y gestiona roles",
   "invitacionesTitulo": "Invitaciones",
@@ -821,7 +970,11 @@
   "quitarDelNegocio": "Quitar del negocio",
   "quitarMiembroConfirmacion": "¿Quitar a {nombre} del negocio?",
   "@quitarMiembroConfirmacion": {
-    "placeholders": { "nombre": { "type": "String" } }
+    "placeholders": {
+      "nombre": {
+        "type": "String"
+      }
+    }
   },
   "unirseCodigo": "Unirme con un código",
   "unirseCodigoTitulo": "Unirse a un negocio",
@@ -834,14 +987,12 @@
   "unirseError": "No se pudo unir. Intenta de nuevo.",
   "sinNombre": "(sin nombre)",
   "ver": "Ver",
-
   "olvidasteContrasena": "¿Olvidaste tu contraseña?",
   "recuperarContrasenaTitulo": "Recuperar contraseña",
   "recuperarContrasenaAyuda": "Te enviaremos un correo para restablecer tu contraseña.",
   "enviar": "Enviar",
   "correoVacio": "Escribe tu correo.",
   "correoRecuperacionEnviado": "Si existe una cuenta con ese correo, te enviamos un enlace para restablecerla.",
-
   "eliminarCuenta": "Eliminar cuenta",
   "eliminarCuentaAdvertencia": "Esto eliminará tu cuenta y tu acceso a este negocio. No se puede deshacer.",
   "eliminarCuentaAdvertenciaDueno": "Como dueño, esto eliminará todo el negocio y sus datos (productos, ventas, gastos, pedidos...) y desvinculará a los demás miembros. Esta acción no se puede deshacer.",
@@ -871,5 +1022,54 @@
   "pagosPronto": "Los pagos se activarán al publicar la app.",
   "yaEresPro": "¡Ya eres Pro! Gracias.",
   "errorCompra": "No se pudo completar la compra.",
-  "productosEligeFiltro": "Elige un tipo o busca un producto."
+  "productosEligeFiltro": "Elige un tipo o busca un producto.",
+  "convertirTitulo": "Crear pedido desde la cotización",
+  "convertirResumen": "{cliente} · {items} ítems · {total}",
+  "@convertirResumen": {
+    "placeholders": {
+      "cliente": {
+        "type": "String"
+      },
+      "items": {
+        "type": "int"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "convertirTelefono": "Teléfono del cliente",
+  "convertirFechaEntrega": "Fecha de entrega",
+  "convertirElegirFecha": "Elegir fecha",
+  "convertirConfirmar": "Crear pedido",
+  "convertirFaltaFecha": "Indica la fecha de entrega.",
+  "convertirAvisoDescuento": "El inventario se descuenta al marcar el pedido como entregado, no ahora.",
+  "convertirSinLineas": "Esta cotización no tiene nada que convertir.",
+  "convertirCreado": "Pedido creado",
+  "convertirAccion": "Crear pedido",
+  "cotizaYaTienePedido": "Ya tiene pedido",
+  "convertirSinInventario": "Estas líneas no descuentan inventario: {lineas}",
+  "@convertirSinInventario": {
+    "placeholders": {
+      "lineas": {
+        "type": "String"
+      }
+    }
+  },
+  "convertirFaltantes": "No alcanza el inventario para: {insumos}",
+  "@convertirFaltantes": {
+    "placeholders": {
+      "insumos": {
+        "type": "String"
+      }
+    }
+  },
+  "convertirAjuste": "Ajuste por adiciones, domicilio, descuento e IVA: {valor}",
+  "@convertirAjuste": {
+    "placeholders": {
+      "valor": {
+        "type": "String"
+      }
+    }
+  }
 }

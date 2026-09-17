@@ -9,6 +9,7 @@ import '../tema.dart';
 import '../formato.dart';
 import 'selector_producto.dart';
 import 'cotizacion_util.dart';
+import 'widgets/dialogo_convertir_pedido.dart';
 
 class _LineaEdit {
   final LineaCotizacion linea;
@@ -119,6 +120,9 @@ class _EditarCotizacionState extends State<EditarCotizacion> {
       aplicaIva: aplicaIva,
       tasaIva: parseCantidad(ivaCtrl.text),
       notas: notaCtrl.text.trim(),
+      // Se arrastra tal cual: sin esto, editar una cotización ya convertida
+      // borraría el enlace y dejaría crear un segundo pedido.
+      pedidoId: widget.cotizacion.pedidoId,
     );
   }
 
@@ -138,12 +142,47 @@ class _EditarCotizacionState extends State<EditarCotizacion> {
     }
   }
 
-  void _guardar() {
+  Future<void> _guardar() async {
     final t = AppLocalizations.of(context)!;
-    context.read<DatosApp>().guardarCotizacion(_construir());
+    final datos = context.read<DatosApp>();
+    final cotizacion = _construir();
+    datos.guardarCotizacion(cotizacion);
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(t.cotizaGuardada)));
-    Navigator.pop(context);
+
+    // Si acaba de quedar aceptada y aún no generó pedido, ofrecer crearlo
+    // aquí mismo: es el momento en que se duplicaba el trabajo.
+    if (cotizacion.estado == 'aceptada' && !cotizacion.convertida) {
+      await _ofrecerConvertir(cotizacion);
+    }
+    if (mounted) Navigator.pop(context);
+  }
+
+  Future<void> _ofrecerConvertir(Cotizacion cotizacion) async {
+    final t = AppLocalizations.of(context)!;
+    final datos = context.read<DatosApp>();
+
+    // Una cotización sin nada que cobrar no puede volverse un pedido.
+    if (cotizacion.lineas.isEmpty && cotizacion.total <= 0) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(t.convertirSinLineas)));
+      return;
+    }
+
+    final r = await mostrarDialogoConvertirPedido(context, cotizacion);
+    // Cancelar no escribe nada: la cotización queda aceptada y sin pedido.
+    if (r == null || !mounted) return;
+
+    final pedido = datos.convertirCotizacionEnPedido(
+      cotizacion,
+      telefono: r.telefono,
+      fechaEntrega: r.fechaEntrega,
+      descripcionFallback: t.pedidoFallback,
+    );
+    if (pedido != null && mounted) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(t.convertirCreado)));
+    }
   }
 
   Future<void> _copiar() async {

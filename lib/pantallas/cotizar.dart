@@ -7,6 +7,7 @@ import '../tema.dart';
 import '../formato.dart';
 import 'editar_cotizacion.dart';
 import 'cotizacion_util.dart';
+import 'widgets/dialogo_convertir_pedido.dart';
 
 class PantallaCotizar extends StatelessWidget {
   const PantallaCotizar({super.key});
@@ -92,16 +93,51 @@ class PantallaCotizar extends StatelessWidget {
           ],
         ),
         subtitle: Text(
-            '${t.cotizaNumProductos(c.lineas.length)}  ·  ${pesos(c.total)}',
+            '${t.cotizaNumProductos(c.lineas.length)}  ·  ${pesos(c.total)}'
+            '${c.convertida ? '  ·  ${t.cotizaYaTienePedido}' : ''}',
             style: TextStyle(color: m.textoSuave)),
-        trailing: datos.puedeEliminar
-            ? IconButton(
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Solo para las aceptadas que aún no generaron pedido: el resto no
+            // tiene nada que convertir, o ya lo hizo.
+            if (c.estado == 'aceptada' && !c.convertida)
+              IconButton(
+                icon: Icon(Icons.assignment_turned_in_outlined, color: m.verdeOscuro),
+                tooltip: t.convertirAccion,
+                onPressed: () => _convertir(context, datos, t, c),
+              ),
+            if (datos.puedeEliminar)
+              IconButton(
                 icon: Icon(Icons.delete_outline, color: m.rojo),
                 onPressed: () => _confirmarEliminar(context, datos, t, c),
-              )
-            : null,
+              ),
+          ],
+        ),
       ),
     );
+  }
+
+  /// Convertir desde la lista, para las cotizaciones que se aceptaron hace
+  /// días y aún no tienen pedido.
+  Future<void> _convertir(BuildContext context, DatosApp datos,
+      AppLocalizations t, Cotizacion c) async {
+    final messenger = ScaffoldMessenger.of(context);
+    if (c.lineas.isEmpty && c.total <= 0) {
+      messenger.showSnackBar(SnackBar(content: Text(t.convertirSinLineas)));
+      return;
+    }
+    final r = await mostrarDialogoConvertirPedido(context, c);
+    if (r == null) return;
+    final pedido = datos.convertirCotizacionEnPedido(
+      c,
+      telefono: r.telefono,
+      fechaEntrega: r.fechaEntrega,
+      descripcionFallback: t.pedidoFallback,
+    );
+    if (pedido != null) {
+      messenger.showSnackBar(SnackBar(content: Text(t.convertirCreado)));
+    }
   }
 
   void _confirmarEliminar(BuildContext context, DatosApp datos,

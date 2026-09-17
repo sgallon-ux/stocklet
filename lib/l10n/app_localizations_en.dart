@@ -1982,4 +1982,58 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get productosEligeFiltro => 'Choose a type or search for a product.';
+
+  @override
+  String get convertirTitulo => 'Create order from quote';
+
+  @override
+  String convertirResumen(String cliente, int items, String total) {
+    return '$cliente · $items items · $total';
+  }
+
+  @override
+  String get convertirTelefono => 'Customer phone';
+
+  @override
+  String get convertirFechaEntrega => 'Delivery date';
+
+  @override
+  String get convertirElegirFecha => 'Pick a date';
+
+  @override
+  String get convertirConfirmar => 'Create order';
+
+  @override
+  String get convertirFaltaFecha => 'Enter the delivery date.';
+
+  @override
+  String get convertirAvisoDescuento =>
+      'Inventory is deducted when you mark the order as delivered, not now.';
+
+  @override
+  String get convertirSinLineas => 'This quote has nothing to convert.';
+
+  @override
+  String get convertirCreado => 'Order created';
+
+  @override
+  String get convertirAccion => 'Create order';
+
+  @override
+  String get cotizaYaTienePedido => 'Already has an order';
+
+  @override
+  String convertirSinInventario(String lineas) {
+    return 'These lines do not deduct inventory: $lineas';
+  }
+
+  @override
+  String convertirFaltantes(String insumos) {
+    return 'Not enough inventory for: $insumos';
+  }
+
+  @override
+  String convertirAjuste(String valor) {
+    return 'Adjustment for extras, delivery, discount and tax: $valor';
+  }
 }

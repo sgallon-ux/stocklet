@@ -1993,4 +1993,59 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get productosEligeFiltro => 'Elige un tipo o busca un producto.';
+
+  @override
+  String get convertirTitulo => 'Crear pedido desde la cotización';
+
+  @override
+  String convertirResumen(String cliente, int items, String total) {
+    return '$cliente · $items ítems · $total';
+  }
+
+  @override
+  String get convertirTelefono => 'Teléfono del cliente';
+
+  @override
+  String get convertirFechaEntrega => 'Fecha de entrega';
+
+  @override
+  String get convertirElegirFecha => 'Elegir fecha';
+
+  @override
+  String get convertirConfirmar => 'Crear pedido';
+
+  @override
+  String get convertirFaltaFecha => 'Indica la fecha de entrega.';
+
+  @override
+  String get convertirAvisoDescuento =>
+      'El inventario se descuenta al marcar el pedido como entregado, no ahora.';
+
+  @override
+  String get convertirSinLineas =>
+      'Esta cotización no tiene nada que convertir.';
+
+  @override
+  String get convertirCreado => 'Pedido creado';
+
+  @override
+  String get convertirAccion => 'Crear pedido';
+
+  @override
+  String get cotizaYaTienePedido => 'Ya tiene pedido';
+
+  @override
+  String convertirSinInventario(String lineas) {
+    return 'Estas líneas no descuentan inventario: $lineas';
+  }
+
+  @override
+  String convertirFaltantes(String insumos) {
+    return 'No alcanza el inventario para: $insumos';
+  }
+
+  @override
+  String convertirAjuste(String valor) {
+    return 'Ajuste por adiciones, domicilio, descuento e IVA: $valor';
+  }
 }

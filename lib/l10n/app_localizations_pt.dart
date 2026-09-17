@@ -1984,4 +1984,59 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get productosEligeFiltro => 'Escolha um tipo ou busque um produto.';
+
+  @override
+  String get convertirTitulo => 'Criar pedido a partir do orçamento';
+
+  @override
+  String convertirResumen(String cliente, int items, String total) {
+    return '$cliente · $items itens · $total';
+  }
+
+  @override
+  String get convertirTelefono => 'Telefone do cliente';
+
+  @override
+  String get convertirFechaEntrega => 'Data de entrega';
+
+  @override
+  String get convertirElegirFecha => 'Escolher data';
+
+  @override
+  String get convertirConfirmar => 'Criar pedido';
+
+  @override
+  String get convertirFaltaFecha => 'Informe a data de entrega.';
+
+  @override
+  String get convertirAvisoDescuento =>
+      'O estoque é baixado ao marcar o pedido como entregue, não agora.';
+
+  @override
+  String get convertirSinLineas =>
+      'Este orçamento não tem nada para converter.';
+
+  @override
+  String get convertirCreado => 'Pedido criado';
+
+  @override
+  String get convertirAccion => 'Criar pedido';
+
+  @override
+  String get cotizaYaTienePedido => 'Já tem pedido';
+
+  @override
+  String convertirSinInventario(String lineas) {
+    return 'Estas linhas não baixam estoque: $lineas';
+  }
+
+  @override
+  String convertirFaltantes(String insumos) {
+    return 'Estoque insuficiente para: $insumos';
+  }
+
+  @override
+  String convertirAjuste(String valor) {
+    return 'Ajuste por adicionais, entrega, desconto e imposto: $valor';
+  }
 }

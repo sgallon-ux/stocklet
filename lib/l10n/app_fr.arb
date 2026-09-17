@@ -1,45 +1,33 @@
 {
   "@@locale": "fr",
-
   "ajustesTitulo": "Paramètres",
   "miNegocio": "Mon entreprise",
-
   "perfil": "Profil",
   "perfilSubtitulo": "Vos informations personnelles",
-
   "datosEmpresa": "Informations de l'entreprise",
   "datosEmpresaSubtitulo": "Nom, numéro fiscal, contact et adresse",
-
   "notificaciones": "Notifications",
   "notificacionesSubtitulo": "Alertes de commandes et d'inventaire",
-
   "ajustesSeguridad": "Paramètres et sécurité",
   "ajustesSeguridadSubtitulo": "Pays, devise, langue et mot de passe",
-
   "apariencia": "Apparence",
   "aparienciaSubtitulo": "Thème et mode sombre",
-
   "idioma": "Langue",
   "idiomaSubtitulo": "Langue de l'application",
   "idiomaAutomatico": "Automatique (appareil)",
   "idiomaTituloDialogo": "Choisissez une langue",
-
   "acercaDe": "À propos",
   "acercaDeSubtitulo": "Version et informations de l'application",
   "acercaDeDescripcion": "Application de comptabilité pour votre entreprise.",
-
   "cerrarSesion": "Se déconnecter",
   "cerrarSesionConfirmacion": "Voulez-vous vraiment vous déconnecter ?",
-
   "cancelar": "Annuler",
-
   "campoCorreo": "E-mail",
   "campoContrasena": "Mot de passe",
   "crearCuenta": "Créez votre compte",
   "iniciarSesion": "Se connecter",
   "iniciaSesion": "Se connecter",
   "errorCorreoInvalido": "L'e-mail n'est pas valide",
-
   "loginBienvenido": "Bienvenue",
   "loginSubtitulo": "Connectez-vous pour gérer votre entreprise",
   "loginRecordarCorreo": "Se souvenir de mon e-mail",
@@ -48,7 +36,6 @@
   "loginErrorGeneral": "Connexion impossible",
   "loginErrorNoExiste": "Aucun compte n'existe avec cet e-mail",
   "loginErrorCredenciales": "E-mail ou mot de passe incorrect",
-
   "registroSubtitulo": "Inscrivez-vous pour démarrer avec votre entreprise",
   "registroMinimo": "Au moins 6 caractères",
   "registroBoton": "Créer un compte",
@@ -57,7 +44,6 @@
   "registroErrorGeneral": "Impossible de créer le compte",
   "registroErrorEnUso": "Cet e-mail a déjà un compte",
   "registroErrorDebil": "Le mot de passe est trop faible",
-
   "crearHubTitulo": "Créer et gérer",
   "inventario": "Inventaire",
   "inventarioSub": "Fournitures, coûts et stock",
@@ -69,7 +55,6 @@
   "recetasSub": "Guides de préparation étape par étape",
   "catalogo": "Catalogue",
   "catalogoSub": "Vos catalogues PDF",
-
   "onboardingBienvenido": "Bienvenue !",
   "onboardingSubtitulo": "Parlez-nous de votre entreprise pour personnaliser l'application",
   "onboardingNombreNegocio": "Nom de l'entreprise",
@@ -79,17 +64,14 @@
   "campoPais": "Pays",
   "campoMoneda": "Devise",
   "errorGenerico": "Erreur : {detalle}",
-
   "panelUsuario": "Panneau utilisateur",
   "buscar": "Rechercher",
   "busquedaProximamente": "Recherche bientôt disponible",
   "agregarVenta": "Ajouter une vente",
   "agregarGasto": "Ajouter une dépense",
-
   "navInicio": "Accueil",
   "navCrear": "Créer",
   "navReportes": "Rapports",
-
   "rangoEsteMes": "Ce mois-ci",
   "rango3Meses": "3 mois",
   "rango6Meses": "6 mois",
@@ -100,7 +82,6 @@
   "ganancia": "Bénéfice",
   "tendenciaGanancia": "Tendance du bénéfice",
   "graficaSinDatos": "Pas encore assez de données à afficher.",
-
   "pedidosProximos": "Commandes à venir",
   "verTodos": "Voir tout",
   "sinPedidosPendientes": "Vous n'avez aucune commande en attente.",
@@ -108,8 +89,6 @@
   "hoy": "Aujourd'hui",
   "manana": "Demain",
   "enDias": "Dans {dias} jours",
-
-
   "eliminar": "Supprimer",
   "editar": "Modifier",
   "campoNombre": "Nom",
@@ -121,7 +100,6 @@
   "stockMinimoHint": "Alerter quand il passe sous...",
   "buscarHint": "Rechercher...",
   "insumo": "Fourniture",
-
   "buscarInsumoHint": "Rechercher une fourniture...",
   "cerrarBusqueda": "Fermer la recherche",
   "inventarioVacio": "Aucune fourniture pour l'instant.\nAjoutez la première avec le bouton +",
@@ -131,7 +109,6 @@
   "insumoNoEliminarEnUso": "Vous ne pouvez pas supprimer {nombre} : un produit l'utilise",
   "costoPorUnidadTexto": "{costo} par {unidad}",
   "stockTexto": "Stock : {cantidad} {unidad}",
-
   "completaCamposValidos": "Remplissez tous les champs avec des valeurs valides",
   "agregarInsumoTitulo": "Ajouter une fourniture",
   "insumoNombreHint": "Ex : Farine",
@@ -140,7 +117,6 @@
   "precioTotalPagado": "Prix total payé",
   "agregarInsumoAyuda": "Avec la quantité et le prix, l'application calcule seule le coût unitaire.",
   "guardarInsumo": "Enregistrer la fourniture",
-
   "revisaCamposNegativos": "Vérifiez les champs : valeurs valides, sans négatifs",
   "editarInsumoTitulo": "Modifier la fourniture",
   "costoPorUnidadLabel": "Coût unitaire",
@@ -269,10 +245,8 @@
   "oportunidadResumen": "Vous perdez ~{monto} par mois",
   "prodUnidadesMes": "Unités vendues par mois (facultatif)",
   "prodUnidadesMesAyuda": "Nous l'utilisons pour estimer l'argent laissé sur la table chaque mois.",
-
   "elegirInsumoTitulo": "Choisir une fourniture",
   "ningunInsumoCoincide": "Aucune fourniture ne correspond.",
-
   "nuevo": "Nouveau",
   "costo": "Coût",
   "margen": "Marge",
@@ -281,12 +255,10 @@
   "tipoProducto": "Type de produit",
   "precioVenta": "Prix de vente",
   "recetaTitulo": "Recette",
-
   "eliminarProductoTitulo": "Supprimer le produit",
   "eliminarProductoConfirmacion": "Supprimer «{nombre}» ? Les ventes déjà enregistrées ne sont pas modifiées.",
   "productosVacio": "Vous n'avez pas encore de produits.\nCréez-en un avec le bouton +",
   "gananciaTexto": "Bénéfice : {valor}",
-
   "eligeInsumoCantidad": "Choisissez une fourniture et une quantité valide",
   "insumoYaEnReceta": "Cette fourniture est déjà dans la recette",
   "faltaNombrePrecioIngrediente": "Il manque le nom, le prix ou au moins un ingrédient",
@@ -301,12 +273,10 @@
   "recetaVacia": "La recette est vide.",
   "ingredienteSubtitulo": "{cantidad} {unidad}  ·  {costo}",
   "guardarProducto": "Enregistrer le produit",
-
   "elegirProductoTitulo": "Choisir un produit",
   "ningunProductoCoincide": "Aucun produit ne correspond.",
   "crearTipoHint": "Créer un type de produit, ex : Boissons",
   "sinTipos": "Vous n'avez pas encore créé de types.",
-
   "recetasVacio": "Vous n'avez pas encore de recettes.\nCréez-en une avec le bouton +",
   "recetaSubtitulo": "{ingredientes} ingrédients · {pasos} étapes",
   "eliminarRecetaTitulo": "Supprimer la recette",
@@ -323,7 +293,6 @@
   "pasosHint": "Une étape par ligne",
   "recetaEditorAyuda": "Écrivez chaque ingrédient et chaque étape sur sa propre ligne (Entrée pour séparer).",
   "guardarReceta": "Enregistrer la recette",
-
   "confirmarVenta": "Confirmer la vente",
   "confirmarVentaProducto": "Enregistrer la vente de {nombre} pour {precio} ?",
   "vender": "Vendre",
@@ -344,11 +313,9 @@
   "filtrarPorTipo": "Filtrer par type",
   "todos": "Tous",
   "sinProductosVenta": "Aucun produit. Créez-en depuis le menu Créer.",
-
   "revisaCamposMayorCero": "Vérifiez les champs : valeurs valides et supérieures à zéro",
   "editarVentaTitulo": "Modifier la vente",
   "precioUnitario": "Prix unitaire",
-
   "eliminarVentaTitulo": "Supprimer la vente",
   "eliminarVentaConfirmacion": "Cela corrige les revenus, mais ne rend pas les fournitures à l'inventaire. Continuer ?",
   "historialVentasTitulo": "Historique des ventes",
@@ -356,7 +323,6 @@
   "mesLabel": "Mois :",
   "sinVentasEnMes": "Aucune vente en {mes}.",
   "ventaSubtitulo": "{fecha}  ·  Qté : {cantidad}",
-
   "analisisVentasTitulo": "Analyse des ventes",
   "sinVentasAnalizar": "Aucune vente à analyser pour l'instant.",
   "resumenGeneral": "Aperçu général",
@@ -370,17 +336,14 @@
   "sinDatosSuficientes": "Données insuffisantes",
   "fechasPico": "Dates de pointe",
   "fechasPicoAyuda": "Vos jours avec le plus de ventes (ce sont vos dates spéciales)",
-
   "topProductosTitulo": "Top des produits",
   "sinVentasProductos": "Aucune vente de produit enregistrée pour l'instant.",
   "sinVentasProductosMes": "Aucune vente de produit ce mois-ci.",
   "totalTexto": "Total : {valor}",
-
   "categoriaInsumos": "Fournitures",
   "categoriaServicios": "Services",
   "categoriaEmpaques": "Emballages",
   "categoriaOtros": "Autres",
-
   "gastoDescripcionMonto": "Saisissez une description et un montant valide",
   "confirmarGasto": "Confirmer la dépense",
   "confirmarGastoTexto": "Enregistrer la dépense «{descripcion}» pour {monto} ?",
@@ -408,7 +371,6 @@
   "compraDescHint": "Ex : achat au marché",
   "totalGasto": "Total de la dépense",
   "guardarCompraReponer": "Enregistrer l'achat et réapprovisionner",
-
   "eliminarGastoTitulo": "Supprimer la dépense",
   "eliminarGastoConfirmacion": "Voulez-vous vraiment supprimer «{descripcion}» ?",
   "historialGastosTitulo": "Historique des dépenses",
@@ -416,7 +378,6 @@
   "sinGastosEnMes": "Aucune dépense en {mes}.",
   "gastoSubtitulo": "{fecha}  ·  {categoria}",
   "editarGastoTitulo": "Modifier la dépense",
-
   "entregarPedido": "Livrer la commande",
   "entregarPedidoTexto": "En marquant cette commande comme livrée, sa valeur de {precio} sera enregistrée comme revenu et apparaîtra dans votre historique des ventes.",
   "pedidoEntregadoOk": "Commande livrée et enregistrée dans les revenus",
@@ -439,7 +400,6 @@
   "entregadoEstado": "Livrée",
   "archivadoEstado": "Archivée",
   "marcarEntregado": "Marquer comme livrée",
-
   "sinProductosCreados": "Vous n'avez pas encore de produits créés",
   "itemManual": "Article manuel",
   "costoUnitarioOpcional": "Coût unitaire (facultatif)",
@@ -464,7 +424,6 @@
   "editarPedidoEntregado": "Cette commande a déjà été livrée. La modifier ne change pas le revenu déjà enregistré.",
   "sinItemsEditar": "Aucun article. Ajoutez depuis le catalogue ou manuellement.",
   "cambiar": "Modifier",
-
   "analisisYReportes": "Analyse et rapports",
   "reportesVacio": "Aucune donnée à analyser pour l'instant.\nEnregistrez des ventes et des dépenses pour voir vos rapports.",
   "gananciaDeMes": "Bénéfice de {mes}",
@@ -477,13 +436,11 @@
   "sinMesesCerrados": "Aucun mois clôturé à signaler pour l'instant.\nÀ la fin du mois en cours, il apparaîtra ici.",
   "ingresosGastos": "Revenus : {ingresos}  ·  Dépenses : {gastos}",
   "descargarPdf": "Télécharger le PDF",
-
   "topProductosMes": "Meilleurs produits du mois",
   "topSinVentasMes": "Aucune vente de produit ce mois-ci pour l'instant.",
   "vendidosAbrev": "{cantidad} vend.",
   "resumenAnalisisCorto": "Panier moyen {ticket} · Meilleur jour : {dia}",
   "verMas": "Voir plus",
-
   "nombreCatalogo": "Nom du catalogue",
   "subir": "Téléverser",
   "errorLeerArchivo": "Impossible de lire le fichier.",
@@ -498,11 +455,9 @@
   "subirPdf": "Téléverser un PDF",
   "catalogosVacio": "Vous n'avez pas encore de catalogues.\nTéléversez un PDF avec le bouton ci-dessous.",
   "abrir": "Ouvrir",
-
   "asunto": "Objet",
   "contenido": "Contenu",
   "sinContenido": "(Aucun contenu)",
-
   "entregaHoy": "Livraison aujourd'hui",
   "entregaManana": "Livraison demain",
   "sinAvisos": "Aucune alerte pour l'instant. Tout est à jour !",
@@ -513,7 +468,6 @@
   "notifConfigAyuda": "Choisissez les alertes que vous souhaitez recevoir dans l'application.",
   "notifPedidosSub": "Livraisons d'aujourd'hui, de demain ou en retard",
   "notifInsumosSub": "Fournitures sous leur stock minimum",
-
   "modo": "Mode",
   "modoClaro": "Clair",
   "modoOscuro": "Sombre",
@@ -526,7 +480,6 @@
   "acentoNaranja": "Orange",
   "acentoRosa": "Rose",
   "aparienciaNota": "Le thème et la couleur d'accent s'appliquent à toute l'application.",
-
   "completaCampos": "Remplissez tous les champs.",
   "passwordMin6": "Le nouveau mot de passe doit comporter au moins 6 caractères.",
   "passwordNoCoincide": "Le nouveau mot de passe et sa confirmation ne correspondent pas.",
@@ -542,7 +495,6 @@
   "passwordNueva": "Nouveau mot de passe",
   "passwordConfirmar": "Confirmer le nouveau mot de passe",
   "guardando": "Enregistrement...",
-
   "errorLeerImagen": "Impossible de lire l'image.",
   "imagenSupera5": "L'image dépasse la limite de 5 Mo.",
   "fotoActualizada": "Photo mise à jour",
@@ -580,15 +532,12 @@
   "telefono": "Téléphone",
   "ubicacion": "Emplacement",
   "guardarEmpresa": "Enregistrer l'entreprise",
-
   "preferenciasNegocio": "Préférences de l'entreprise",
   "ajustesSeguridadCaption": "La langue de l'application peut être changée ici et s'applique à toute l'application. Le pays et la devise ne peuvent pas être modifiés pour l'instant.",
   "seguridad": "Sécurité",
-
   "buscadorHint": "Rechercher dans votre entreprise...",
   "buscadorInicio": "Recherchez produits, fournitures, commandes, recettes et catalogues.",
   "buscadorSinResultados": "Aucun résultat pour «{q}»",
-
   "miembrosInvitaciones": "Membres et invitations",
   "miembrosInvitacionesSub": "Invitez votre équipe et gérez les rôles",
   "invitacionesTitulo": "Invitations",
@@ -622,14 +571,12 @@
   "unirseError": "Impossible de rejoindre. Réessayez.",
   "sinNombre": "(sans nom)",
   "ver": "Voir",
-
   "olvidasteContrasena": "Mot de passe oublié ?",
   "recuperarContrasenaTitulo": "Réinitialiser le mot de passe",
   "recuperarContrasenaAyuda": "Nous vous enverrons un e-mail pour réinitialiser votre mot de passe.",
   "enviar": "Envoyer",
   "correoVacio": "Saisissez votre e-mail.",
   "correoRecuperacionEnviado": "Si un compte existe pour cet e-mail, nous avons envoyé un lien pour le réinitialiser.",
-
   "eliminarCuenta": "Supprimer le compte",
   "eliminarCuentaAdvertencia": "Cela supprimera votre compte et votre accès à cette entreprise. Irréversible.",
   "eliminarCuentaAdvertenciaDueno": "En tant que propriétaire, cela supprimera TOUTE l'entreprise et ses données (produits, ventes, dépenses, commandes...) et dissociera les autres membres. Cette action est IRRÉVERSIBLE.",
@@ -659,5 +606,20 @@
   "pagosPronto": "Les paiements seront activés à la publication de l'app.",
   "yaEresPro": "Vous êtes Pro ! Merci.",
   "errorCompra": "L'achat n'a pas pu être effectué.",
-  "productosEligeFiltro": "Choisissez un type ou cherchez un produit."
+  "productosEligeFiltro": "Choisissez un type ou cherchez un produit.",
+  "convertirTitulo": "Créer une commande depuis le devis",
+  "convertirResumen": "{cliente} · {items} articles · {total}",
+  "convertirTelefono": "Téléphone du client",
+  "convertirFechaEntrega": "Date de livraison",
+  "convertirElegirFecha": "Choisir une date",
+  "convertirConfirmar": "Créer la commande",
+  "convertirFaltaFecha": "Indiquez la date de livraison.",
+  "convertirAvisoDescuento": "Le stock est déduit au moment de marquer la commande comme livrée, pas maintenant.",
+  "convertirSinLineas": "Ce devis n'a rien à convertir.",
+  "convertirCreado": "Commande créée",
+  "convertirAccion": "Créer la commande",
+  "cotizaYaTienePedido": "A déjà une commande",
+  "convertirSinInventario": "Ces lignes ne déduisent pas le stock : {lineas}",
+  "convertirFaltantes": "Stock insuffisant pour : {insumos}",
+  "convertirAjuste": "Ajustement pour suppléments, livraison, remise et taxe : {valor}"
 }

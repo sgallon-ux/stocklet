@@ -1,45 +1,33 @@
 {
   "@@locale": "pt",
-
   "ajustesTitulo": "Configurações",
   "miNegocio": "Meu negócio",
-
   "perfil": "Perfil",
   "perfilSubtitulo": "Suas informações pessoais",
-
   "datosEmpresa": "Dados da empresa",
   "datosEmpresaSubtitulo": "Nome, CNPJ, contato e localização",
-
   "notificaciones": "Notificações",
   "notificacionesSubtitulo": "Avisos de pedidos e estoque",
-
   "ajustesSeguridad": "Configurações e segurança",
   "ajustesSeguridadSubtitulo": "País, moeda, idioma e senha",
-
   "apariencia": "Aparência",
   "aparienciaSubtitulo": "Tema e modo escuro",
-
   "idioma": "Idioma",
   "idiomaSubtitulo": "Idioma do aplicativo",
   "idiomaAutomatico": "Automático (dispositivo)",
   "idiomaTituloDialogo": "Escolha um idioma",
-
   "acercaDe": "Sobre",
   "acercaDeSubtitulo": "Versão e informações do app",
   "acercaDeDescripcion": "App de contabilidade para o seu negócio.",
-
   "cerrarSesion": "Sair",
   "cerrarSesionConfirmacion": "Tem certeza de que deseja sair?",
-
   "cancelar": "Cancelar",
-
   "campoCorreo": "E-mail",
   "campoContrasena": "Senha",
   "crearCuenta": "Crie sua conta",
   "iniciarSesion": "Entrar",
   "iniciaSesion": "Entrar",
   "errorCorreoInvalido": "O e-mail não é válido",
-
   "loginBienvenido": "Bem-vindo",
   "loginSubtitulo": "Entre para gerenciar seu negócio",
   "loginRecordarCorreo": "Lembrar meu e-mail",
@@ -48,7 +36,6 @@
   "loginErrorGeneral": "Não foi possível entrar",
   "loginErrorNoExiste": "Não existe uma conta com esse e-mail",
   "loginErrorCredenciales": "E-mail ou senha incorretos",
-
   "registroSubtitulo": "Cadastre-se para começar com seu negócio",
   "registroMinimo": "Mínimo de 6 caracteres",
   "registroBoton": "Criar conta",
@@ -57,7 +44,6 @@
   "registroErrorGeneral": "Não foi possível criar a conta",
   "registroErrorEnUso": "Esse e-mail já tem uma conta",
   "registroErrorDebil": "A senha é muito fraca",
-
   "crearHubTitulo": "Criar e gerenciar",
   "inventario": "Estoque",
   "inventarioSub": "Insumos, custos e estoque",
@@ -69,7 +55,6 @@
   "recetasSub": "Guias de preparo passo a passo",
   "catalogo": "Catálogo",
   "catalogoSub": "Seus catálogos em PDF",
-
   "onboardingBienvenido": "Bem-vindo!",
   "onboardingSubtitulo": "Conte-nos sobre o seu negócio para personalizar o app",
   "onboardingNombreNegocio": "Nome do negócio",
@@ -79,17 +64,14 @@
   "campoPais": "País",
   "campoMoneda": "Moeda",
   "errorGenerico": "Erro: {detalle}",
-
   "panelUsuario": "Painel do usuário",
   "buscar": "Buscar",
   "busquedaProximamente": "Busca em breve",
   "agregarVenta": "Adicionar venda",
   "agregarGasto": "Adicionar despesa",
-
   "navInicio": "Início",
   "navCrear": "Criar",
   "navReportes": "Relatórios",
-
   "rangoEsteMes": "Este mês",
   "rango3Meses": "3 meses",
   "rango6Meses": "6 meses",
@@ -100,7 +82,6 @@
   "ganancia": "Lucro",
   "tendenciaGanancia": "Tendência de lucro",
   "graficaSinDatos": "Ainda não há dados suficientes para mostrar.",
-
   "pedidosProximos": "Pedidos próximos",
   "verTodos": "Ver todos",
   "sinPedidosPendientes": "Você não tem pedidos pendentes.",
@@ -108,8 +89,6 @@
   "hoy": "Hoje",
   "manana": "Amanhã",
   "enDias": "Em {dias} dias",
-
-
   "eliminar": "Excluir",
   "editar": "Editar",
   "campoNombre": "Nome",
@@ -121,7 +100,6 @@
   "stockMinimoHint": "Avisar quando ficar abaixo de...",
   "buscarHint": "Buscar...",
   "insumo": "Insumo",
-
   "buscarInsumoHint": "Buscar insumo...",
   "cerrarBusqueda": "Fechar busca",
   "inventarioVacio": "Ainda não há insumos.\nAdicione o primeiro com o botão +",
@@ -131,7 +109,6 @@
   "insumoNoEliminarEnUso": "Você não pode excluir {nombre}: um produto o usa",
   "costoPorUnidadTexto": "{costo} por {unidad}",
   "stockTexto": "Estoque: {cantidad} {unidad}",
-
   "completaCamposValidos": "Preencha todos os campos com valores válidos",
   "agregarInsumoTitulo": "Adicionar insumo",
   "insumoNombreHint": "Ex: Farinha",
@@ -140,7 +117,6 @@
   "precioTotalPagado": "Preço total pago",
   "agregarInsumoAyuda": "Com a quantidade e o preço, o app calcula sozinho o custo por unidade.",
   "guardarInsumo": "Salvar insumo",
-
   "revisaCamposNegativos": "Revise os campos: valores válidos, sem negativos",
   "editarInsumoTitulo": "Editar insumo",
   "costoPorUnidadLabel": "Custo por unidade",
@@ -269,10 +245,8 @@
   "oportunidadResumen": "Você deixa de ganhar ~{monto} por mês",
   "prodUnidadesMes": "Unidades que você vende por mês (opcional)",
   "prodUnidadesMesAyuda": "Usamos isso para estimar quanto dinheiro você deixa sobre a mesa por mês.",
-
   "elegirInsumoTitulo": "Escolher insumo",
   "ningunInsumoCoincide": "Nenhum insumo corresponde.",
-
   "nuevo": "Novo",
   "costo": "Custo",
   "margen": "Margem",
@@ -281,12 +255,10 @@
   "tipoProducto": "Tipo de produto",
   "precioVenta": "Preço de venda",
   "recetaTitulo": "Receita",
-
   "eliminarProductoTitulo": "Excluir produto",
   "eliminarProductoConfirmacion": "Excluir «{nombre}»? As vendas já registradas não são alteradas.",
   "productosVacio": "Você ainda não tem produtos.\nCrie um com o botão +",
   "gananciaTexto": "Lucro: {valor}",
-
   "eligeInsumoCantidad": "Escolha um insumo e uma quantidade válida",
   "insumoYaEnReceta": "Esse insumo já está na receita",
   "faltaNombrePrecioIngrediente": "Falta o nome, o preço ou pelo menos um ingrediente",
@@ -301,12 +273,10 @@
   "recetaVacia": "A receita está vazia.",
   "ingredienteSubtitulo": "{cantidad} {unidad}  ·  {costo}",
   "guardarProducto": "Salvar produto",
-
   "elegirProductoTitulo": "Escolher produto",
   "ningunProductoCoincide": "Nenhum produto corresponde.",
   "crearTipoHint": "Criar tipo de produto, ex: Bebidas",
   "sinTipos": "Você ainda não criou tipos.",
-
   "recetasVacio": "Você ainda não tem receitas.\nCrie uma com o botão +",
   "recetaSubtitulo": "{ingredientes} ingredientes · {pasos} passos",
   "eliminarRecetaTitulo": "Excluir receita",
@@ -323,7 +293,6 @@
   "pasosHint": "Um passo por linha",
   "recetaEditorAyuda": "Escreva cada ingrediente e cada passo em sua própria linha (Enter para separar).",
   "guardarReceta": "Salvar receita",
-
   "confirmarVenta": "Confirmar venda",
   "confirmarVentaProducto": "Registrar a venda de {nombre} por {precio}?",
   "vender": "Vender",
@@ -344,11 +313,9 @@
   "filtrarPorTipo": "Filtrar por tipo",
   "todos": "Todos",
   "sinProductosVenta": "Não há produtos. Crie-os no menu Criar.",
-
   "revisaCamposMayorCero": "Revise os campos: valores válidos e maiores que zero",
   "editarVentaTitulo": "Editar venda",
   "precioUnitario": "Preço unitário",
-
   "eliminarVentaTitulo": "Excluir venda",
   "eliminarVentaConfirmacion": "Isso corrige as receitas, mas não devolve os insumos ao estoque. Deseja continuar?",
   "historialVentasTitulo": "Histórico de vendas",
@@ -356,7 +323,6 @@
   "mesLabel": "Mês:",
   "sinVentasEnMes": "Não houve vendas em {mes}.",
   "ventaSubtitulo": "{fecha}  ·  Qtd: {cantidad}",
-
   "analisisVentasTitulo": "Análise de vendas",
   "sinVentasAnalizar": "Ainda não há vendas para analisar.",
   "resumenGeneral": "Resumo geral",
@@ -370,17 +336,14 @@
   "sinDatosSuficientes": "Dados insuficientes",
   "fechasPico": "Datas de pico",
   "fechasPicoAyuda": "Seus dias com mais vendas (aí estão suas datas especiais)",
-
   "topProductosTitulo": "Top de produtos",
   "sinVentasProductos": "Ainda não há vendas de produtos registradas.",
   "sinVentasProductosMes": "Não houve vendas de produtos neste mês.",
   "totalTexto": "Total: {valor}",
-
   "categoriaInsumos": "Insumos",
   "categoriaServicios": "Serviços",
   "categoriaEmpaques": "Embalagens",
   "categoriaOtros": "Outros",
-
   "gastoDescripcionMonto": "Escreva uma descrição e um valor válido",
   "confirmarGasto": "Confirmar despesa",
   "confirmarGastoTexto": "Registrar a despesa «{descripcion}» por {monto}?",
@@ -408,7 +371,6 @@
   "compraDescHint": "Ex: compra na feira",
   "totalGasto": "Total da despesa",
   "guardarCompraReponer": "Salvar compra e repor estoque",
-
   "eliminarGastoTitulo": "Excluir despesa",
   "eliminarGastoConfirmacion": "Tem certeza de que deseja excluir «{descripcion}»?",
   "historialGastosTitulo": "Histórico de despesas",
@@ -416,7 +378,6 @@
   "sinGastosEnMes": "Não houve despesas em {mes}.",
   "gastoSubtitulo": "{fecha}  ·  {categoria}",
   "editarGastoTitulo": "Editar despesa",
-
   "entregarPedido": "Entregar pedido",
   "entregarPedidoTexto": "Ao marcar este pedido como entregue, seu valor de {precio} será registrado como receita e aparecerá no seu histórico de vendas.",
   "pedidoEntregadoOk": "Pedido entregue e registrado nas receitas",
@@ -439,7 +400,6 @@
   "entregadoEstado": "Entregue",
   "archivadoEstado": "Arquivado",
   "marcarEntregado": "Marcar como entregue",
-
   "sinProductosCreados": "Você ainda não tem produtos criados",
   "itemManual": "Item manual",
   "costoUnitarioOpcional": "Custo unitário (opcional)",
@@ -464,7 +424,6 @@
   "editarPedidoEntregado": "Este pedido já foi entregue. Editá-lo não altera a receita já registrada.",
   "sinItemsEditar": "Sem itens. Adicione do catálogo ou manuais.",
   "cambiar": "Alterar",
-
   "analisisYReportes": "Análise e relatórios",
   "reportesVacio": "Ainda não há dados para analisar.\nRegistre vendas e despesas para ver seus relatórios.",
   "gananciaDeMes": "Lucro de {mes}",
@@ -477,13 +436,11 @@
   "sinMesesCerrados": "Ainda não há meses fechados para relatar.\nAo terminar o mês atual, aparecerá aqui.",
   "ingresosGastos": "Receitas: {ingresos}  ·  Despesas: {gastos}",
   "descargarPdf": "Baixar PDF",
-
   "topProductosMes": "Top produtos do mês",
   "topSinVentasMes": "Ainda não há vendas de produtos este mês.",
   "vendidosAbrev": "{cantidad} vend.",
   "resumenAnalisisCorto": "Ticket médio {ticket} · Melhor dia: {dia}",
   "verMas": "Ver mais",
-
   "nombreCatalogo": "Nome do catálogo",
   "subir": "Enviar",
   "errorLeerArchivo": "Não foi possível ler o arquivo.",
@@ -498,11 +455,9 @@
   "subirPdf": "Enviar PDF",
   "catalogosVacio": "Você ainda não tem catálogos.\nEnvie um PDF com o botão abaixo.",
   "abrir": "Abrir",
-
   "asunto": "Assunto",
   "contenido": "Conteúdo",
   "sinContenido": "(Sem conteúdo)",
-
   "entregaHoy": "Entrega hoje",
   "entregaManana": "Entrega amanhã",
   "sinAvisos": "Sem avisos por enquanto. Tudo em dia!",
@@ -513,7 +468,6 @@
   "notifConfigAyuda": "Escolha quais avisos deseja receber no app.",
   "notifPedidosSub": "Entregas de hoje, amanhã ou atrasadas",
   "notifInsumosSub": "Insumos abaixo do estoque mínimo",
-
   "modo": "Modo",
   "modoClaro": "Claro",
   "modoOscuro": "Escuro",
@@ -526,7 +480,6 @@
   "acentoNaranja": "Laranja",
   "acentoRosa": "Rosa",
   "aparienciaNota": "O tema e a cor de destaque se aplicam a todo o app.",
-
   "completaCampos": "Preencha todos os campos.",
   "passwordMin6": "A nova senha deve ter no mínimo 6 caracteres.",
   "passwordNoCoincide": "A nova senha e a confirmação não coincidem.",
@@ -542,7 +495,6 @@
   "passwordNueva": "Nova senha",
   "passwordConfirmar": "Confirmar nova senha",
   "guardando": "Salvando...",
-
   "errorLeerImagen": "Não foi possível ler a imagem.",
   "imagenSupera5": "A imagem excede o limite de 5 MB.",
   "fotoActualizada": "Foto atualizada",
@@ -580,15 +532,12 @@
   "telefono": "Telefone",
   "ubicacion": "Localização",
   "guardarEmpresa": "Salvar empresa",
-
   "preferenciasNegocio": "Preferências do negócio",
   "ajustesSeguridadCaption": "O idioma do aplicativo pode ser alterado aqui e se aplica a todo o app. País e moeda não podem ser alterados por enquanto.",
   "seguridad": "Segurança",
-
   "buscadorHint": "Buscar no seu negócio...",
   "buscadorInicio": "Busque produtos, insumos, pedidos, receitas e catálogos.",
   "buscadorSinResultados": "Nenhum resultado para «{q}»",
-
   "miembrosInvitaciones": "Membros e convites",
   "miembrosInvitacionesSub": "Convide sua equipe e gerencie papéis",
   "invitacionesTitulo": "Convites",
@@ -622,14 +571,12 @@
   "unirseError": "Não foi possível entrar. Tente novamente.",
   "sinNombre": "(sem nome)",
   "ver": "Ver",
-
   "olvidasteContrasena": "Esqueceu sua senha?",
   "recuperarContrasenaTitulo": "Redefinir senha",
   "recuperarContrasenaAyuda": "Enviaremos um e-mail para redefinir sua senha.",
   "enviar": "Enviar",
   "correoVacio": "Digite seu e-mail.",
   "correoRecuperacionEnviado": "Se existir uma conta com esse e-mail, enviamos um link para redefini-la.",
-
   "eliminarCuenta": "Excluir conta",
   "eliminarCuentaAdvertencia": "Isto excluirá sua conta e seu acesso a este negócio. Não pode ser desfeito.",
   "eliminarCuentaAdvertenciaDueno": "Como dono, isto excluirá TODO o negócio e seus dados (produtos, vendas, despesas, pedidos...) e desvinculará os demais membros. Esta ação NÃO pode ser desfeita.",
@@ -659,5 +606,20 @@
   "pagosPronto": "Os pagamentos serão ativados ao publicar o app.",
   "yaEresPro": "Agora você é Pro! Obrigado.",
   "errorCompra": "Não foi possível concluir a compra.",
-  "productosEligeFiltro": "Escolha um tipo ou busque um produto."
+  "productosEligeFiltro": "Escolha um tipo ou busque um produto.",
+  "convertirTitulo": "Criar pedido a partir do orçamento",
+  "convertirResumen": "{cliente} · {items} itens · {total}",
+  "convertirTelefono": "Telefone do cliente",
+  "convertirFechaEntrega": "Data de entrega",
+  "convertirElegirFecha": "Escolher data",
+  "convertirConfirmar": "Criar pedido",
+  "convertirFaltaFecha": "Informe a data de entrega.",
+  "convertirAvisoDescuento": "O estoque é baixado ao marcar o pedido como entregue, não agora.",
+  "convertirSinLineas": "Este orçamento não tem nada para converter.",
+  "convertirCreado": "Pedido criado",
+  "convertirAccion": "Criar pedido",
+  "cotizaYaTienePedido": "Já tem pedido",
+  "convertirSinInventario": "Estas linhas não baixam estoque: {lineas}",
+  "convertirFaltantes": "Estoque insuficiente para: {insumos}",
+  "convertirAjuste": "Ajuste por adicionais, entrega, desconto e imposto: {valor}"
 }

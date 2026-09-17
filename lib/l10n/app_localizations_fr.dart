@@ -2013,4 +2013,58 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get productosEligeFiltro =>
       'Choisissez un type ou cherchez un produit.';
+
+  @override
+  String get convertirTitulo => 'Créer une commande depuis le devis';
+
+  @override
+  String convertirResumen(String cliente, int items, String total) {
+    return '$cliente · $items articles · $total';
+  }
+
+  @override
+  String get convertirTelefono => 'Téléphone du client';
+
+  @override
+  String get convertirFechaEntrega => 'Date de livraison';
+
+  @override
+  String get convertirElegirFecha => 'Choisir une date';
+
+  @override
+  String get convertirConfirmar => 'Créer la commande';
+
+  @override
+  String get convertirFaltaFecha => 'Indiquez la date de livraison.';
+
+  @override
+  String get convertirAvisoDescuento =>
+      'Le stock est déduit au moment de marquer la commande comme livrée, pas maintenant.';
+
+  @override
+  String get convertirSinLineas => 'Ce devis n\'a rien à convertir.';
+
+  @override
+  String get convertirCreado => 'Commande créée';
+
+  @override
+  String get convertirAccion => 'Créer la commande';
+
+  @override
+  String get cotizaYaTienePedido => 'A déjà une commande';
+
+  @override
+  String convertirSinInventario(String lineas) {
+    return 'Ces lignes ne déduisent pas le stock : $lineas';
+  }
+
+  @override
+  String convertirFaltantes(String insumos) {
+    return 'Stock insuffisant pour : $insumos';
+  }
+
+  @override
+  String convertirAjuste(String valor) {
+    return 'Ajustement pour suppléments, livraison, remise et taxe : $valor';
+  }
 }

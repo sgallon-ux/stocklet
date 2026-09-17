@@ -1,45 +1,33 @@
 {
   "@@locale": "en",
-
   "ajustesTitulo": "Settings",
   "miNegocio": "My business",
-
   "perfil": "Profile",
   "perfilSubtitulo": "Your personal information",
-
   "datosEmpresa": "Business details",
   "datosEmpresaSubtitulo": "Name, tax ID, contact and location",
-
   "notificaciones": "Notifications",
   "notificacionesSubtitulo": "Order and inventory alerts",
-
   "ajustesSeguridad": "Settings and security",
   "ajustesSeguridadSubtitulo": "Country, currency, language and password",
-
   "apariencia": "Appearance",
   "aparienciaSubtitulo": "Theme and dark mode",
-
   "idioma": "Language",
   "idiomaSubtitulo": "App language",
   "idiomaAutomatico": "Automatic (device)",
   "idiomaTituloDialogo": "Choose a language",
-
   "acercaDe": "About",
   "acercaDeSubtitulo": "App version and information",
   "acercaDeDescripcion": "Accounting app for your business.",
-
   "cerrarSesion": "Sign out",
   "cerrarSesionConfirmacion": "Are you sure you want to sign out?",
-
   "cancelar": "Cancel",
-
   "campoCorreo": "Email",
   "campoContrasena": "Password",
   "crearCuenta": "Create your account",
   "iniciarSesion": "Sign in",
   "iniciaSesion": "Sign in",
   "errorCorreoInvalido": "The email is not valid",
-
   "loginBienvenido": "Welcome",
   "loginSubtitulo": "Sign in to manage your business",
   "loginRecordarCorreo": "Remember my email",
@@ -48,7 +36,6 @@
   "loginErrorGeneral": "Could not sign in",
   "loginErrorNoExiste": "No account exists with that email",
   "loginErrorCredenciales": "Incorrect email or password",
-
   "registroSubtitulo": "Sign up to get started with your business",
   "registroMinimo": "At least 6 characters",
   "registroBoton": "Create account",
@@ -57,7 +44,6 @@
   "registroErrorGeneral": "Could not create the account",
   "registroErrorEnUso": "That email already has an account",
   "registroErrorDebil": "The password is too weak",
-
   "crearHubTitulo": "Create and manage",
   "inventario": "Inventory",
   "inventarioSub": "Supplies, costs and stock",
@@ -69,7 +55,6 @@
   "recetasSub": "Step-by-step preparation guides",
   "catalogo": "Catalog",
   "catalogoSub": "Your PDF catalogs",
-
   "onboardingBienvenido": "Welcome!",
   "onboardingSubtitulo": "Tell us about your business to personalize the app",
   "onboardingNombreNegocio": "Business name",
@@ -79,17 +64,14 @@
   "campoPais": "Country",
   "campoMoneda": "Currency",
   "errorGenerico": "Error: {detalle}",
-
   "panelUsuario": "User panel",
   "buscar": "Search",
   "busquedaProximamente": "Search coming soon",
   "agregarVenta": "Add sale",
   "agregarGasto": "Add expense",
-
   "navInicio": "Home",
   "navCrear": "Create",
   "navReportes": "Reports",
-
   "rangoEsteMes": "This month",
   "rango3Meses": "3 months",
   "rango6Meses": "6 months",
@@ -100,7 +82,6 @@
   "ganancia": "Profit",
   "tendenciaGanancia": "Profit trend",
   "graficaSinDatos": "Not enough data to show yet.",
-
   "pedidosProximos": "Upcoming orders",
   "verTodos": "See all",
   "sinPedidosPendientes": "You have no pending orders.",
@@ -108,8 +89,6 @@
   "hoy": "Today",
   "manana": "Tomorrow",
   "enDias": "In {dias} days",
-
-
   "eliminar": "Delete",
   "editar": "Edit",
   "campoNombre": "Name",
@@ -121,7 +100,6 @@
   "stockMinimoHint": "Alert when it drops below...",
   "buscarHint": "Search...",
   "insumo": "Supply",
-
   "buscarInsumoHint": "Search supply...",
   "cerrarBusqueda": "Close search",
   "inventarioVacio": "No supplies yet.\nAdd the first one with the + button",
@@ -131,7 +109,6 @@
   "insumoNoEliminarEnUso": "You can't delete {nombre}: a product uses it",
   "costoPorUnidadTexto": "{costo} per {unidad}",
   "stockTexto": "Stock: {cantidad} {unidad}",
-
   "completaCamposValidos": "Fill in all fields with valid values",
   "agregarInsumoTitulo": "Add supply",
   "insumoNombreHint": "e.g. Flour",
@@ -140,7 +117,6 @@
   "precioTotalPagado": "Total price paid",
   "agregarInsumoAyuda": "With the quantity and price, the app calculates the unit cost for you.",
   "guardarInsumo": "Save supply",
-
   "revisaCamposNegativos": "Check the fields: valid values, no negatives",
   "editarInsumoTitulo": "Edit supply",
   "costoPorUnidadLabel": "Cost per unit",
@@ -269,10 +245,8 @@
   "oportunidadResumen": "You're leaving ~{monto} on the table monthly",
   "prodUnidadesMes": "Units you sell per month (optional)",
   "prodUnidadesMesAyuda": "We use this to estimate how much money you leave on the table each month.",
-
   "elegirInsumoTitulo": "Choose supply",
   "ningunInsumoCoincide": "No supply matches.",
-
   "nuevo": "New",
   "costo": "Cost",
   "margen": "Margin",
@@ -281,12 +255,10 @@
   "tipoProducto": "Product type",
   "precioVenta": "Sale price",
   "recetaTitulo": "Recipe",
-
   "eliminarProductoTitulo": "Delete product",
   "eliminarProductoConfirmacion": "Delete «{nombre}»? Sales already recorded are not affected.",
   "productosVacio": "You have no products yet.\nCreate one with the + button",
   "gananciaTexto": "Profit: {valor}",
-
   "eligeInsumoCantidad": "Choose a supply and a valid quantity",
   "insumoYaEnReceta": "That supply is already in the recipe",
   "faltaNombrePrecioIngrediente": "Missing the name, price or at least one ingredient",
@@ -301,12 +273,10 @@
   "recetaVacia": "The recipe is empty.",
   "ingredienteSubtitulo": "{cantidad} {unidad}  ·  {costo}",
   "guardarProducto": "Save product",
-
   "elegirProductoTitulo": "Choose product",
   "ningunProductoCoincide": "No product matches.",
   "crearTipoHint": "Create product type, e.g. Drinks",
   "sinTipos": "You haven't created any types yet.",
-
   "recetasVacio": "You have no recipes yet.\nCreate one with the + button",
   "recetaSubtitulo": "{ingredientes} ingredients · {pasos} steps",
   "eliminarRecetaTitulo": "Delete recipe",
@@ -323,7 +293,6 @@
   "pasosHint": "One step per line",
   "recetaEditorAyuda": "Write each ingredient and each step on its own line (Enter to separate).",
   "guardarReceta": "Save recipe",
-
   "confirmarVenta": "Confirm sale",
   "confirmarVentaProducto": "Record the sale of {nombre} for {precio}?",
   "vender": "Sell",
@@ -344,11 +313,9 @@
   "filtrarPorTipo": "Filter by type",
   "todos": "All",
   "sinProductosVenta": "No products. Create them from the Create menu.",
-
   "revisaCamposMayorCero": "Check the fields: valid values greater than zero",
   "editarVentaTitulo": "Edit sale",
   "precioUnitario": "Unit price",
-
   "eliminarVentaTitulo": "Delete sale",
   "eliminarVentaConfirmacion": "This corrects the income, but doesn't return the supplies to inventory. Continue?",
   "historialVentasTitulo": "Sales history",
@@ -356,7 +323,6 @@
   "mesLabel": "Month:",
   "sinVentasEnMes": "No sales in {mes}.",
   "ventaSubtitulo": "{fecha}  ·  Qty: {cantidad}",
-
   "analisisVentasTitulo": "Sales analysis",
   "sinVentasAnalizar": "No sales to analyze yet.",
   "resumenGeneral": "Overview",
@@ -370,17 +336,14 @@
   "sinDatosSuficientes": "Not enough data",
   "fechasPico": "Peak dates",
   "fechasPicoAyuda": "Your days with the most sales (those are your special dates)",
-
   "topProductosTitulo": "Top products",
   "sinVentasProductos": "No product sales recorded yet.",
   "sinVentasProductosMes": "No product sales this month.",
   "totalTexto": "Total: {valor}",
-
   "categoriaInsumos": "Supplies",
   "categoriaServicios": "Services",
   "categoriaEmpaques": "Packaging",
   "categoriaOtros": "Other",
-
   "gastoDescripcionMonto": "Enter a description and a valid amount",
   "confirmarGasto": "Confirm expense",
   "confirmarGastoTexto": "Record the expense «{descripcion}» for {monto}?",
@@ -408,7 +371,6 @@
   "compraDescHint": "e.g. purchase at the market",
   "totalGasto": "Total expense",
   "guardarCompraReponer": "Save purchase and restock",
-
   "eliminarGastoTitulo": "Delete expense",
   "eliminarGastoConfirmacion": "Are you sure you want to delete «{descripcion}»?",
   "historialGastosTitulo": "Expense history",
@@ -416,7 +378,6 @@
   "sinGastosEnMes": "No expenses in {mes}.",
   "gastoSubtitulo": "{fecha}  ·  {categoria}",
   "editarGastoTitulo": "Edit expense",
-
   "entregarPedido": "Deliver order",
   "entregarPedidoTexto": "By marking this order as delivered, its value of {precio} will be recorded as income and appear in your sales history.",
   "pedidoEntregadoOk": "Order delivered and recorded as income",
@@ -439,7 +400,6 @@
   "entregadoEstado": "Delivered",
   "archivadoEstado": "Archived",
   "marcarEntregado": "Mark as delivered",
-
   "sinProductosCreados": "You have no products created yet",
   "itemManual": "Manual item",
   "costoUnitarioOpcional": "Unit cost (optional)",
@@ -464,7 +424,6 @@
   "editarPedidoEntregado": "This order has already been delivered. Editing it doesn't change the income already recorded.",
   "sinItemsEditar": "No items. Add from the catalog or manual ones.",
   "cambiar": "Change",
-
   "analisisYReportes": "Analysis and reports",
   "reportesVacio": "No data to analyze yet.\nRecord sales and expenses to see your reports.",
   "gananciaDeMes": "{mes} profit",
@@ -477,13 +436,11 @@
   "sinMesesCerrados": "No closed months to report yet.\nWhen the current month ends, it will appear here.",
   "ingresosGastos": "Income: {ingresos}  ·  Expenses: {gastos}",
   "descargarPdf": "Download PDF",
-
   "topProductosMes": "Top products of the month",
   "topSinVentasMes": "No product sales this month yet.",
   "vendidosAbrev": "{cantidad} sold",
   "resumenAnalisisCorto": "Average ticket {ticket} · Best day: {dia}",
   "verMas": "See more",
-
   "nombreCatalogo": "Catalog name",
   "subir": "Upload",
   "errorLeerArchivo": "Could not read the file.",
@@ -498,11 +455,9 @@
   "subirPdf": "Upload PDF",
   "catalogosVacio": "You have no catalogs yet.\nUpload a PDF with the button below.",
   "abrir": "Open",
-
   "asunto": "Subject",
   "contenido": "Content",
   "sinContenido": "(No content)",
-
   "entregaHoy": "Delivery today",
   "entregaManana": "Delivery tomorrow",
   "sinAvisos": "No alerts for now. All caught up!",
@@ -513,7 +468,6 @@
   "notifConfigAyuda": "Choose which alerts you want to receive in the app.",
   "notifPedidosSub": "Deliveries today, tomorrow or overdue",
   "notifInsumosSub": "Supplies below their minimum stock",
-
   "modo": "Mode",
   "modoClaro": "Light",
   "modoOscuro": "Dark",
@@ -526,7 +480,6 @@
   "acentoNaranja": "Orange",
   "acentoRosa": "Pink",
   "aparienciaNota": "The theme and accent color apply to the whole app.",
-
   "completaCampos": "Fill in all fields.",
   "passwordMin6": "The new password must be at least 6 characters.",
   "passwordNoCoincide": "The new password and its confirmation don't match.",
@@ -542,7 +495,6 @@
   "passwordNueva": "New password",
   "passwordConfirmar": "Confirm new password",
   "guardando": "Saving...",
-
   "errorLeerImagen": "Could not read the image.",
   "imagenSupera5": "The image exceeds the 5 MB limit.",
   "fotoActualizada": "Photo updated",
@@ -580,15 +532,12 @@
   "telefono": "Phone",
   "ubicacion": "Location",
   "guardarEmpresa": "Save business",
-
   "preferenciasNegocio": "Business preferences",
   "ajustesSeguridadCaption": "The app language can be changed here and applies to the whole app. Country and currency can't be changed for now.",
   "seguridad": "Security",
-
   "buscadorHint": "Search your business...",
   "buscadorInicio": "Search products, supplies, orders, recipes and catalogs.",
   "buscadorSinResultados": "No results for «{q}»",
-
   "miembrosInvitaciones": "Members and invitations",
   "miembrosInvitacionesSub": "Invite your team and manage roles",
   "invitacionesTitulo": "Invitations",
@@ -622,14 +571,12 @@
   "unirseError": "Could not join. Try again.",
   "sinNombre": "(no name)",
   "ver": "View",
-
   "olvidasteContrasena": "Forgot your password?",
   "recuperarContrasenaTitulo": "Reset password",
   "recuperarContrasenaAyuda": "We'll send you an email to reset your password.",
   "enviar": "Send",
   "correoVacio": "Enter your email.",
   "correoRecuperacionEnviado": "If an account exists for that email, we sent a link to reset it.",
-
   "eliminarCuenta": "Delete account",
   "eliminarCuentaAdvertencia": "This will delete your account and your access to this business. It can't be undone.",
   "eliminarCuentaAdvertenciaDueno": "As the owner, this will delete the ENTIRE business and its data (products, sales, expenses, orders...) and unlink the other members. This action CANNOT be undone.",
@@ -659,5 +606,20 @@
   "pagosPronto": "Payments will be enabled when the app is published.",
   "yaEresPro": "You're Pro now! Thank you.",
   "errorCompra": "The purchase could not be completed.",
-  "productosEligeFiltro": "Choose a type or search for a product."
+  "productosEligeFiltro": "Choose a type or search for a product.",
+  "convertirTitulo": "Create order from quote",
+  "convertirResumen": "{cliente} · {items} items · {total}",
+  "convertirTelefono": "Customer phone",
+  "convertirFechaEntrega": "Delivery date",
+  "convertirElegirFecha": "Pick a date",
+  "convertirConfirmar": "Create order",
+  "convertirFaltaFecha": "Enter the delivery date.",
+  "convertirAvisoDescuento": "Inventory is deducted when you mark the order as delivered, not now.",
+  "convertirSinLineas": "This quote has nothing to convert.",
+  "convertirCreado": "Order created",
+  "convertirAccion": "Create order",
+  "cotizaYaTienePedido": "Already has an order",
+  "convertirSinInventario": "These lines do not deduct inventory: {lineas}",
+  "convertirFaltantes": "Not enough inventory for: {insumos}",
+  "convertirAjuste": "Adjustment for extras, delivery, discount and tax: {valor}"
 }

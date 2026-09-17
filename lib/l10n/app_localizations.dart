@@ -3743,6 +3743,96 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Elige un tipo o busca un producto.'**
   String get productosEligeFiltro;
+
+  /// No description provided for @convertirTitulo.
+  ///
+  /// In es, this message translates to:
+  /// **'Crear pedido desde la cotización'**
+  String get convertirTitulo;
+
+  /// No description provided for @convertirResumen.
+  ///
+  /// In es, this message translates to:
+  /// **'{cliente} · {items} ítems · {total}'**
+  String convertirResumen(String cliente, int items, String total);
+
+  /// No description provided for @convertirTelefono.
+  ///
+  /// In es, this message translates to:
+  /// **'Teléfono del cliente'**
+  String get convertirTelefono;
+
+  /// No description provided for @convertirFechaEntrega.
+  ///
+  /// In es, this message translates to:
+  /// **'Fecha de entrega'**
+  String get convertirFechaEntrega;
+
+  /// No description provided for @convertirElegirFecha.
+  ///
+  /// In es, this message translates to:
+  /// **'Elegir fecha'**
+  String get convertirElegirFecha;
+
+  /// No description provided for @convertirConfirmar.
+  ///
+  /// In es, this message translates to:
+  /// **'Crear pedido'**
+  String get convertirConfirmar;
+
+  /// No description provided for @convertirFaltaFecha.
+  ///
+  /// In es, this message translates to:
+  /// **'Indica la fecha de entrega.'**
+  String get convertirFaltaFecha;
+
+  /// No description provided for @convertirAvisoDescuento.
+  ///
+  /// In es, this message translates to:
+  /// **'El inventario se descuenta al marcar el pedido como entregado, no ahora.'**
+  String get convertirAvisoDescuento;
+
+  /// No description provided for @convertirSinLineas.
+  ///
+  /// In es, this message translates to:
+  /// **'Esta cotización no tiene nada que convertir.'**
+  String get convertirSinLineas;
+
+  /// No description provided for @convertirCreado.
+  ///
+  /// In es, this message translates to:
+  /// **'Pedido creado'**
+  String get convertirCreado;
+
+  /// No description provided for @convertirAccion.
+  ///
+  /// In es, this message translates to:
+  /// **'Crear pedido'**
+  String get convertirAccion;
+
+  /// No description provided for @cotizaYaTienePedido.
+  ///
+  /// In es, this message translates to:
+  /// **'Ya tiene pedido'**
+  String get cotizaYaTienePedido;
+
+  /// No description provided for @convertirSinInventario.
+  ///
+  /// In es, this message translates to:
+  /// **'Estas líneas no descuentan inventario: {lineas}'**
+  String convertirSinInventario(String lineas);
+
+  /// No description provided for @convertirFaltantes.
+  ///
+  /// In es, this message translates to:
+  /// **'No alcanza el inventario para: {insumos}'**
+  String convertirFaltantes(String insumos);
+
+  /// No description provided for @convertirAjuste.
+  ///
+  /// In es, this message translates to:
+  /// **'Ajuste por adiciones, domicilio, descuento e IVA: {valor}'**
+  String convertirAjuste(String valor);
 }
 
 class _AppLocalizationsDelegate

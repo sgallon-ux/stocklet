@@ -65,6 +65,9 @@ class Cotizacion {
   bool aplicaIva;
   double tasaIva;
   String notas;
+  /// Id del pedido que generó esta cotización. Vacío = aún no convertida.
+  /// Una vez asignado no se vacía: es lo que impide crear dos pedidos.
+  String pedidoId;
 
   Cotizacion({
     String? id,
@@ -78,6 +81,7 @@ class Cotizacion {
     this.aplicaIva = false,
     this.tasaIva = 19,
     this.notas = '',
+    this.pedidoId = '',
   })  : fecha = fecha ?? DateTime.now(),
         lineas = lineas ?? [],
         adiciones = adiciones ?? [],
@@ -91,6 +95,10 @@ class Cotizacion {
   double get iva => aplicaIva ? base * tasaIva / 100 : 0;
   double get total => base + iva;
 
+  /// `true` si ya generó un pedido. Es lo que consultan las pantallas para
+  /// decidir si ofrecen convertirla.
+  bool get convertida => pedidoId.isNotEmpty;
+
   Map<String, dynamic> toMap() => {
         'cliente': cliente,
         'fecha': fecha,
@@ -102,6 +110,7 @@ class Cotizacion {
         'aplicaIva': aplicaIva,
         'tasaIva': tasaIva,
         'notas': notas,
+        'pedidoId': pedidoId,
       };
 
   factory Cotizacion.fromMap(String id, Map<String, dynamic> map) {
@@ -131,6 +140,8 @@ class Cotizacion {
       aplicaIva: (map['aplicaIva'] as bool?) ?? false,
       tasaIva: (map['tasaIva'] as num?)?.toDouble() ?? 19,
       notas: (map['notas'] as String?) ?? '',
+      // Ausente = cotización anterior a esta funcionalidad: no convertida.
+      pedidoId: (map['pedidoId'] as String?) ?? '',
     );
   }
 }
