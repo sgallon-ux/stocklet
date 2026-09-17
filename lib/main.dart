@@ -1,6 +1,9 @@
 import 'dart:ui' show PlatformDispatcher;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -22,11 +25,30 @@ Future<void> _fcmBackgroundHandler(RemoteMessage message) async {}
 // Instancia global de Analytics (usada por el observador de navegación).
 final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
+/// Apunta la app a los emuladores locales en vez de a Firebase de verdad.
+///
+/// Se activa solo al compilar con `--dart-define=STOCKLET_EMULADOR=true`, que
+/// es lo que usa el negocio de demo para tomar las capturas de la tienda sin
+/// exponer datos reales. Al ser `const`, un build de release lo elimina del
+/// binario: no hay forma de que se cuele en producción.
+const bool kUsarEmulador =
+    bool.fromEnvironment('STOCKLET_EMULADOR', defaultValue: false);
+
+void _conectarEmuladores() {
+  const host = String.fromEnvironment('STOCKLET_EMULADOR_HOST',
+      defaultValue: 'localhost');
+  FirebaseFirestore.instance.useFirestoreEmulator(host, 8080);
+  FirebaseAuth.instance.useAuthEmulator(host, 9099);
+  FirebaseStorage.instance.useStorageEmulator(host, 9199);
+  debugPrint('Stocklet apuntando a los emuladores en $host');
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  if (kUsarEmulador) _conectarEmuladores();
 
   // Crashlytics: captura errores de Flutter y errores asíncronos no atrapados.
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;

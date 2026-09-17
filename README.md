@@ -32,6 +32,38 @@ firebase deploy --only functions     # Cloud Functions
 firebase deploy --only hosting       # web/ (tras flutter build web)
 ```
 
+## Negocio de demo (capturas de la tienda)
+
+Las capturas de la ficha de Google Play **no deben salir del negocio real**: las
+pantallas muestran nombres y teléfonos de clientes, ventas, costos y márgenes, y
+una captura en Play es pública y permanente.
+
+Para eso hay un negocio de demo sembrado en los emuladores. En una terminal:
+
+```
+firebase emulators:start --only auth,firestore,storage --project demo-stocklet
+```
+
+En otra, una sola vez `npm install` dentro de `tool/demo`, y luego:
+
+```
+cd tool/demo
+npm run sembrar
+```
+
+Y la app apuntando a los emuladores:
+
+```
+flutter run --dart-define=STOCKLET_EMULADOR=true
+```
+
+Entrar con `demo@stocklet.app` / `demo1234` (credenciales del emulador; no
+existen en el proyecto real). Volver a sembrar deja todo igual que la primera
+vez, así que las capturas son repetibles.
+
+El interruptor `STOCKLET_EMULADOR` es `const` y está apagado por defecto: un
+build de release lo elimina del binario.
+
 ## Pruebas
 
 Lógica pura (costeo, unidades, formato):
