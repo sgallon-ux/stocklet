@@ -71,5 +71,9 @@ bucket, así que las reglas van con `storage` a secas.
 
 ## Documentación
 
+- `docs/data-safety.md` — inventario de datos para el formulario de Seguridad de
+  los datos de Google Play. Hay que actualizarlo cuando la app recoja un dato nuevo.
+
+
 El estado del proyecto, el plan de monetización y el checklist para publicar están en
 `Creador Apps/Stocklet - Estado del proyecto.md`.
