@@ -142,17 +142,20 @@ class _PantallaCatalogoState extends State<PantallaCatalogo> {
     final t = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(title: Text(t.catalogo)),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: subiendo ? null : _subir,
-        icon: subiendo
-            ? const SizedBox(
-                height: 18,
-                width: 18,
-                child: CircularProgressIndicator(
-                    strokeWidth: 2, color: Colors.white))
-            : const Icon(Icons.upload_file),
-        label: Text(subiendo ? t.subiendo : t.subirPdf),
-      ),
+      // El empleado consulta los catálogos, pero no los sube.
+      floatingActionButton: context.watch<DatosApp>().puedeGestionarCatalogo
+          ? FloatingActionButton.extended(
+              onPressed: subiendo ? null : _subir,
+              icon: subiendo
+                  ? const SizedBox(
+                      height: 18,
+                      width: 18,
+                      child: CircularProgressIndicator(
+                          strokeWidth: 2, color: Colors.white))
+                  : const Icon(Icons.upload_file),
+              label: Text(subiendo ? t.subiendo : t.subirPdf),
+            )
+          : null,
       body: Consumer<DatosApp>(
         builder: (context, datos, child) {
           final m = AppColores.of(context);

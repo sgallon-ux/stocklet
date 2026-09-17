@@ -199,11 +199,18 @@ service cloud.firestore {
         allow write: if esDuenoOSocio(negocioId);
       }
 
+      // Cotizaciones: cualquier miembro cotiza para un cliente, y puede
+      // corregir la cotización mientras la arma (la pantalla de edición no
+      // distingue rol). Borrarlas sigue siendo de dueño y socio.
+      // Nota: el modelo no guarda quién la creó, así que las reglas no pueden
+      // limitar la edición al autor; si eso hiciera falta, primero hay que
+      // añadir ese campo en models/cotizacion.dart.
       match /cotizaciones/{docId} {
-        allow read: if esMiembro(negocioId);
-        allow write: if esDuenoOSocio(negocioId);
+        allow read, create, update: if esMiembro(negocioId);
+        allow delete: if esDuenoOSocio(negocioId);
       }
 
+      // Catálogos: el empleado los consulta, pero no los sube ni los borra.
       match /catalogos/{docId} {
         allow read: if esMiembro(negocioId);
         allow write: if esDuenoOSocio(negocioId);

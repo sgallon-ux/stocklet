@@ -24,13 +24,12 @@ class PantallaCotizar extends StatelessWidget {
     final m = AppColores.of(context);
     return Scaffold(
       appBar: AppBar(title: Text(t.cotizarTitulo)),
-      floatingActionButton: context.watch<DatosApp>().puedeGestionarCatalogo
-          ? FloatingActionButton.extended(
-              onPressed: () => _nueva(context),
-              icon: const Icon(Icons.add),
-              label: Text(t.nuevaCotizacion),
-            )
-          : null,
+      // Cotizar es parte del trabajo del día: cualquier miembro puede hacerlo.
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => _nueva(context),
+        icon: const Icon(Icons.add),
+        label: Text(t.nuevaCotizacion),
+      ),
       body: Consumer<DatosApp>(
         builder: (context, datos, _) {
           final lista = [...datos.cotizaciones]
@@ -95,10 +94,12 @@ class PantallaCotizar extends StatelessWidget {
         subtitle: Text(
             '${t.cotizaNumProductos(c.lineas.length)}  ·  ${pesos(c.total)}',
             style: TextStyle(color: m.textoSuave)),
-        trailing: IconButton(
-          icon: Icon(Icons.delete_outline, color: m.rojo),
-          onPressed: () => _confirmarEliminar(context, datos, t, c),
-        ),
+        trailing: datos.puedeEliminar
+            ? IconButton(
+                icon: Icon(Icons.delete_outline, color: m.rojo),
+                onPressed: () => _confirmarEliminar(context, datos, t, c),
+              )
+            : null,
       ),
     );
   }

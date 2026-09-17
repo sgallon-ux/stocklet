@@ -61,6 +61,8 @@ async function sembrar() {
     await setDoc(doc(db, 'negocios/negA/insumos/harina'), HARINA);
     await setDoc(doc(db, 'negocios/negA/productos/torta'), { nombre: 'Torta', precio: 50000 });
     await setDoc(doc(db, 'negocios/negA/ventas/v1'), { descripcion: 'Torta', cantidad: 1 });
+    await setDoc(doc(db, 'negocios/negA/cotizaciones/c1'), { cliente: 'Cliente', descuento: 0 });
+    await setDoc(doc(db, 'negocios/negA/catalogos/cat1'), { nombre: 'Catálogo', url: 'x', path: 'y' });
     await setDoc(doc(db, 'negocios/negB/insumos/azucar'), { ...HARINA, nombre: 'Azúcar' });
 
     await setDoc(doc(db, 'invitaciones/ABC123'), {
@@ -229,6 +231,41 @@ test('el empleado registra una venta pero no la borra', async () => {
   await assertSucceeds(setDoc(doc(como('empleadoA'), 'negocios/negA/ventas/v2'),
     { descripcion: 'Torta', cantidad: 1 }));
   await assertFails(deleteDoc(doc(como('empleadoA'), 'negocios/negA/ventas/v1')));
+});
+
+// Cotizar es trabajo de cualquier miembro; los catálogos son solo de lectura
+// para el empleado. Decisión explícita del dueño del producto (2026-09-17).
+
+test('el empleado cotiza: la crea y la corrige', async () => {
+  await assertSucceeds(setDoc(doc(como('empleadoA'), 'negocios/negA/cotizaciones/c2'),
+    { cliente: 'Nuevo cliente', descuento: 0 }));
+  await assertSucceeds(setDoc(doc(como('empleadoA'), 'negocios/negA/cotizaciones/c1'),
+    { cliente: 'Cliente', descuento: 5000 }));
+});
+
+test('el empleado no borra cotizaciones', async () => {
+  await assertFails(deleteDoc(doc(como('empleadoA'), 'negocios/negA/cotizaciones/c1')));
+});
+
+test('el socio sí borra cotizaciones', async () => {
+  await assertSucceeds(deleteDoc(doc(como('socioA'), 'negocios/negA/cotizaciones/c1')));
+});
+
+test('el empleado no cotiza para otro negocio', async () => {
+  await assertFails(setDoc(doc(como('empleadoA'), 'negocios/negB/cotizaciones/c9'),
+    { cliente: 'Ajeno', descuento: 0 }));
+});
+
+test('el empleado consulta los catálogos pero no los sube ni los borra', async () => {
+  await assertSucceeds(getDoc(doc(como('empleadoA'), 'negocios/negA/catalogos/cat1')));
+  await assertFails(setDoc(doc(como('empleadoA'), 'negocios/negA/catalogos/cat2'),
+    { nombre: 'Mío', url: 'x', path: 'y' }));
+  await assertFails(deleteDoc(doc(como('empleadoA'), 'negocios/negA/catalogos/cat1')));
+});
+
+test('el socio sí sube catálogos', async () => {
+  await assertSucceeds(setDoc(doc(como('socioA'), 'negocios/negA/catalogos/cat2'),
+    { nombre: 'Nuevo', url: 'x', path: 'y' }));
 });
 
 test('el socio sí corrige el historial', async () => {
