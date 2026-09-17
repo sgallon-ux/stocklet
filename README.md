@@ -32,6 +32,16 @@ firebase deploy --only functions     # Cloud Functions
 firebase deploy --only hosting       # web/ (tras flutter build web)
 ```
 
+## Pruebas
+
+Lógica pura (costeo, unidades, formato):
+
+```
+flutter test
+```
+
+Las reglas de seguridad tienen su propia suite, aparte (ver abajo).
+
 ## Reglas de seguridad
 
 Las reglas viven en el repositorio y son la única barrera real entre un negocio
