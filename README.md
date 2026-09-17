@@ -52,8 +52,12 @@ npm test
 Para desplegarlas (sobrescribe lo que haya en la consola de Firebase):
 
 ```
-firebase deploy --only firestore:rules,storage:rules
+firebase deploy --only firestore:rules,storage
 ```
+
+Ojo con el nombre del objetivo: `firestore:rules` existe, pero `storage:rules`
+no. En Storage lo que va después de los dos puntos es un *deploy target* de
+bucket, así que las reglas van con `storage` a secas.
 
 ## Documentación
 
