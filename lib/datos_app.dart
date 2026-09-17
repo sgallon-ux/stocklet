@@ -139,6 +139,8 @@ class DatosApp extends ChangeNotifier {
         estado = EstadoApp.cargando;
         notifyListeners();
         await _cargarNegocioId(usuario.uid);
+        // La suscripción va atada al uid, no a la instalación.
+        await SuscripcionService.instance.identificar(usuario.uid);
         if (_negocioId != null) {
           _escucharTodo();
           estado = EstadoApp.listo;
@@ -153,6 +155,9 @@ class DatosApp extends ChangeNotifier {
         _negocioId = null;
         negocio = null;        // limpia el negocio anterior
         reiniciarMoneda();     // vuelve la moneda a la de por defecto
+        // Desvincula la suscripción: el siguiente usuario de este dispositivo
+        // no debe heredar el Pro del anterior.
+        await SuscripcionService.instance.cerrarSesion();
         _detenerYLimpiar();
       }
     });

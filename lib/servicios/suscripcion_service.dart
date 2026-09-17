@@ -45,6 +45,37 @@ class SuscripcionService {
     }
   }
 
+  /// Vincula la suscripción al usuario de Firebase.
+  ///
+  /// Sin esto RevenueCat asigna un ID anónimo por instalación, y quien
+  /// reinstale o entre desde otro dispositivo no recupera su Pro salvo que use
+  /// "Restaurar compras" a mano. Al identificar, RevenueCat conserva las
+  /// compras hechas antes de iniciar sesión (las asocia al uid).
+  Future<void> identificar(String uid) async {
+    if (!activa || uid.isEmpty) return;
+    try {
+      final res = await Purchases.logIn(uid);
+      esPro.value =
+          res.customerInfo.entitlements.active.containsKey(entitlementPro);
+    } catch (_) {
+      // Si falla, se queda con lo que hubiera; restaurar() sigue disponible.
+    }
+  }
+
+  /// Desvincula al cerrar sesión, para que quien entre después en este mismo
+  /// dispositivo no herede el estado Pro del anterior.
+  Future<void> cerrarSesion() async {
+    if (!activa) return;
+    try {
+      final info = await Purchases.logOut();
+      esPro.value = info.entitlements.active.containsKey(entitlementPro);
+    } catch (_) {
+      // logOut lanza si el usuario ya era anónimo. Sea ese caso o un fallo de
+      // red, lo prudente es no dejar Pro activo para el siguiente usuario.
+      esPro.value = false;
+    }
+  }
+
   Future<void> _refrescar() async {
     try {
       final info = await Purchases.getCustomerInfo();
