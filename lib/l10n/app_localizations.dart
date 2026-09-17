@@ -1101,7 +1101,7 @@ abstract class AppLocalizations {
   /// No description provided for @costeoFijosIncompletos.
   ///
   /// In es, this message translates to:
-  /// **'Faltan tus gastos fijos y unidades/mes para el costo completo.'**
+  /// **'Faltan tus gastos fijos y lotes/mes para el costo completo.'**
   String get costeoFijosIncompletos;
 
   /// No description provided for @costeoCompletar.
@@ -1182,16 +1182,16 @@ abstract class AppLocalizations {
   /// **'Agregar concepto'**
   String get costeoAgregarConcepto;
 
-  /// No description provided for @costeoUnidadesMes.
+  /// No description provided for @costeoLotesMes.
   ///
   /// In es, this message translates to:
-  /// **'Unidades que produces al mes'**
-  String get costeoUnidadesMes;
+  /// **'Recetas o lotes que preparas al mes'**
+  String get costeoLotesMes;
 
   /// No description provided for @costeoTotalMensual.
   ///
   /// In es, this message translates to:
-  /// **'Total mensual: {total} · por unidad: {unidad}'**
+  /// **'Total mensual: {total} · por lote: {unidad}'**
   String costeoTotalMensual(String total, String unidad);
 
   /// No description provided for @costeoMargenSeccion.

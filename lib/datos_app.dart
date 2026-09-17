@@ -1295,7 +1295,7 @@ Future<void> _cargarNegocioId(String uid) async {
     required double tarifaHora,
     required double costoEnergiaHora,
     required List<GastoFijo> gastosFijos,
-    required double unidadesMes,
+    required double lotesMes,
     required String metodoMargen,
     required double margenPct,
     required double margenEspecialPct,
@@ -1306,7 +1306,7 @@ Future<void> _cargarNegocioId(String uid) async {
     negocio!.tarifaHora = tarifaHora;
     negocio!.costoEnergiaHora = costoEnergiaHora;
     negocio!.gastosFijos = gastosFijos;
-    negocio!.unidadesMes = unidadesMes;
+    negocio!.lotesMes = lotesMes;
     negocio!.metodoMargen = metodoMargen;
     negocio!.margenPct = margenPct;
     negocio!.margenEspecialPct = margenEspecialPct;
@@ -1317,7 +1317,7 @@ Future<void> _cargarNegocioId(String uid) async {
         'tarifaHora': tarifaHora,
         'costoEnergiaHora': costoEnergiaHora,
         'gastosFijos': gastosFijos.map((g) => g.toMap()).toList(),
-        'unidadesMes': unidadesMes,
+        'lotesMes': lotesMes,
         'metodoMargen': metodoMargen,
         'margenPct': margenPct,
         'margenEspecialPct': margenEspecialPct,

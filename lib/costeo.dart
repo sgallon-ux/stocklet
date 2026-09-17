@@ -7,7 +7,7 @@ class ConfigCosteo {
   final double tarifaHora;
   final double costoEnergiaHora;
   final double gastosMes;
-  final double unidadesMes;
+  final double lotesMes;
   final String metodoMargen; // 'venta' | 'markup'
   final double margenPct;
   final double margenEspecialPct;
@@ -16,7 +16,7 @@ class ConfigCosteo {
     this.tarifaHora = 0,
     this.costoEnergiaHora = 0,
     this.gastosMes = 0,
-    this.unidadesMes = 0,
+    this.lotesMes = 0,
     this.metodoMargen = 'venta',
     this.margenPct = 40,
     this.margenEspecialPct = 50,
@@ -28,14 +28,14 @@ class ConfigCosteo {
       tarifaHora: n.tarifaHora,
       costoEnergiaHora: n.costoEnergiaHora,
       gastosMes: n.gastosFijosMes,
-      unidadesMes: n.unidadesMes,
+      lotesMes: n.lotesMes,
       metodoMargen: n.metodoMargen,
       margenPct: n.margenPct,
       margenEspecialPct: n.margenEspecialPct,
     );
   }
 
-  bool get fijosIncompletos => !(gastosMes > 0 && unidadesMes > 0);
+  bool get fijosIncompletos => !(gastosMes > 0 && lotesMes > 0);
 }
 
 enum EstadoPrecio { sinPrecio, perdida, bajo, bien }
@@ -135,8 +135,13 @@ ResultadoCosteo costear(Producto p, ConfigCosteo cfg,
   final manoObraUnidad = (p.minutosPrep / 60) * cfg.tarifaHora / rend;
   final energiaUnidad = (p.minutosHorno / 60) * cfg.costoEnergiaHora / rend;
 
-  // 6. Gastos fijos prorrateados
-  final fijosUnidad = cfg.unidadesMes > 0 ? cfg.gastosMes / cfg.unidadesMes : 0.0;
+  // 6. Gastos fijos prorrateados POR LOTE, no por unidad.
+  // Cada preparación carga una parte igual de los gastos del mes, y esa parte
+  // se reparte entre las unidades que rinde. Así una torta (lote de una
+  // unidad) carga un lote entero, y un lote de 50 galletas carga lo mismo
+  // repartido entre las 50: ocupar el horno cuesta igual en los dos casos.
+  final fijosLote = cfg.lotesMes > 0 ? cfg.gastosMes / cfg.lotesMes : 0.0;
+  final fijosUnidad = fijosLote / rend;
 
   // 7. Costo total por unidad
   final costoUnidad = materiaUnidad +

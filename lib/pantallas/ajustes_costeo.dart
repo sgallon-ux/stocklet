@@ -24,7 +24,7 @@ class PantallaAjustesCosteo extends StatefulWidget {
 class _PantallaAjustesCosteoState extends State<PantallaAjustesCosteo> {
   late final TextEditingController tarifaCtrl;
   late final TextEditingController energiaCtrl;
-  late final TextEditingController unidadesCtrl;
+  late final TextEditingController lotesCtrl;
   late final TextEditingController margenCtrl;
   late final TextEditingController margenEspCtrl;
   late final TextEditingController ivaCtrl;
@@ -42,8 +42,8 @@ class _PantallaAjustesCosteoState extends State<PantallaAjustesCosteo> {
         text: (n?.costoEnergiaHora ?? 0) > 0
             ? cantidadStr(n!.costoEnergiaHora)
             : '');
-    unidadesCtrl = TextEditingController(
-        text: (n?.unidadesMes ?? 0) > 0 ? cantidadStr(n!.unidadesMes) : '');
+    lotesCtrl = TextEditingController(
+        text: (n?.lotesMes ?? 0) > 0 ? cantidadStr(n!.lotesMes) : '');
     margenCtrl = TextEditingController(text: cantidadStr(n?.margenPct ?? 40));
     margenEspCtrl =
         TextEditingController(text: cantidadStr(n?.margenEspecialPct ?? 50));
@@ -57,7 +57,7 @@ class _PantallaAjustesCosteoState extends State<PantallaAjustesCosteo> {
 
   @override
   void dispose() {
-    for (final c in [tarifaCtrl, energiaCtrl, unidadesCtrl, margenCtrl,
+    for (final c in [tarifaCtrl, energiaCtrl, lotesCtrl, margenCtrl,
       margenEspCtrl, ivaCtrl]) {
       c.dispose();
     }
@@ -85,7 +85,7 @@ class _PantallaAjustesCosteoState extends State<PantallaAjustesCosteo> {
           tarifaHora: parseCantidad(tarifaCtrl.text),
           costoEnergiaHora: parseCantidad(energiaCtrl.text),
           gastosFijos: lista,
-          unidadesMes: parseCantidad(unidadesCtrl.text),
+          lotesMes: parseCantidad(lotesCtrl.text),
           metodoMargen: metodoMargen,
           margenPct: parseCantidad(margenCtrl.text),
           margenEspecialPct: parseCantidad(margenEspCtrl.text),
@@ -102,8 +102,8 @@ class _PantallaAjustesCosteoState extends State<PantallaAjustesCosteo> {
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
     final m = AppColores.of(context);
-    final unidades = parseCantidad(unidadesCtrl.text);
-    final porUnidad = unidades > 0 ? _totalGastos / unidades : 0.0;
+    final lotes = parseCantidad(lotesCtrl.text);
+    final porLote = lotes > 0 ? _totalGastos / lotes : 0.0;
 
     return Scaffold(
       appBar: AppBar(title: Text(t.ajustesCosteoTitulo)),
@@ -198,18 +198,18 @@ class _PantallaAjustesCosteoState extends State<PantallaAjustesCosteo> {
                   ),
                   const SizedBox(height: 8),
                   TextField(
-                    controller: unidadesCtrl,
+                    controller: lotesCtrl,
                     keyboardType:
                         const TextInputType.numberWithOptions(decimal: true),
                     inputFormatters: [Decimal2Formatter()],
                     onChanged: (_) => setState(() {}),
                     decoration:
-                        InputDecoration(labelText: t.costeoUnidadesMes),
+                        InputDecoration(labelText: t.costeoLotesMes),
                   ),
                   const SizedBox(height: 10),
                   Text(
                     t.costeoTotalMensual(
-                        pesos(_totalGastos), pesos(porUnidad)),
+                        pesos(_totalGastos), pesos(porLote)),
                     style: TextStyle(fontSize: 12, color: m.textoSuave),
                   ),
                 ],

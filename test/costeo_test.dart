@@ -130,26 +130,58 @@ void main() {
     });
   });
 
-  group('gastos fijos', () {
-    test('se reparten entre las unidades estimadas del mes', () {
-      final r = costear(
-        producto(),
-        const ConfigCosteo(gastosMes: 1000000, unidadesMes: 500),
-      );
-      expect(r.fijosUnidad, 2000);
-      expect(r.fijosIncompletos, isFalse);
+  group('gastos fijos: se reparten por lote, no por unidad', () {
+    // $1.000.000 al mes entre 20 lotes = $50.000 que carga cada preparación.
+    const cfg = ConfigCosteo(gastosMes: 1000000, lotesMes: 20);
+
+    test('un lote de una unidad carga el lote entero', () {
+      // Una torta ocupa el horno y el turno igual que cualquier otro lote.
+      final r = costear(producto(rendimiento: 1), cfg);
+      expect(r.fijosUnidad, 50000);
     });
 
-    test('sin unidades estimadas no se prorratea y se avisa', () {
+    test('un lote de 50 carga lo mismo, repartido entre las 50', () {
+      final r = costear(producto(rendimiento: 50), cfg);
+      expect(r.fijosUnidad, 1000); // 50000 / 50
+    });
+
+    test('el lote siempre carga lo mismo, rinda lo que rinda', () {
+      // La invariante del modelo: fijosUnidad × rendimiento es constante.
+      for (final rend in [1.0, 4.0, 12.0, 50.0, 200.0]) {
+        final r = costear(producto(rendimiento: rend), cfg);
+        expect(r.fijosUnidad * rend, closeTo(50000, 0.01),
+            reason: 'rendimiento $rend');
+      }
+    });
+
+    test('el mes recupera exactamente los gastos fijos', () {
+      // Sin esta igualdad el prorrateo estaría mal planteado: 20 lotes al mes
+      // tienen que sumar el millón, ni más ni menos.
+      final r = costear(producto(rendimiento: 50), cfg);
+      final recuperadoAlMes = r.fijosUnidad * 50 * cfg.lotesMes;
+      expect(recuperadoAlMes, closeTo(cfg.gastosMes, 0.01));
+    });
+
+    test('un rendimiento inválido carga el lote entero', () {
+      // rendimiento 0 se trata como 1, igual que en la materia prima.
+      final r = costear(producto(rendimiento: 0), cfg);
+      expect(r.fijosUnidad, 50000);
+    });
+
+    test('sin lotes al mes no se prorratea y se avisa', () {
       final r = costear(producto(), const ConfigCosteo(gastosMes: 1000000));
       expect(r.fijosUnidad, 0);
       expect(r.fijosIncompletos, isTrue);
     });
 
+    test('con gastos y lotes cargados, no se avisa', () {
+      expect(costear(producto(), cfg).fijosIncompletos, isFalse);
+    });
+
     test('el costo variable excluye los fijos', () {
       final r = costear(
         producto(),
-        const ConfigCosteo(gastosMes: 100000, unidadesMes: 100),
+        const ConfigCosteo(gastosMes: 100000, lotesMes: 100),
       );
       expect(r.fijosUnidad, 1000);
       expect(r.costoUnidad - r.costoVariableUnidad, 1000);
@@ -256,7 +288,7 @@ void main() {
     test('utilidad y contribución', () {
       final r = costear(
         producto(metodoMargen: 'markup', margenPct: 50),
-        const ConfigCosteo(gastosMes: 100000, unidadesMes: 100),
+        const ConfigCosteo(gastosMes: 100000, lotesMes: 100),
       );
       // costo 1000 + fijos 1000 = 2000; sugerido 3000.
       expect(r.costoUnidad, 2000);
@@ -268,7 +300,7 @@ void main() {
     test('el punto de equilibrio son los fijos entre la contribución', () {
       final r = costear(
         producto(metodoMargen: 'markup', margenPct: 50),
-        const ConfigCosteo(gastosMes: 100000, unidadesMes: 100),
+        const ConfigCosteo(gastosMes: 100000, lotesMes: 100),
       );
       expect(r.equilibrio, closeTo(50, 0.01)); // 100000 / 2000
     });
@@ -276,7 +308,7 @@ void main() {
     test('sin contribución positiva no hay equilibrio que calcular', () {
       final r = costear(
         producto(metodoMargen: 'markup', margenPct: 0),
-        const ConfigCosteo(gastosMes: 100000, unidadesMes: 0),
+        const ConfigCosteo(gastosMes: 100000, lotesMes: 0),
       );
       expect(r.contribucion, 0);
       expect(r.equilibrio, isNull);

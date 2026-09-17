@@ -27,7 +27,7 @@ class Negocio {
   double tarifaHora; // valor de una hora de trabajo
   double costoEnergiaHora; // costo de una hora de horno/energía
   List<GastoFijo> gastosFijos; // gastos fijos del mes
-  double unidadesMes; // unidades producidas al mes (prorrateo)
+  double lotesMes; // lotes/recetas preparados al mes (prorrateo de fijos)
   String metodoMargen; // 'venta' | 'markup'
   double margenPct; // margen general (%)
   double margenEspecialPct; // margen para la línea sin azúcar (%)
@@ -49,7 +49,7 @@ class Negocio {
     this.tarifaHora = 0,
     this.costoEnergiaHora = 0,
     List<GastoFijo>? gastosFijos,
-    this.unidadesMes = 0,
+    this.lotesMes = 0,
     this.metodoMargen = 'venta',
     this.margenPct = 40,
     this.margenEspecialPct = 50,
@@ -75,7 +75,7 @@ class Negocio {
       'tarifaHora': tarifaHora,
       'costoEnergiaHora': costoEnergiaHora,
       'gastosFijos': gastosFijos.map((g) => g.toMap()).toList(),
-      'unidadesMes': unidadesMes,
+      'lotesMes': lotesMes,
       'metodoMargen': metodoMargen,
       'margenPct': margenPct,
       'margenEspecialPct': margenEspecialPct,
@@ -106,7 +106,7 @@ class Negocio {
       tarifaHora: (map['tarifaHora'] as num?)?.toDouble() ?? 0,
       costoEnergiaHora: (map['costoEnergiaHora'] as num?)?.toDouble() ?? 0,
       gastosFijos: gf,
-      unidadesMes: (map['unidadesMes'] as num?)?.toDouble() ?? 0,
+      lotesMes: (map['lotesMes'] as num?)?.toDouble() ?? 0,
       metodoMargen: (map['metodoMargen'] as String?) ?? 'venta',
       margenPct: (map['margenPct'] as num?)?.toDouble() ?? 40,
       margenEspecialPct: (map['margenEspecialPct'] as num?)?.toDouble() ?? 50,

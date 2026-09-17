@@ -538,7 +538,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get costeoFijosIncompletos =>
-      'Add your fixed costs and units/month for the full cost.';
+      'Add your fixed costs and batches/month for the full cost.';
 
   @override
   String get costeoCompletar => 'Complete';
@@ -580,11 +580,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get costeoAgregarConcepto => 'Add item';
 
   @override
-  String get costeoUnidadesMes => 'Units you make per month';
+  String get costeoLotesMes => 'Recipes or batches you make per month';
 
   @override
   String costeoTotalMensual(String total, String unidad) {
-    return 'Monthly total: $total · per unit: $unidad';
+    return 'Monthly total: $total · per batch: $unidad';
   }
 
   @override

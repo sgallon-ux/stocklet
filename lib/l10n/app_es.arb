@@ -233,7 +233,7 @@
   "costeoCostoUnidad": "Costo por unidad",
   "costeoPrecioSugerido": "Precio sugerido",
   "costeoUsarSugerido": "Usar este precio",
-  "costeoFijosIncompletos": "Faltan tus gastos fijos y unidades/mes para el costo completo.",
+  "costeoFijosIncompletos": "Faltan tus gastos fijos y lotes/mes para el costo completo.",
   "costeoCompletar": "Completar",
   "estadoPerdida": "Pérdida",
   "estadoBajo": "Por debajo",
@@ -247,8 +247,8 @@
   "costeoConcepto": "Concepto",
   "costeoValorMensual": "Valor mensual",
   "costeoAgregarConcepto": "Agregar concepto",
-  "costeoUnidadesMes": "Unidades que produces al mes",
-  "costeoTotalMensual": "Total mensual: {total} · por unidad: {unidad}",
+  "costeoLotesMes": "Recetas o lotes que preparas al mes",
+  "costeoTotalMensual": "Total mensual: {total} · por lote: {unidad}",
   "@costeoTotalMensual": {
     "placeholders": {
       "total": { "type": "String" },
