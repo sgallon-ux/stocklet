@@ -73,24 +73,36 @@ de duplicarse en la pantalla que la necesitó primero.
 Razón: la app es una herramienta contable multi-moneda; un redondeo inconsistente entre
 dos pantallas destruye la confianza en todos los números que muestra.
 
-### V. Verificación manual antes de entregar (NO NEGOCIABLE)
+### V. Verificación antes de entregar (NO NEGOCIABLE)
 
-Este proyecto no tiene CI ni suite de pruebas automatizada, así que la puerta de calidad
-es explícita y manual. Antes de dar por terminado cualquier cambio:
+El proyecto ya tiene dos suites automatizadas, pero **no tiene CI**: nadie las ejecuta
+salvo que se corran a mano. La puerta de calidad sigue siendo explícita y manual, y ahora
+incluye correrlas. Antes de dar por terminado cualquier cambio:
 
 - `flutter analyze` MUST terminar sin errores ni advertencias nuevas.
+- `flutter test` MUST pasar entero (lógica pura: costeo, unidades, formato).
+- Si el cambio toca `firestore.rules`, `storage.rules`, roles o permisos, la suite de
+  reglas MUST pasar entera: `cd test/rules && npm test`.
 - Si se tocaron archivos ARB, `flutter gen-l10n` MUST ejecutarse y el resultado compilar.
 - El flujo afectado MUST ejecutarse al menos una vez en la app real (`flutter run`);
-  "compila" no cuenta como verificado.
+  "compila" no cuenta como verificado, y las pruebas en verde tampoco.
 - Un cambio que toque permisos, roles, cobros o datos de negocio MUST probarse además con
   un rol distinto de `dueno`.
 
-Lo que quede sin verificar MUST reportarse en lugar de declarar el trabajo terminado.
-Cuando se añadan pruebas automatizadas, estas SHOULD cubrir primero `costeo.dart`,
-`unidades.dart` y `formato.dart`, que son lógica pura y de alto impacto.
+Qué entra con prueba, obligatoriamente:
 
-Razón: sin red automatizada, la única protección real es que nadie entregue algo que no
-ejecutó.
+- Lógica pura nueva o modificada en `lib/costeo.dart`, `lib/unidades.dart` o
+  `lib/formato.dart` MUST entrar con su prueba en `test/`.
+- Un cambio de reglas de seguridad o del modelo de roles MUST entrar con su prueba en
+  `test/rules/`, tanto para lo que se permite como para lo que se deniega.
+- Un bug corregido en esos módulos SHOULD entrar con la prueba que lo habría detectado.
+
+Lo que quede sin verificar MUST reportarse en lugar de declarar el trabajo terminado.
+
+Razón: las suites cubren el cálculo del dinero y el aislamiento entre negocios, que son
+los dos sitios donde un error no se nota hasta que ya hizo daño. Pero sin CI nadie las
+ejecuta por ti, y ninguna de las dos prueba la app de verdad: por eso el paso manual no
+desaparece, se suma.
 
 ## Restricciones de Stack y Plataforma
 
@@ -122,8 +134,9 @@ ejecutó.
   antes de commitear.
 - **Commits**: mensaje en español, describiendo el cambio funcional. Un commit MUST NOT
   mezclar una funcionalidad nueva con una refactorización amplia no relacionada.
-- **Puerta previa al commit**: Principio V completo (analyze limpio, l10n regenerada si
-  aplica, flujo ejecutado en la app).
+- **Puerta previa al commit**: Principio V completo (analyze limpio, `flutter test` en
+  verde, suite de reglas en verde si aplica, l10n regenerada si aplica, flujo ejecutado
+  en la app).
 - **Puerta previa a publicar**: `flutter build appbundle` para Play, y `flutter build web`
   + `firebase deploy --only hosting` para web; verificar que la versión de `pubspec.yaml`
   se incrementó.
@@ -158,4 +171,4 @@ Las guías operativas del día a día (comandos, puesta en marcha, stack) viven 
 `README.md`; si el README y esta constitución discrepan, manda esta constitución y el
 README MUST corregirse.
 
-**Version**: 1.0.0 | **Ratified**: 2026-09-15 | **Last Amended**: 2026-09-15
+**Version**: 1.1.0 | **Ratified**: 2026-09-15 | **Last Amended**: 2026-09-17
