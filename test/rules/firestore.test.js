@@ -77,7 +77,10 @@ before(async () => {
   env = await initializeTestEnvironment({
     projectId: 'demo-stocklet',
     firestore: {
-      rules: readFileSync(resolve(aqui, '../../firestore.rules'), 'utf8'),
+      // STOCKLET_RULES permite correr la misma suite contra otro archivo de
+      // reglas (por ejemplo, las que hay desplegadas hoy) para compararlas.
+      rules: readFileSync(
+        process.env.STOCKLET_RULES ?? resolve(aqui, '../../firestore.rules'), 'utf8'),
       host,
       port: Number(puerto),
     },

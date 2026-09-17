@@ -33,6 +33,15 @@ service firebase.storage {
       return esMiembro(negocioId) && miFicha().get('rol', 'empleado') in ['dueno', 'socio'];
     }
 
+    // El logo solo lo cambia el dueño: panel_usuario.dart gatea esa acción en
+    // `esDueno` (negocio.duenoUid == uid), no en dueño-o-socio.
+    function esDuenoDelNegocio(negocioId) {
+      return autenticado() &&
+             firestore.exists(/databases/(default)/documents/negocios/$(negocioId)) &&
+             firestore.get(/databases/(default)/documents/negocios/$(negocioId)).data
+               .get('duenoUid', '') == request.auth.uid;
+    }
+
     function esImagen() {
       return request.resource.contentType.matches('image/.*') &&
              request.resource.size < 5 * 1024 * 1024;
@@ -51,11 +60,11 @@ service firebase.storage {
       allow delete: if autenticado() && request.auth.uid == uid;
     }
 
-    // Logo del negocio: lo ven todos los miembros, lo cambian dueño y socio.
+    // Logo del negocio: lo ven todos los miembros, lo cambia solo el dueño.
     match /negocios/{negocioId}/logo/{archivo=**} {
       allow read: if esMiembro(negocioId);
-      allow write: if esDuenoOSocio(negocioId) && esImagen();
-      allow delete: if esDuenoOSocio(negocioId);
+      allow write: if esDuenoDelNegocio(negocioId) && esImagen();
+      allow delete: if esDuenoDelNegocio(negocioId);
     }
 
     // Catálogos en PDF: los ven todos los miembros, los suben dueño y socio.
