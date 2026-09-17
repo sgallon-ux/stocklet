@@ -19,7 +19,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.example.reposteria_app"
+    namespace = "com.buildlark.stocklet"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 

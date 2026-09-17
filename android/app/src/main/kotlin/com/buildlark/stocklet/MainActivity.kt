@@ -1,4 +1,4 @@
-package com.example.reposteria_app
+package com.buildlark.stocklet
 
 import io.flutter.embedding.android.FlutterActivity
 
