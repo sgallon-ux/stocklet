@@ -147,7 +147,7 @@ const productos = [
     id: 'cheesecake',
     nombre: 'Cheesecake de maracuyá',
     tipo: 'Tortas',
-    precioVenta: 62000,
+    precioVenta: 9000,
     rendimiento: 12,
     mermaPct: 5,
     minutosPrep: 50,
@@ -164,7 +164,7 @@ const catalogoVentas = [
   ['Torta de chocolate', 95000, 41000],
   ['Brownies', 5000, 2100],
   ['Galletas de vainilla', 2800, 1150],
-  ['Cheesecake de maracuyá', 62000, 28000],
+  ['Cheesecake de maracuyá', 9000, 7014],
 ];
 
 function generarVentas() {
@@ -177,8 +177,12 @@ function generarVentas() {
   for (let dia = 175; dia >= 0; dia -= 1) {
     const fecha = diasAtras(dia);
     const finDeSemana = fecha.getDay() === 0 || fecha.getDay() === 6;
-    const cuantas = finDeSemana ? Math.floor(aleatorio() * 4) + 2
-                                : Math.floor(aleatorio() * 3);
+    // Todos los días venden algo: un cero deja la gráfica de tendencia con un
+    // pico hacia abajo que parece un error de la app, no un día flojo. Y el
+    // volumen tiene que cubrir los gastos fijos del mes con holgura: un
+    // negocio de demo en pérdidas es una pésima primera captura de la ficha.
+    const cuantas = finDeSemana ? Math.floor(aleatorio() * 5) + 5
+                                : Math.floor(aleatorio() * 4) + 3;
     for (let i = 0; i < cuantas; i += 1) {
       const [nombre, precio, costo] = catalogoVentas[
         Math.floor(aleatorio() * catalogoVentas.length)];
@@ -248,15 +252,15 @@ const pedidos = [
   {
     id: 'pedido-entregado',
     cliente: { nombre: 'Cafetería La Plaza', telefono: '3201118834' },
-    descripcion: '2x Cheesecake de maracuyá',
+    descripcion: '12x Cheesecake de maracuyá',
     fechaPedido: ts(diasAtras(18)),
     fechaEntrega: ts(diasAtras(12)),
-    precio: 124000,
-    costo: 56000,
+    precio: 108000,
+    costo: 84168,
     entregado: true,
     archivado: false,
     otroValor: 0,
-    items: [item('Cheesecake de maracuyá', 2, 62000, 28000, [r('queso', 75)])],
+    items: [item('Cheesecake de maracuyá', 12, 9000, 7014, [r('queso', 75)])],
   },
 ];
 
@@ -302,11 +306,28 @@ const cotizaciones = [
   },
 ];
 
+// --- Equipo ------------------------------------------------------------------
+// Un negocio con un solo miembro no enseña los roles, que es justo lo que
+// separa a Stocklet de una libreta personal.
+const miembros = [
+  ['socio-demo', 'Mariana Ochoa', 'socio', '3145567821'],
+  ['empleado-demo', 'Julián Mesa', 'empleado', '3179923410'],
+];
+
+// Invitación pendiente, para que se vea el mecanismo de códigos.
+const invitaciones = [
+  ['K7M2QP', 'empleado', 'pendiente', ''],
+];
+
 // --- Siembra -----------------------------------------------------------------
 async function limpiar() {
   await db.recursiveDelete(db.collection('negocios').doc(NEGOCIO));
-  const us = await db.collection('usuarios').get();
-  await Promise.all(us.docs.map((d) => d.ref.delete()));
+  // usuarios e invitaciones son colecciones raíz: no las arrastra el borrado
+  // del negocio, y si no se limpian aquí el sembrado deja de ser repetible.
+  for (const col of ['usuarios', 'invitaciones']) {
+    const snap = await db.collection(col).get();
+    await Promise.all(snap.docs.map((d) => d.ref.delete()));
+  }
 }
 
 async function crearUsuario() {
@@ -336,6 +357,19 @@ async function sembrar() {
     fotoUrl: '',
     idioma: 'es',
   });
+
+  for (const [id, nombre, rol, celular] of miembros) {
+    await db.collection('usuarios').doc(id).set({
+      negocioId: NEGOCIO, rol, nombre, celular, fotoUrl: '', idioma: 'es',
+    });
+  }
+
+  for (const [codigo, rol, estado, usadaPor] of invitaciones) {
+    await db.collection('invitaciones').doc(codigo).set({
+      negocioId: NEGOCIO, rol, estado, creadoPor: uid, usadaPor,
+      fecha: ts(diasAtras(1)),
+    });
+  }
 
   await db.collection('negocios').doc(NEGOCIO).set({
     nombre: 'Postres Aurora',
@@ -417,6 +451,7 @@ Listo. Negocio de demo "Postres Aurora":
   ${productos.length} productos con receta (el cheesecake, mal cobrado a propósito)
   ${ventas.length} ventas en seis meses
   ${gastos.length} gastos, ${pedidos.length} pedidos, ${cotizaciones.length} cotizaciones
+  equipo: dueña + ${miembros.length} miembros y ${invitaciones.length} invitación pendiente
 
 Entra en la app con:
   correo: ${CORREO}
