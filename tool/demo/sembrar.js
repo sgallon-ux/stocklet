@@ -103,7 +103,7 @@ const productos = [
     id: 'torta-chocolate',
     nombre: 'Torta de chocolate',
     tipo: 'Tortas',
-    precioVenta: 95000,
+    precioVenta: 76000,
     rendimiento: 1,
     mermaPct: 5,
     minutosPrep: 55,
@@ -161,7 +161,7 @@ const productos = [
 
 // --- Ventas: seis meses de historia, para que las gráficas tengan forma ------
 const catalogoVentas = [
-  ['Torta de chocolate', 95000, 41000],
+  ['Torta de chocolate', 76000, 59515],
   ['Brownies', 5000, 2100],
   ['Galletas de vainilla', 2800, 1150],
   ['Cheesecake de maracuyá', 9000, 7014],

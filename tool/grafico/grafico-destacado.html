@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<!--
+  Gráfico destacado de Google Play: 1024x500, obligatorio en la ficha.
+
+  Se renderiza a PNG con Chrome en modo headless (ver README en esta carpeta),
+  así que el tamaño sale exacto y es repetible.
+
+  Dos reglas que condicionan el diseño:
+  - Play recorta este gráfico en varias superficies, así que nada importante
+    va cerca de los bordes. Aquí todo queda dentro de un margen de 80 px.
+  - No puede llevar transparencia: el fondo es opaco de lado a lado.
+-->
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: 1024px;
+    height: 500px;
+    overflow: hidden;
+  }
+
+  body {
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    /* Verde de marca (tema.dart): #0E9F6E sobre #0A7D55. */
+    background: linear-gradient(118deg, #0A7D55 0%, #0E9F6E 58%, #14B37C 100%);
+    position: relative;
+  }
+
+  /* Formas de fondo: dan profundidad sin competir con el texto. */
+  .halo {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.07);
+  }
+  .halo.a { width: 520px; height: 520px; top: -190px; right: -90px; }
+  .halo.b { width: 330px; height: 330px; bottom: -160px; left: 380px;
+            background: rgba(255, 255, 255, 0.05); }
+
+  .lienzo {
+    position: relative;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 80px;          /* margen de seguridad frente al recorte */
+    gap: 56px;
+  }
+
+  .marca { flex: 1; }
+
+  .fila {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    margin-bottom: 26px;
+  }
+
+  .icono {
+    width: 104px;
+    height: 104px;
+    border-radius: 24px;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+    display: block;
+  }
+
+  .nombre {
+    font-size: 78px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -1.5px;
+    line-height: 1;
+  }
+
+  .lema {
+    font-size: 31px;
+    line-height: 1.32;
+    color: rgba(255, 255, 255, 0.95);
+    font-weight: 400;
+    max-width: 480px;
+  }
+  .lema b { font-weight: 700; }
+
+  /* Tarjeta: el argumento del producto en dos cifras. */
+  .tarjeta {
+    width: 322px;
+    background: #fff;
+    border-radius: 20px;
+    padding: 26px 28px;
+    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.26);
+    transform: rotate(-2.2deg);
+    flex-shrink: 0;
+  }
+
+  .tarjeta .titulo {
+    font-size: 14px;
+    font-weight: 600;
+    color: #6B7A88;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    margin-bottom: 18px;
+  }
+
+  .dato { display: flex; justify-content: space-between; align-items: baseline; }
+  .dato + .dato { margin-top: 12px; }
+  .dato .et { font-size: 17px; color: #6B7A88; }
+  .dato .va { font-size: 21px; font-weight: 700; color: #1B2733; }
+
+  .sep { height: 1px; background: #E3E9ED; margin: 18px 0; }
+
+  .dato.destacado .et { color: #0A7D55; font-weight: 600; }
+  .dato.destacado .va { color: #0E9F6E; font-size: 30px; }
+</style>
+</head>
+<body>
+  <div class="halo a"></div>
+  <div class="halo b"></div>
+
+  <div class="lienzo">
+    <div class="marca">
+      <div class="fila">
+        <img class="icono" src="stocklet_icon.png" alt="">
+        <div class="nombre">Stocklet</div>
+      </div>
+      <div class="lema">
+        Sabe cuánto te cuesta.<br><b>Y cuánto deberías cobrar.</b>
+      </div>
+    </div>
+
+    <div class="tarjeta">
+      <div class="titulo">Torta de chocolate</div>
+      <div class="dato">
+        <span class="et">Costo real</span>
+        <span class="va">59.515 $</span>
+      </div>
+      <div class="dato">
+        <span class="et">Cobras</span>
+        <span class="va">76.000 $</span>
+      </div>
+      <div class="sep"></div>
+      <div class="dato destacado">
+        <span class="et">Deberías</span>
+        <span class="va">99.192 $</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

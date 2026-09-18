@@ -118,7 +118,7 @@ solo le importa a quien ya tiene equipo.
 | Capturas de teléfono | Entre 2 y 8. JPEG o PNG de 24 bits sin transparencia. Lado corto mínimo 320 px, largo máximo 3840 px. Recomendado 1080×1920 |
 | Capturas de tablet 7" y 10" | Opcionales, pero **si no las subes Play puede marcar la app como no optimizada para tablets** |
 | Icono | 512×512 PNG de 32 bits con alfa |
-| Gráfico destacado | 1024×500 JPEG o PNG de 24 bits, sin transparencia. Obligatorio |
+| Gráfico destacado | 1024×500 JPEG o PNG de 24 bits, sin transparencia. Obligatorio. Se genera con `tool/grafico/` |
 | Descripción corta | Máximo 80 caracteres |
 | Descripción completa | Máximo 4000 caracteres |
 | Vídeo promocional | Opcional, enlace de YouTube |
