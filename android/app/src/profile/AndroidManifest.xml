@@ -4,4 +4,9 @@
          to allow setting breakpoints, to provide hot reload, etc.
     -->
     <uses-permission android:name="android.permission.INTERNET"/>
+
+    <!-- Permite hablar con los emuladores locales de Firebase, que son HTTP.
+         Ver android/app/src/main/res/xml/network_security_config.xml. El
+         manifest de release no lo referencia: la app publicada exige HTTPS. -->
+    <application android:networkSecurityConfig="@xml/network_security_config" />
 </manifest>

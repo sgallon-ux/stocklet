@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Permite HTTP sin cifrar ÚNICAMENTE hacia direcciones locales, que es lo que
+  necesitan los emuladores de Firebase (hablan HTTP, no HTTPS).
+
+  Desde targetSdk 28 Android bloquea el tráfico sin cifrar por defecto, y el
+  síntoma es engañoso: la app no logra hablar con el emulador de Auth y el
+  login falla con el mismo mensaje que si las credenciales fueran malas.
+
+  Este archivo NO se referencia desde el manifest de release: solo desde los de
+  debug y profile. La app publicada sigue exigiendo HTTPS para todo.
+-->
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="false">localhost</domain>
+        <domain includeSubdomains="false">127.0.0.1</domain>
+        <domain includeSubdomains="false">10.0.2.2</domain>
+    </domain-config>
+</network-security-config>
