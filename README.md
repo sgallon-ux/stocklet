@@ -38,10 +38,13 @@ Las capturas de la ficha de Google Play **no deben salir del negocio real**: las
 pantallas muestran nombres y teléfonos de clientes, ventas, costos y márgenes, y
 una captura en Play es pública y permanente.
 
-Para eso hay un negocio de demo sembrado en los emuladores. En una terminal:
+Para eso hay un negocio de demo sembrado en los emuladores. El `--project` tiene
+que ser el mismo de `firebase_options.dart`: el emulador de Firestore separa los
+datos por proyecto, así que con otro nombre la app entra pero encuentra la base
+vacía y te manda a crear negocio. En una terminal:
 
 ```
-firebase emulators:start --only auth,firestore,storage --project demo-stocklet
+firebase emulators:start --only auth,firestore,storage --project mi-reposteria-app
 ```
 
 En otra, una sola vez `npm install` dentro de `tool/demo`, y luego:

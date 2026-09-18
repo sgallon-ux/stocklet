@@ -9,7 +9,7 @@
 // Nunca toca producción: si no detecta los emuladores, se niega a correr.
 //
 // Uso:
-//   1. firebase emulators:start --only auth,firestore,storage --project demo-stocklet
+//   1. firebase emulators:start --only auth,firestore,storage --project mi-reposteria-app
 //   2. cd tool/demo && npm install && npm run sembrar
 //   3. flutter run --dart-define=STOCKLET_EMULADOR=true
 //   4. Entrar con las credenciales que imprime al final.
@@ -19,18 +19,40 @@ import { getFirestore, Timestamp } from 'firebase-admin/firestore';
 import { getAuth } from 'firebase-admin/auth';
 
 // --- Guardia: solo emuladores ------------------------------------------------
-if (!process.env.FIRESTORE_EMULATOR_HOST) {
-  process.env.FIRESTORE_EMULATOR_HOST = '127.0.0.1:8080';
-}
-if (!process.env.FIREBASE_AUTH_EMULATOR_HOST) {
-  process.env.FIREBASE_AUTH_EMULATOR_HOST = '127.0.0.1:9099';
-}
-const PROYECTO = process.env.GCLOUD_PROJECT || 'demo-stocklet';
-if (!PROYECTO.startsWith('demo-')) {
-  console.error(
-    `Negándome a sembrar en el proyecto "${PROYECTO}".\n` +
-    'Este script es solo para emuladores: usa un projectId que empiece por "demo-".');
-  process.exit(1);
+//
+// El projectId TIENE que ser el mismo que usa la app (`firebase_options.dart`),
+// porque el emulador de Firestore separa los datos por proyecto: sembrar en uno
+// distinto deja a la app mirando una base vacía.
+//
+// Por eso la protección no puede ser el nombre del proyecto. Lo que de verdad
+// impide tocar producción es que las peticiones vayan al emulador, así que se
+// comprueba que esté escuchando antes de escribir nada.
+const HOST_FIRESTORE =
+  process.env.FIRESTORE_EMULATOR_HOST || '127.0.0.1:8080';
+const HOST_AUTH =
+  process.env.FIREBASE_AUTH_EMULATOR_HOST || '127.0.0.1:9099';
+process.env.FIRESTORE_EMULATOR_HOST = HOST_FIRESTORE;
+process.env.FIREBASE_AUTH_EMULATOR_HOST = HOST_AUTH;
+
+const PROYECTO = process.env.GCLOUD_PROJECT || 'mi-reposteria-app';
+
+async function exigirEmuladores() {
+  for (const [nombre, host] of [
+    ['Firestore', HOST_FIRESTORE],
+    ['Auth', HOST_AUTH],
+  ]) {
+    try {
+      const res = await fetch(`http://${host}/`, { signal: AbortSignal.timeout(3000) });
+      if (!res.ok && res.status !== 404) throw new Error(`HTTP ${res.status}`);
+    } catch (e) {
+      console.error(
+        `\nNo encuentro el emulador de ${nombre} en ${host}.\n` +
+        'Este script solo siembra contra emuladores; sin ellos no escribe nada.\n\n' +
+        '  firebase emulators:start --only auth,firestore,storage ' +
+        `--project ${PROYECTO}\n`);
+      process.exit(1);
+    }
+  }
 }
 
 initializeApp({ projectId: PROYECTO });
@@ -301,6 +323,7 @@ async function crearUsuario() {
 }
 
 async function sembrar() {
+  await exigirEmuladores();
   console.log(`Sembrando en el proyecto "${PROYECTO}" (emuladores)...`);
   await limpiar();
   const uid = await crearUsuario();
