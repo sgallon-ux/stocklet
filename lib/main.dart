@@ -1,4 +1,4 @@
-import 'dart:ui' show PlatformDispatcher;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -35,8 +35,16 @@ const bool kUsarEmulador =
     bool.fromEnvironment('STOCKLET_EMULADOR', defaultValue: false);
 
 void _conectarEmuladores() {
-  const host = String.fromEnvironment('STOCKLET_EMULADOR_HOST',
-      defaultValue: 'localhost');
+  // Dentro del emulador de Android, `localhost` es el propio dispositivo: la
+  // máquina que corre los emuladores de Firebase se ve como 10.0.2.2. En web y
+  // escritorio sí es localhost. Desde un teléfono físico hay que pasar la IP de
+  // la máquina en la red local con --dart-define=STOCKLET_EMULADOR_HOST=...
+  const definido = String.fromEnvironment('STOCKLET_EMULADOR_HOST');
+  final host = definido.isNotEmpty
+      ? definido
+      : (!kIsWeb && defaultTargetPlatform == TargetPlatform.android
+          ? '10.0.2.2'
+          : 'localhost');
   FirebaseFirestore.instance.useFirestoreEmulator(host, 8080);
   FirebaseAuth.instance.useAuthEmulator(host, 9099);
   FirebaseStorage.instance.useStorageEmulator(host, 9199);

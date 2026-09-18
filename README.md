@@ -61,6 +61,18 @@ Entrar con `demo@stocklet.app` / `demo1234` (credenciales del emulador; no
 existen en el proyecto real). Volver a sembrar deja todo igual que la primera
 vez, así que las capturas son repetibles.
 
+Los emuladores tienen que seguir corriendo mientras usas la app: si los paras,
+el login falla con un error genérico y los datos sembrados se pierden (se
+vuelven a sembrar en segundos).
+
+La dirección del host se resuelve sola: `10.0.2.2` en el emulador de Android,
+`localhost` en web y escritorio. Desde un **teléfono físico** hay que pasar la
+IP de tu máquina en la red local:
+
+```
+flutter run --dart-define=STOCKLET_EMULADOR=true --dart-define=STOCKLET_EMULADOR_HOST=192.168.1.X
+```
+
 El interruptor `STOCKLET_EMULADOR` es `const` y está apagado por defecto: un
 build de release lo elimina del binario.
 
