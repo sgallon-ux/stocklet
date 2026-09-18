@@ -118,6 +118,7 @@ bucket, así que las reglas van con `storage` a secas.
 
 ## Documentación
 
+- `docs/ficha-play.md` — guion de capturas y textos de la ficha de Google Play.
 - `docs/data-safety.md` — inventario de datos para el formulario de Seguridad de
   los datos de Google Play. Hay que actualizarlo cuando la app recoja un dato nuevo.
 
