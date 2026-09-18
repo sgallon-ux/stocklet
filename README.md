@@ -32,6 +32,41 @@ firebase deploy --only functions     # Cloud Functions
 firebase deploy --only hosting       # web/ (tras flutter build web)
 ```
 
+## Cloud Functions
+
+Tres funciones en `functions/`: `inventarioBajo` (push cuando un insumo cruza su
+mínimo), `recordatorioPedidos` (aviso diario de pedidos por entregar) y
+`eliminarCuenta` (borrado de cuenta, requisito de las tiendas). Requieren plan
+Blaze.
+
+Corren en **Node 22**. Se subió desde Node 20 porque Google lo apaga el
+2026-10-30, y con él vinieron `firebase-admin` 14 y `firebase-functions` 7.
+
+**`firebase-admin` 14 eliminó el espacio de nombres**: `admin.firestore()`,
+`admin.auth()`, `admin.messaging()` y `admin.storage()` ya no existen. Todo entra
+por imports modulares (`getFirestore()`, `getAuth()`, …). Si algún día se copia
+código de un ejemplo viejo, fallará con `admin.X is not a function`.
+
+**Hay que desplegar con el CLI de npm, no con el de winget.** `firebase-admin` 14
+arrastra `jose`, que es solo ESM, y el CLI empaquetado de winget lleva Node 20
+dentro y revienta al analizar el código:
+
+```
+Error [ERR_REQUIRE_ESM]: require() of ES Module .../jose/dist/webapi/index.js
+```
+
+El de npm usa el Node del sistema. Si `firebase --version` no dice 15 o más:
+
+```
+npm install -g firebase-tools
+winget uninstall Google.FirebaseCLI
+```
+
+Para probarlas antes de desplegar, los emuladores cargan las tres si arrancan con
+`--only functions,firestore,auth,storage`; el log debe decir
+`Using node@22 from host`. `recordatorioPedidos` queda fuera sin el emulador de
+pubsub, pero su handler se puede llamar a mano con `.run({})`.
+
 ## Negocio de demo (capturas de la tienda)
 
 Las capturas de la ficha de Google Play **no deben salir del negocio real**: las

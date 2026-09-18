@@ -4,14 +4,23 @@
 // Cada usuario recibe el texto en SU idioma (guardado en usuarios/{uid}.idioma).
 //
 // Requiere plan Blaze. Despliegue:  firebase deploy --only functions
+//
+// Node 22 y firebase-admin 14. El SDK 14 borró el espacio de nombres, así que
+// admin.firestore() y compañía ya no existen: todo entra por imports
+// modulares. Y el despliegue tiene que hacerse con el CLI de npm, no con el de
+// winget, que lleva Node 20 dentro y no puede cargar este código. Ver README.
 
 const {onDocumentUpdated} =
     require('firebase-functions/v2/firestore');
 const {onSchedule} = require('firebase-functions/v2/scheduler');
 const {onCall, HttpsError} = require('firebase-functions/v2/https');
-const admin = require('firebase-admin');
+const {initializeApp} = require('firebase-admin/app');
+const {getFirestore} = require('firebase-admin/firestore');
+const {getMessaging} = require('firebase-admin/messaging');
+const {getAuth} = require('firebase-admin/auth');
+const {getStorage} = require('firebase-admin/storage');
 
-admin.initializeApp();
+initializeApp();
 
 const IDIOMAS = ['es', 'en', 'pt', 'fr'];
 const IDIOMA_DEFECTO = 'es';
@@ -47,7 +56,7 @@ const T = {
 // Devuelve los tokens de los miembros agrupados por idioma:
 //   { es: [...], en: [...] }
 async function tokensPorIdioma(negocioId, excluyeUid) {
-  const snap = await admin.firestore()
+  const snap = await getFirestore()
       .collection('usuarios')
       .where('negocioId', '==', negocioId)
       .get();
@@ -70,7 +79,7 @@ async function tokensPorIdioma(negocioId, excluyeUid) {
 async function enviarPorIdioma(grupos, construir) {
   for (const lang of Object.keys(grupos)) {
     const {title, body} = construir(T[lang]);
-    await admin.messaging().sendEachForMulticast({
+    await getMessaging().sendEachForMulticast({
       tokens: grupos[lang],
       notification: {title, body},
       data: {tipo: 'notificaciones'},
@@ -103,7 +112,7 @@ exports.recordatorioPedidos = onSchedule(
       const finDia = new Date(
           ahora.getFullYear(), ahora.getMonth(), ahora.getDate(),
           23, 59, 59);
-      const snap = await admin.firestore()
+      const snap = await getFirestore()
           .collectionGroup('pedidos')
           .where('entregado', '==', false)
           .get();
@@ -138,8 +147,8 @@ exports.eliminarCuenta = onCall(async (request) => {
   if (!uid) {
     throw new HttpsError('unauthenticated', 'Debes iniciar sesión.');
   }
-  const db = admin.firestore();
-  const bucket = admin.storage().bucket();
+  const db = getFirestore();
+  const bucket = getStorage().bucket();
 
   const miDoc = await db.collection('usuarios').doc(uid).get();
   const negocioId = miDoc.exists ? miDoc.get('negocioId') : null;
@@ -179,7 +188,7 @@ exports.eliminarCuenta = onCall(async (request) => {
 
   // Finalmente, eliminar el usuario de Firebase Auth.
   try {
-    await admin.auth().deleteUser(uid);
+    await getAuth().deleteUser(uid);
   } catch (e) {
     console.error('Error borrando el usuario de Auth', e);
     throw new HttpsError('internal', 'No se pudo eliminar la cuenta.');
