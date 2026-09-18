@@ -76,6 +76,25 @@ IP de tu máquina en la red local:
 flutter run --dart-define=STOCKLET_EMULADOR=true --dart-define=STOCKLET_EMULADOR_HOST=192.168.1.X
 ```
 
+**Si el emulador de Android no alcanza `10.0.2.2`** (síntoma: el login falla con
+el error genérico, y `adb shell nc -w 3 10.0.2.2 9099` responde
+`Network is unreachable`), su stack de red está roto. En vez de pelearse con
+él, se tuneliza por el cable de depuración:
+
+```
+adb reverse tcp:8080 tcp:8080
+adb reverse tcp:9099 tcp:9099
+adb reverse tcp:9199 tcp:9199
+```
+
+Y se compila apuntando a `localhost`, que ahora sale por el túnel:
+
+```
+flutter run --dart-define=STOCKLET_EMULADOR=true --dart-define=STOCKLET_EMULADOR_HOST=localhost
+```
+
+Los túneles se pierden al reiniciar el AVD; hay que volver a crearlos.
+
 El interruptor `STOCKLET_EMULADOR` es `const` y está apagado por defecto: un
 build de release lo elimina del binario.
 
