@@ -64,3 +64,6 @@ android/key.properties
 # Emulador de Firebase y pruebas de reglas
 *-debug.log
 test/rules/node_modules/
+
+# Capturas para la ficha de la tienda: se regeneran, no se versionan
+capturas/
